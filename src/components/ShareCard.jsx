@@ -193,37 +193,37 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
     const lineH = Math.round(fontSize * 1.55)
     const textMaxY = content.sub ? H - 220 : H - 170
 
-    // Main content — handle numbered lists (split on newline)
+        // Main content — detect newline-separated list vs paragraph
     ctx.fillStyle = '#EDE6D6'
     ctx.letterSpacing = '0.01em'
     let endY = 510
 
-    const lines = content.main.split('\n').filter(Boolean)
-    const isList = lines.length > 1 && lines[0].match(/^\d+\./)
+    // Split on any newline variant
+    const rawLines = content.main.split(/\n|\\n/).filter(s => s.trim())
+    const isList = rawLines.length > 1 && /^\d+\./.test(rawLines[0])
 
     if (isList) {
-      // Draw as left-aligned numbered list
-      const listFontSize = Math.min(fontSize, 36)
-      const listLineH = Math.round(listFontSize * 1.7)
-      const listX = 100
-      const listMaxW = W - 200
-      ctx.font = `${listFontSize}px serif`
+      const listFontSize = 34
+      const listLineH = 56
+      const listX = 90
+      const listMaxW = W - 180
       ctx.textAlign = 'left'
-      let y = 510
-      for (const line of lines) {
-        if (y > textMaxY) break
-        // number bold, rest normal
+      let y = 480
+      for (const line of rawLines) {
+        if (y + listLineH > textMaxY) break
         const dotIdx = line.indexOf('. ')
-        const num = line.substring(0, dotIdx + 2)
-        const text = line.substring(dotIdx + 2)
+        const num = dotIdx >= 0 ? line.substring(0, dotIdx + 2) : ''
+        const text = dotIdx >= 0 ? line.substring(dotIdx + 2) : line
+        // Draw number in red
         ctx.font = `bold ${listFontSize}px serif`
-        ctx.fillStyle = 'rgba(201,72,72,0.9)'
+        ctx.fillStyle = 'rgba(201,72,72,0.95)'
         ctx.fillText(num, listX, y)
-        const numW = ctx.measureText(num).width
+        const numW = num ? ctx.measureText(num).width + 4 : 0
+        // Draw text
         ctx.font = `${listFontSize}px serif`
         ctx.fillStyle = '#EDE6D6'
-        endY = wrapText(ctx, text, listX + numW, y, listMaxW - numW, listLineH, textMaxY)
-        y = endY + listLineH * 0.3
+        const lastLine = wrapText(ctx, text, listX + numW, y, listMaxW - numW, listLineH, textMaxY)
+        y = lastLine + listLineH
         endY = y
       }
       ctx.textAlign = 'center'
@@ -231,7 +231,6 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
       ctx.font = `italic ${fontSize}px serif`
       endY = wrapText(ctx, content.main, W / 2, 510, W - 200, lineH, textMaxY)
     }
-
     // Reference / sub
     if (content.sub) {
       const refY = Math.min(endY + 52, H - 160)

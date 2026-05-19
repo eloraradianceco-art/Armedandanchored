@@ -525,7 +525,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           </div>
           <div style={{display:"flex",gap:5,alignItems:"center",flexShrink:0}}>
             {declared[weapon.id] && <span style={{fontSize:9,color:"#C94848",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em"}}>✦ Done</span>}
-            <button onClick={()=>setShareCard({weapon,type:tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"})} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:"#B08A4E",borderRadius:8,padding:"5px 9px",cursor:"pointer",fontSize:12}}>🖼</button>
+            <button onClick={()=>{setShareCard({weapon,type:tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"});setTabMenuOpen(false);}} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:"#B08A4E",borderRadius:8,padding:"5px 9px",cursor:"pointer",fontSize:12}}>🖼</button>
           </div>
         </div>
         {/* Row 2: current tab label + hamburger */}
@@ -552,40 +552,49 @@ export default function ArmedAndAnchored({ session, profile }) {
         {/* Dropdown tab menu */}
       </div>
 
-      {/* Tab menu — rendered outside sticky so zIndex works correctly */}
+      {/* Tab menu — fixed, no backdrop so content stays tappable */}
       {tabMenuOpen && (
-        <>
-          <div onClick={()=>setTabMenuOpen(false)}
-            style={{position:"fixed",inset:0,zIndex:400,background:"rgba(0,0,0,0.4)"}}/>
-          <div style={{position:"fixed",top:0,left:0,right:0,zIndex:500,
-            paddingTop:96,
-            background:"transparent",pointerEvents:"none"}}>
-            <div style={{
-              background:"rgba(7,14,23,0.99)",backdropFilter:"blur(20px)",
-              borderBottom:`2px solid ${C.redB}`,
-              boxShadow:"0 8px 32px rgba(0,0,0,0.6)",
-              pointerEvents:"all",
-            }}>
-              {TABS.map((t,i) => (
-                <button key={t.id} onClick={()=>{setTab(t.id);setTabMenuOpen(false);window.scrollTo(0,0);}}
-                  style={{
-                    width:"100%",display:"flex",alignItems:"center",gap:14,
-                    background:tab===t.id?C.redF:"transparent",
-                    border:"none",borderBottom:i<TABS.length-1?`1px solid ${C.border}`:"none",
-                    color:tab===t.id?C.cream:C.muted,
-                    padding:"16px 20px",cursor:"pointer",textAlign:"left",
-                    transition:"all .18s",
-                  }}>
-                  <span style={{fontSize:20,width:26,textAlign:"center"}}>{t.label.split(' ')[0]}</span>
-                  <span style={{fontSize:16,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em"}}>
-                    {t.label.split(' ').slice(1).join(' ')}
-                  </span>
-                  {tab===t.id && <span style={{marginLeft:"auto",color:C.redL,fontSize:13}}>✦</span>}
-                </button>
-              ))}
-            </div>
+        <div style={{position:"fixed",top:0,left:0,right:0,zIndex:500,
+          paddingTop:90}}>
+          <div style={{
+            background:"rgba(7,14,23,0.99)",backdropFilter:"blur(20px)",
+            borderBottom:`2px solid ${C.redB}`,
+            boxShadow:"0 8px 32px rgba(0,0,0,0.6)",
+          }}>
+            {TABS.map((t,i) => (
+              <button key={t.id} onClick={()=>{setTab(t.id);setTabMenuOpen(false);window.scrollTo(0,0);}}
+                style={{
+                  width:"100%",display:"flex",alignItems:"center",gap:14,
+                  background:tab===t.id?C.redF:"transparent",
+                  border:"none",borderBottom:i<TABS.length-1?`1px solid ${C.border}`:"none",
+                  color:tab===t.id?C.cream:C.muted,
+                  padding:"16px 20px",cursor:"pointer",textAlign:"left",
+                  transition:"all .18s",
+                }}>
+                <span style={{fontSize:20,width:26,textAlign:"center"}}>{t.label.split(' ')[0]}</span>
+                <span style={{fontSize:16,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em"}}>
+                  {t.label.split(' ').slice(1).join(' ')}
+                </span>
+                {tab===t.id && <span style={{marginLeft:"auto",color:C.redL,fontSize:13}}>✦</span>}
+              </button>
+            ))}
+            {/* Home button at bottom */}
+            <button onClick={()=>{setSelected(null);setTabMenuOpen(false);window.scrollTo(0,0);}}
+              style={{
+                width:"100%",display:"flex",alignItems:"center",gap:14,
+                background:"transparent",
+                border:"none",borderTop:`1px solid ${C.redB}`,
+                color:C.muted,
+                padding:"16px 20px",cursor:"pointer",textAlign:"left",
+                transition:"all .18s",
+              }}>
+              <span style={{fontSize:20,width:26,textAlign:"center"}}>🏠</span>
+              <span style={{fontSize:16,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em"}}>
+                Home
+              </span>
+            </button>
           </div>
-        </>
+        </div>
       )}
 
       <div style={{padding:"16px 16px 0"}}>
@@ -606,7 +615,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                 <p style={{fontSize:18,color:C.cream,fontStyle:"italic",lineHeight:1.9,margin:0}}>"{s.text}"</p>
               </div>
             ))}
-            <button onClick={()=>setShareCard({weapon,type:'scripture'})} style={{width:"100%",marginTop:4,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+            <button onClick={()=>{setShareCard({weapon,type:'scripture'});setTabMenuOpen(false);}} style={{width:"100%",marginTop:4,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
               🖼 Create Share Card for Social Media
             </button>
           </div>
@@ -622,7 +631,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                 <p style={{fontSize:15,color:C.text,lineHeight:1.75,margin:0}}>{weapon.fastingNote}</p>
               </div>
             )}
-            <button onClick={()=>setShareCard({weapon,type:'teaching'})} style={{width:"100%",marginTop:12,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+            <button onClick={()=>{setShareCard({weapon,type:'teaching'});setTabMenuOpen(false);}} style={{width:"100%",marginTop:12,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
               🖼 Create Share Card
             </button>
           </div>
@@ -642,7 +651,7 @@ export default function ArmedAndAnchored({ session, profile }) {
               <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:8}}>⚡ Deploy This Weapon</div>
               <p style={{fontSize:16,color:C.cream,lineHeight:1.8,margin:0}}>{weapon.challenge}</p>
             </div>
-            <button onClick={()=>setShareCard({weapon,type:'tactics'})} style={{width:"100%",marginTop:10,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+            <button onClick={()=>{setShareCard({weapon,type:'tactics'});setTabMenuOpen(false);}} style={{width:"100%",marginTop:10,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
               🖼 Create Share Card
             </button>
           </div>
@@ -662,7 +671,7 @@ export default function ArmedAndAnchored({ session, profile }) {
             <button onClick={()=>markDeclared(weapon.id)} style={{width:"100%",background:declared[weapon.id]?`linear-gradient(135deg,rgba(124,146,132,0.2),rgba(124,146,132,0.08))`:`linear-gradient(135deg,rgba(158,40,40,0.3),rgba(158,40,40,0.12))`,border:`1px solid ${declared[weapon.id]?"rgba(124,146,132,0.4)":C.redB}`,color:declared[weapon.id]?"#7A9284":C.redL,padding:"13px",borderRadius:12,cursor:"pointer",fontSize:13,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",transition:"all .3s"}}>
               {deployFlash[weapon.id]?"✦ Weapon Deployed":declared[weapon.id]?"✦ Deployed — Speak It Again":"⚔️ Declare This — Mark as Deployed"}
             </button>
-            <button onClick={()=>setShareCard({weapon,type:'declaration'})} style={{width:"100%",marginTop:10,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+            <button onClick={()=>{setShareCard({weapon,type:'declaration'});setTabMenuOpen(false);}} style={{width:"100%",marginTop:10,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
               🖼 Create Share Card
             </button>
             <p style={{fontSize:12,color:C.dim,fontStyle:"italic",lineHeight:1.6,marginTop:10,textAlign:"center"}}>Speak the declaration and prayer aloud. The spoken word has spiritual weight.</p>

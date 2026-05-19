@@ -719,16 +719,16 @@ export default function ArmedAndAnchored({ session, profile }) {
         const prev = TABS[i - 1]
         if (!prev) return null
         return (
-          <button onClick={()=>{setTab(prev.id);window.scrollTo(0,0);}} style={{
+          <button onClick={()=>{setTab(prev.id);window.scrollTo(0,0);}} title={prev.label} style={{
             position:"fixed",bottom:36,left:18,
             background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,
             border:`1px solid ${accB(weapon)}`,color:acc(weapon),
-            padding:"9px 18px",borderRadius:50,cursor:"pointer",fontSize:11,
-            fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",
+            width:44,height:44,borderRadius:50,cursor:"pointer",fontSize:18,
             boxShadow:"0 4px 20px rgba(0,0,0,0.4)",backdropFilter:"blur(10px)",
-            zIndex:201,display:"flex",alignItems:"center",gap:7,transition:"all .2s",
+            zIndex:201,display:"flex",alignItems:"center",justifyContent:"center",
+            transition:"all .25s",
           }}>
-            ‹ {prev.label}
+            ‹
           </button>
         )
       })()}
@@ -754,16 +754,16 @@ export default function ArmedAndAnchored({ session, profile }) {
         const next = TABS[i + 1]
         if (!next) return null
         return (
-          <button onClick={()=>{setTab(next.id);window.scrollTo(0,0);}} style={{
+          <button onClick={()=>{setTab(next.id);window.scrollTo(0,0);}} title={next.label} style={{
             position:"fixed",bottom:36,right:18,
             background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,
             border:`1px solid ${accB(weapon)}`,color:acc(weapon),
-            padding:"9px 18px",borderRadius:50,cursor:"pointer",fontSize:11,
-            fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",
+            width:44,height:44,borderRadius:50,cursor:"pointer",fontSize:18,
             boxShadow:"0 4px 20px rgba(0,0,0,0.4)",backdropFilter:"blur(10px)",
-            zIndex:201,display:"flex",alignItems:"center",gap:7,transition:"all .2s",
+            zIndex:201,display:"flex",alignItems:"center",justifyContent:"center",
+            transition:"all .25s",
           }}>
-            {next.label} ›
+            ›
           </button>
         )
       })()}

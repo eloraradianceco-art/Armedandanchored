@@ -248,6 +248,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [deployFlash, setDeployFlash] = useState({})
   const [shareFlash, setShareFlash] = useState(null)
   const [shareCard, setShareCard] = useState(null) // {weapon, type}
+  const [journalSaved, setJournalSaved] = useState(false)
   const [dockOpen, setDockOpen] = useState(false)
   const [tabMenuOpen, setTabMenuOpen] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -689,7 +690,15 @@ export default function ArmedAndAnchored({ session, profile }) {
             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:7}}>Battle Journal</div>
             <p style={{fontSize:13,color:C.muted,fontStyle:"italic",lineHeight:1.7,marginBottom:14}}>What is the Holy Spirit showing you through this weapon? What areas of your life does it address? What is your response?</p>
             <textarea rows={10} value={get('journal')} onChange={e=>set('journal',e.target.value)} placeholder="Write your response, reflections, and warfare notes here..." style={{width:"100%",background:"rgba(255,255,255,0.03)",border:`1px solid ${C.borderGold}`,borderRadius:14,color:C.cream,fontSize:17,lineHeight:1.9,padding:"14px 16px",fontFamily:"'EB Garamond',Georgia,serif",outline:"none",resize:"vertical",boxSizing:"border-box",minHeight:200}}/>
-            <div style={{marginTop:12,fontSize:11,color:C.dim,fontStyle:"italic",textAlign:"center"}}>Saved automatically to your account across all devices</div>
+            <button onClick={()=>{set('journal', get('journal')); setJournalSaved(true); setTimeout(()=>setJournalSaved(false),2000);}}
+              style={{width:"100%",marginTop:12,
+                background:journalSaved?"rgba(124,146,132,0.15)":`linear-gradient(135deg,${C.redF},rgba(255,255,255,0.01))`,
+                border:`1px solid ${journalSaved?"rgba(124,146,132,0.4)":C.redB}`,
+                color:journalSaved?C.green:C.redL,
+                padding:"12px",borderRadius:12,cursor:"pointer",fontSize:12,
+                fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",transition:"all .25s"}}>
+              {journalSaved ? "✓ Saved" : "Save Journal Entry"}
+            </button>
             <div style={{marginTop:14,background:C.goldF,border:`1px solid ${C.goldB}`,borderRadius:12,padding:"13px 16px"}}>
               <div style={{fontSize:9,color:C.gold,letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>This Week's Challenge</div>
               <p style={{fontSize:15,color:C.text,lineHeight:1.75,margin:0}}>{weapon.challenge}</p>
@@ -764,4 +773,5 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   // ── SHARE CARD OVERLAY ─────────────────────────────────────────────────
   // (renders on top of everything when shareCard is set)
-}
+}  // Scroll to top whenever weapon changes or returns home
+  useEffect(() => { window.scrollTo(0,0) }, [selected])

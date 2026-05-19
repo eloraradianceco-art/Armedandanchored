@@ -1,29 +1,47 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Component } from 'react'
 import { supabase } from './supabaseClient'
 import Paywall from './components/Paywall'
 import Auth from './components/Auth'
 import Onboarding from './components/Onboarding'
 import ArmedAndAnchored from './ArmedAndAnchored'
 
-export default function App() {
+// Error boundary catches any runtime crash and shows a message instead of blank screen
+class ErrorBoundary extends Component {
+  constructor(props) { super(props); this.state = { error: null } }
+  static getDerivedStateFromError(error) { return { error } }
+  render() {
+    if (this.state.error) {
+      return (
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#070E17', flexDirection: 'column', gap: 16, padding: 24, textAlign: 'center' }}>
+          <div style={{ fontSize: 32 }}>⚔️</div>
+          <div style={{ fontSize: 14, color: '#B83232', fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.1em' }}>Something went wrong</div>
+          <div style={{ fontSize: 12, color: '#3A4D5C', maxWidth: 360, lineHeight: 1.6 }}>{this.state.error.message}</div>
+          <button onClick={() => window.location.reload()} style={{ marginTop: 8, background: 'rgba(140,31,31,0.2)', border: '1px solid rgba(140,31,31,0.4)', color: '#B83232', padding: '10px 20px', borderRadius: 10, cursor: 'pointer', fontSize: 12, fontFamily: "'Cinzel',Georgia,serif" }}>
+            Reload
+          </button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
+function AppInner() {
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showOnboarding, setShowOnboarding] = useState(false)
 
-  // Check for Stripe session_id on load
   const params = new URLSearchParams(window.location.search)
   const stripeSessionId = params.get('session_id')
 
   useEffect(() => {
-    // Get current session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       if (session) loadProfile(session.user.id)
       else setLoading(false)
     })
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
       if (session) loadProfile(session.user.id)
@@ -44,18 +62,12 @@ export default function App() {
   }
 
   const handlePaymentComplete = async (sessionId) => {
-    // Verify payment with our API
     try {
       const res = await fetch(`/api/verify-payment?session_id=${sessionId}`)
       const data = await res.json()
       if (data.paid) {
-        // Clean URL
         window.history.replaceState({}, '', window.location.pathname)
-        if (session) {
-          // Already logged in — just reload profile
-          await loadProfile(session.user.id)
-        }
-        // Otherwise Auth component will redirect here after sign up
+        if (session) await loadProfile(session.user.id)
         return true
       }
     } catch (e) {
@@ -65,7 +77,6 @@ export default function App() {
   }
 
   const handleAuthComplete = async (isNewUser) => {
-    // Reload profile after sign in/up
     const { data: { session } } = await supabase.auth.getSession()
     if (session) {
       await loadProfile(session.user.id)
@@ -80,48 +91,43 @@ export default function App() {
 
   if (loading) return <LoadingScreen />
 
-  // Not paid yet — show paywall
-  if (!profile?.paid && !stripeSessionId) {
-    return <Paywall />
-  }
+  // Not paid — show paywall
+  if (!profile?.paid && !stripeSessionId) return <Paywall />
 
-  // Came back from Stripe but not logged in — show auth with session_id
+  // Returned from Stripe, not logged in — create account
   if (stripeSessionId && !session) {
-    return (
-      <Auth
-        stripeSessionId={stripeSessionId}
-        onComplete={handleAuthComplete}
-        onPaymentVerify={handlePaymentComplete}
-      />
-    )
+    return <Auth stripeSessionId={stripeSessionId} onComplete={handleAuthComplete} onPaymentVerify={handlePaymentComplete} />
   }
 
-  // Paid + logged in but session_id still in URL — verify then continue
+  // Returned from Stripe, already logged in — verify payment
   if (stripeSessionId && session && !profile?.paid) {
     handlePaymentComplete(stripeSessionId)
     return <LoadingScreen />
   }
 
-  // Not logged in (direct visit, not from Stripe)
-  if (!session) {
-    return <Auth onComplete={handleAuthComplete} />
-  }
+  // Not logged in
+  if (!session) return <Auth onComplete={handleAuthComplete} />
 
-  // Logged in, paid — show onboarding for new users
+  // New user — show onboarding
   if (showOnboarding || (!localStorage.getItem('aa_onboarded') && profile?.paid)) {
     return <Onboarding onComplete={handleOnboardingComplete} />
   }
 
-  // All good — show the app
+  // All good
   return <ArmedAndAnchored session={session} profile={profile} />
+}
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <AppInner />
+    </ErrorBoundary>
+  )
 }
 
 function LoadingScreen() {
   return (
-    <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center',
-      justifyContent: 'center', background: '#070E17', flexDirection: 'column', gap: 16
-    }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#070E17', flexDirection: 'column', gap: 16 }}>
       <div style={{ fontSize: 32 }}>⚔️</div>
       <div style={{ fontSize: 13, color: '#3A4D5C', fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.12em' }}>
         ARMED & ANCHORED

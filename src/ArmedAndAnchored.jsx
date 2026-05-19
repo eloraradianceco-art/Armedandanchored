@@ -553,7 +553,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         {tabMenuOpen && (
           <div style={{position:"absolute",top:"100%",left:0,right:0,zIndex:200,
             background:"rgba(7,14,23,0.98)",backdropFilter:"blur(20px)",
-            borderBottom:`1px solid ${C.redB}`,
+            borderBottom:`1px solid ${C.redB}`,zIndex:300,
             boxShadow:"0 8px 32px rgba(0,0,0,0.5)"}}>
             {TABS.map((t,i) => (
               <button key={t.id} onClick={()=>{setTab(t.id);setTabMenuOpen(false);window.scrollTo(0,0);}}
@@ -685,7 +685,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
       {/* Bottom-left: dock toggle */}
       <button onClick={()=>setDockOpen(o=>!o)} style={{
-        position:"fixed",bottom:18,left:18,
+        position:"fixed",bottom:36,left:18,
         background:dockOpen?C.redF:"rgba(7,14,23,0.92)",
         border:`1px solid ${dockOpen?C.redB:"rgba(158,40,40,0.3)"}`,
         color:dockOpen?C.redL:C.muted,
@@ -705,7 +705,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         if (!next) return null
         return (
           <button onClick={()=>{setTab(next.id);window.scrollTo(0,0);}} style={{
-            position:"fixed",bottom:18,right:18,
+            position:"fixed",bottom:36,right:18,
             background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,
             border:`1px solid ${accB(weapon)}`,color:acc(weapon),
             padding:"9px 18px",borderRadius:50,cursor:"pointer",fontSize:11,

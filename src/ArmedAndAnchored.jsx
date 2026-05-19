@@ -368,8 +368,16 @@ export default function ArmedAndAnchored({ session, profile }) {
   );
 
 
+  // Inject fadeIn keyframe once
+  if (typeof document !== 'undefined' && !document.getElementById('aa-fadein')) {
+    const s = document.createElement('style')
+    s.id = 'aa-fadein'
+    s.textContent = '@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }'
+    document.head.appendChild(s)
+  }
+
   if (!selected) return (
-    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(139,32,32,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90}}>
+    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(139,32,32,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90,animation:"fadeIn 0.4s ease"}}>
       <div style={{borderBottom:`1px solid ${C.border}`,padding:"28px 24px 22px",textAlign:"center",background:"linear-gradient(180deg,rgba(139,32,32,0.07),transparent)"}}>
         <div style={{fontSize:11,color:C.red,letterSpacing:"0.22em",fontFamily:"'Cinzel',Georgia,serif",textTransform:"uppercase",marginBottom:10,opacity:0.9}}>Elora Radiance Co.</div>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12,marginBottom:5}}>

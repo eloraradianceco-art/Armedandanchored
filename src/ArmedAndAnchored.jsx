@@ -389,7 +389,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   }
 
   const EmojDock = ({activeId}) => (
-    <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:202,fontFamily:"'EB Garamond',Georgia,serif"}}>
+    <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:dockOpen?202:199,fontFamily:"'EB Garamond',Georgia,serif"}}>
       {/* Backdrop when open */}
       {dockOpen && (
         <div onClick={()=>setDockOpen(false)}

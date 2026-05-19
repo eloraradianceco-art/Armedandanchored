@@ -15,7 +15,7 @@ const FEATURES = [
   { icon: '🔗', text: 'Share any weapon instantly — scripture, declaration, prayer' },
 ]
 
-export default function Paywall() {
+export default function Paywall({ onShowSignIn }) {
   return (
     <div style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column',
@@ -27,7 +27,6 @@ export default function Paywall() {
     }}>
       <div style={{ maxWidth: 480, width: '100%' }}>
 
-        {/* Header */}
         <div style={{ fontSize: 11, color: C.red, letterSpacing: '0.22em', fontFamily: "'Cinzel',Georgia,serif", textTransform: 'uppercase', marginBottom: 14, opacity: 0.9 }}>
           Elora Radiance Co.
         </div>
@@ -40,7 +39,6 @@ export default function Paywall() {
           Spiritual Warfare Training Journal
         </div>
 
-        {/* Feature card */}
         <div style={{
           background: 'linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))',
           border: `1px solid ${C.goldB}`, borderRadius: 16, padding: '24px 26px', marginBottom: 24,
@@ -61,7 +59,6 @@ export default function Paywall() {
           </div>
         </div>
 
-        {/* CTA */}
         <a
           href={STRIPE_LINK}
           style={{
@@ -81,7 +78,7 @@ export default function Paywall() {
         <div style={{ marginTop: 24, fontSize: 13, color: C.dim }}>
           Already purchased?{' '}
           <button
-            onClick={() => window.location.href = '?signin=true'}
+            onClick={onShowSignIn}
             style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 13, textDecoration: 'underline', fontFamily: 'inherit' }}
           >
             Sign in

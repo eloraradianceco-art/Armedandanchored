@@ -63,6 +63,7 @@ const SLIDES = [
 
 export default function Onboarding({ onComplete }) {
   const [slide, setSlide] = useState(0)
+  const [fadingOut, setFadingOut] = useState(false)
   const current = SLIDES[slide]
   const isLast = slide === SLIDES.length - 1
 
@@ -74,6 +75,8 @@ export default function Onboarding({ onComplete }) {
                    radial-gradient(ellipse at 80% 100%,rgba(176,138,78,0.08) 0%,transparent 50%),${C.bg}`,
       fontFamily: "'EB Garamond',Georgia,serif", color: C.text,
       padding: '32px 24px', textAlign: 'center',
+      opacity: fadingOut ? 0 : 1,
+      transition: 'opacity 0.4s ease',
     }}>
       <div style={{ maxWidth: 440, width: '100%' }}>
 
@@ -127,7 +130,10 @@ export default function Onboarding({ onComplete }) {
         {/* CTA */}
         {isLast ? (
           <button
-            onClick={onComplete}
+            onClick={() => {
+            setFadingOut(true)
+            setTimeout(() => onComplete(), 400)
+          }}
             style={{
               width: '100%', background: 'linear-gradient(135deg,rgba(139,32,32,0.4),rgba(139,32,32,0.18))',
               border: '1px solid rgba(140,31,31,0.55)', color: C.cream,
@@ -169,7 +175,10 @@ export default function Onboarding({ onComplete }) {
         {/* Skip on early slides */}
         {!isLast && (
           <button
-            onClick={onComplete}
+            onClick={() => {
+            setFadingOut(true)
+            setTimeout(() => onComplete(), 400)
+          }}
             style={{
               background: 'none', border: 'none', color: C.dim,
               cursor: 'pointer', fontSize: 12, marginTop: 16,

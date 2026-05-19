@@ -31,21 +31,6 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    // ─────────────────────────────────────────────────────────────────────────
-    // CONFIGURATION — set these two values before deploying
-    // ─────────────────────────────────────────────────────────────────────────
-
-    // Your Stripe Payment Link (from dashboard.stripe.com/payment-links)
-    // Set the success redirect in Stripe to: https://yoursite.com?ref=YOURCODE
-    const PAYMENT_LINK = "https://buy.stripe.com/REPLACE_WITH_YOUR_LINK";
-
-    // The secret code that appears in your Stripe success redirect URL
-    // Example: if your redirect is https://yoursite.com?ref=AA2025 → set "AA2025"
-    // Change this to anything you want — just match it in your Stripe redirect URL
-    const UNLOCK_CODE = "AA2025";
-
-    // ─────────────────────────────────────────────────────────────────────────
-
 const { useState, useEffect } = React;
 
 const C = {
@@ -269,20 +254,7 @@ function ArmedAndAnchored() {
   const [journal, setJournal] = useState({});
   const [deployFlash, setDeployFlash] = useState({});
   const [shareFlash, setShareFlash] = useState(null);
-  const [paid, setPaid] = useState(() => {
-    try {
-      if (localStorage.getItem("aa_paid") === "true") return true;
-      const ref = new URLSearchParams(window.location.search).get("ref");
-      if (ref === UNLOCK_CODE) {
-        localStorage.setItem("aa_paid","true");
-        window.history.replaceState({}, "", window.location.pathname);
-        return true;
-      }
-      return false;
-    } catch { return false; }
-  });
-  const verifying = false;
-  const payError = null;
+  const paid = true;
 
   const weapon = selected ? WEAPONS.find(w => w.id === selected) : null;
 
@@ -379,7 +351,7 @@ function ArmedAndAnchored() {
           <div style={{padding:"14px",fontSize:14,color:"#B83232",background:"rgba(140,31,31,0.1)",border:"1px solid rgba(140,31,31,0.3)",borderRadius:12,marginBottom:14}}>{payError}</div>
         ) : null}
 
-        <a href={PAYMENT_LINK}
+        <a href="#"
           style={{display:"block",background:"linear-gradient(135deg,rgba(139,32,32,0.35),rgba(139,32,32,0.15))",border:"1px solid rgba(140,31,31,0.5)",color:"#EDE6D6",padding:"16px 28px",borderRadius:14,fontSize:16,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.09em",textDecoration:"none",marginBottom:12,transition:"all .25s",cursor:"pointer"}}>
           ⚔️ Get Lifetime Access
         </a>

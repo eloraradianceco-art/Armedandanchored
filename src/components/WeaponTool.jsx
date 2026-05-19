@@ -55,8 +55,10 @@ function Entry({C,date,children,onDelete}) {
       <div style={{fontSize:10,color:C.dim,marginBottom:8,fontFamily:"'Cinzel',Georgia,serif"}}>{date}</div>
       {children}
       {onDelete && (
-        <button onClick={onDelete} style={{position:'absolute',top:10,right:12,background:'none',
-          border:'none',color:C.dim,cursor:'pointer',fontSize:13}}>×</button>
+        <button onClick={onDelete} style={{position:'absolute',top:6,right:8,background:'rgba(255,255,255,0.05)',
+          border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:13,
+          width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',
+          lineHeight:1}}>×</button>
       )}
     </div>
   )
@@ -224,7 +226,7 @@ function StrongholdBreaker({C, get, set}) {
               <div key={i} style={{...card(C),borderLeft:`3px solid ${C.redL}`}}>
                 <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
                   <span style={tag(C)}>Day {days} of Breaking</span>
-                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:13}}>×</button>
+                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:13,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
                 </div>
                 <p style={{fontSize:13,color:C.muted,fontStyle:'italic',marginBottom:4}}>Lie: "{e.lie}"</p>
                 <p style={{fontSize:15,color:C.cream,lineHeight:1.65,marginBottom:e.scripture?6:10}}>Truth: {e.truth}</p>
@@ -423,7 +425,7 @@ function DeclarationBuilder({C, get, set}) {
                   <span style={{fontSize:11,color:spokenToday?C.green:C.redL,fontFamily:"'Cinzel',Georgia,serif"}}>
                     {days} day{days!==1?'s':''} declared
                   </span>
-                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:13}}>×</button>
+                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:13,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
                 </div>
                 <p style={{fontSize:16,color:C.cream,fontStyle:'italic',lineHeight:1.8,marginBottom:10}}>"{e.text}"</p>
                 <button onClick={()=>markToday(i)} style={{
@@ -478,7 +480,7 @@ function ThoughtJournal({C, get, set}) {
             <div key={i} style={card(C)}>
               <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
                 <span style={{fontSize:10,color:C.dim}}>{e.date}</span>
-                <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:13}}>×</button>
+                <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:13,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
               </div>
               <p style={{fontSize:13,color:C.muted,fontStyle:'italic',marginBottom:4,lineHeight:1.6}}>Lie: "{e.lie}"</p>
               <p style={{fontSize:15,color:C.cream,lineHeight:1.7,marginBottom:10}}>Truth: {e.truth}</p>
@@ -801,7 +803,7 @@ function IntercessionList({C, get, set}) {
                 <span style={{fontSize:14,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600}}>{e.name}</span>
                 <div style={{display:'flex',gap:6,alignItems:'center'}}>
                   {e.breakthrough && <span style={{fontSize:10,color:C.green,fontFamily:"'Cinzel',Georgia,serif"}}>✦ Breakthrough</span>}
-                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:13}}>×</button>
+                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:13,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
                 </div>
               </div>
               {e.request && <p style={{fontSize:14,color:C.text,lineHeight:1.65,marginBottom:10}}>{e.request}</p>}

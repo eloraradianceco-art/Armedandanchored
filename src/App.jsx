@@ -5,7 +5,6 @@ import Auth from './components/Auth'
 import Onboarding from './components/Onboarding'
 import ArmedAndAnchored from './ArmedAndAnchored'
 
-// Error boundary catches any runtime crash and shows a message instead of blank screen
 class ErrorBoundary extends Component {
   constructor(props) { super(props); this.state = { error: null } }
   static getDerivedStateFromError(error) { return { error } }
@@ -31,6 +30,7 @@ function AppInner() {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showOnboarding, setShowOnboarding] = useState(false)
+  const [showSignIn, setShowSignIn] = useState(false)
 
   const params = new URLSearchParams(window.location.search)
   const stripeSessionId = params.get('session_id')
@@ -82,6 +82,7 @@ function AppInner() {
       await loadProfile(session.user.id)
       if (isNewUser) setShowOnboarding(true)
     }
+    setShowSignIn(false)
   }
 
   const handleOnboardingComplete = () => {
@@ -91,10 +92,7 @@ function AppInner() {
 
   if (loading) return <LoadingScreen />
 
-  // Not paid — show paywall
-  if (!profile?.paid && !stripeSessionId) return <Paywall />
-
-  // Returned from Stripe, not logged in — create account
+  // Returned from Stripe — show sign up
   if (stripeSessionId && !session) {
     return <Auth stripeSessionId={stripeSessionId} onComplete={handleAuthComplete} onPaymentVerify={handlePaymentComplete} />
   }
@@ -105,8 +103,18 @@ function AppInner() {
     return <LoadingScreen />
   }
 
-  // Not logged in
-  if (!session) return <Auth onComplete={handleAuthComplete} />
+  // Not logged in — show paywall or sign in
+  if (!session) {
+    if (showSignIn) {
+      return <Auth onComplete={handleAuthComplete} onBack={() => setShowSignIn(false)} />
+    }
+    return <Paywall onShowSignIn={() => setShowSignIn(true)} />
+  }
+
+  // Logged in but not paid — show paywall
+  if (!profile?.paid) {
+    return <Paywall onShowSignIn={() => setShowSignIn(true)} />
+  }
 
   // New user — show onboarding
   if (showOnboarding || (!localStorage.getItem('aa_onboarded') && profile?.paid)) {

@@ -483,17 +483,17 @@ export default function ArmedAndAnchored({ session, profile }) {
 
       <div style={{padding:"14px 18px 40px"}}>
         <div style={{fontSize:9,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>15 Weapons of the Believer</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr",gap:8}}>
           {WEAPONS.map(w => {
             const done = declared[w.id];
             return (
-              <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{background:done?`linear-gradient(145deg,rgba(158,40,40,0.12),rgba(158,40,40,0.04))`:`linear-gradient(145deg,rgba(255,255,255,0.028),rgba(255,255,255,0.01))`,border:`1px solid ${done?"rgba(158,40,40,0.35)":C.border}`,borderRadius:12,padding:"12px 12px",cursor:"pointer",textAlign:"left",transition:"all .2s",position:"relative"}}>
+              <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{background:done?`linear-gradient(145deg,rgba(158,40,40,0.12),rgba(158,40,40,0.04))`:`linear-gradient(145deg,rgba(255,255,255,0.028),rgba(255,255,255,0.01))`,border:`1px solid ${done?"rgba(158,40,40,0.35)":C.border}`,borderRadius:14,padding:"14px 16px",cursor:"pointer",textAlign:"left",transition:"all .2s",position:"relative"}}>
                 {done && <div style={{position:"absolute",top:10,right:12,fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</div>}
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
                   <span style={{fontSize:18}}>{w.icon}</span>
-                  <div style={{fontSize:8,color:acc(w),letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{w.tag}</div>
+                  <div style={{fontSize:9,color:acc(w),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{w.tag}</div>
                 </div>
-                <div style={{fontSize:13,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",lineHeight:1.25,marginBottom:3}}>{w.title}</div>
+                <div style={{fontSize:14,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",lineHeight:1.25,marginBottom:4}}>{w.title}</div>
                 <div style={{fontSize:11,color:C.muted,fontStyle:"italic",lineHeight:1.35}}>{w.subtitle}</div>
               </button>
             );
@@ -550,36 +550,42 @@ export default function ArmedAndAnchored({ session, profile }) {
           </button>
         </div>
         {/* Dropdown tab menu */}
-        {tabMenuOpen && (
-          <div style={{position:"absolute",top:"100%",left:0,right:0,zIndex:200,
-            background:"rgba(7,14,23,0.98)",backdropFilter:"blur(20px)",
-            borderBottom:`1px solid ${C.redB}`,zIndex:300,
-            boxShadow:"0 8px 32px rgba(0,0,0,0.5)"}}>
-            {TABS.map((t,i) => (
-              <button key={t.id} onClick={()=>{setTab(t.id);setTabMenuOpen(false);window.scrollTo(0,0);}}
-                style={{
-                  width:"100%",display:"flex",alignItems:"center",gap:14,
-                  background:tab===t.id?C.redF:"transparent",
-                  border:"none",borderBottom:i<TABS.length-1?`1px solid ${C.border}`:"none",
-                  color:tab===t.id?C.cream:C.muted,
-                  padding:"14px 18px",cursor:"pointer",textAlign:"left",
-                  transition:"all .18s",
-                }}>
-                <span style={{fontSize:18,width:24,textAlign:"center"}}>{t.label.split(' ')[0]}</span>
-                <span style={{fontSize:15,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em"}}>
-                  {t.label.split(' ').slice(1).join(' ')}
-                </span>
-                {tab===t.id && <span style={{marginLeft:"auto",color:C.redL,fontSize:12}}>✦</span>}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
-      {/* Close tab menu when tapping outside */}
+      {/* Tab menu — rendered outside sticky so zIndex works correctly */}
       {tabMenuOpen && (
-        <div onClick={()=>setTabMenuOpen(false)}
-          style={{position:"fixed",inset:0,zIndex:150,background:"rgba(0,0,0,0.3)"}}/>
+        <>
+          <div onClick={()=>setTabMenuOpen(false)}
+            style={{position:"fixed",inset:0,zIndex:400,background:"rgba(0,0,0,0.4)"}}/>
+          <div style={{position:"fixed",top:0,left:0,right:0,zIndex:500,
+            paddingTop:96,
+            background:"transparent",pointerEvents:"none"}}>
+            <div style={{
+              background:"rgba(7,14,23,0.99)",backdropFilter:"blur(20px)",
+              borderBottom:`2px solid ${C.redB}`,
+              boxShadow:"0 8px 32px rgba(0,0,0,0.6)",
+              pointerEvents:"all",
+            }}>
+              {TABS.map((t,i) => (
+                <button key={t.id} onClick={()=>{setTab(t.id);setTabMenuOpen(false);window.scrollTo(0,0);}}
+                  style={{
+                    width:"100%",display:"flex",alignItems:"center",gap:14,
+                    background:tab===t.id?C.redF:"transparent",
+                    border:"none",borderBottom:i<TABS.length-1?`1px solid ${C.border}`:"none",
+                    color:tab===t.id?C.cream:C.muted,
+                    padding:"16px 20px",cursor:"pointer",textAlign:"left",
+                    transition:"all .18s",
+                  }}>
+                  <span style={{fontSize:20,width:26,textAlign:"center"}}>{t.label.split(' ')[0]}</span>
+                  <span style={{fontSize:16,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em"}}>
+                    {t.label.split(' ').slice(1).join(' ')}
+                  </span>
+                  {tab===t.id && <span style={{marginLeft:"auto",color:C.redL,fontSize:13}}>✦</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
       )}
 
       <div style={{padding:"16px 16px 0"}}>
@@ -698,8 +704,8 @@ export default function ArmedAndAnchored({ session, profile }) {
         {dockOpen ? "✕" : "⚔️"}
       </button>
 
-      {/* Bottom-right: next tab */}
-      {(() => {
+      {/* Bottom-right: next tab — hidden when dock open */}
+      {!dockOpen && (() => {
         const i = TABS.findIndex(t => t.id === tab)
         const next = TABS[i + 1]
         if (!next) return null

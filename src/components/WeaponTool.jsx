@@ -79,7 +79,7 @@ function BattleLog({C, get, set}) {
   const cats = ['peace','purity','purpose','relationships','health','mind','finances','other']
   const add = () => {
     if(!notes.trim()) return
-    save([{date:dateStr(),category:cat,notes},{...entries},...entries.slice(0,19)])
+    save([{date:dateStr(),category:cat,notes},...entries.slice(0,19)])
     setNotes(''); setSaved(true); setTimeout(()=>setSaved(false),1800)
   }
   return (

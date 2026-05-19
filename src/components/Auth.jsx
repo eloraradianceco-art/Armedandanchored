@@ -16,7 +16,7 @@ const INP = {
   boxSizing: 'border-box',
 }
 
-export default function Auth({ stripeSessionId, onComplete, onPaymentVerify }) {
+export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onBack }) {
   const isNewUser = !!stripeSessionId
   const [mode, setMode] = useState(isNewUser ? 'signup' : 'signin')
   const [email, setEmail] = useState('')
@@ -78,6 +78,9 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify }) {
           </div>
         )}
 
+        {onBack && (
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#6A7E90', cursor: 'pointer', fontSize: 13, fontFamily: "'inherit'", marginBottom: 16, textAlign: 'left', padding: 0 }}>← Back</button>
+        )}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
           <input
             type="email" placeholder="Email address" value={email}

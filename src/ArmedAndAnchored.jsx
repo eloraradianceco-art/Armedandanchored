@@ -377,9 +377,9 @@ export default function ArmedAndAnchored({ session, profile }) {
   }
 
   const EmojDock = ({activeId}) => (
-    <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:200,background:"rgba(7,14,23,0.97)",backdropFilter:"blur(20px)",borderTop:"1px solid rgba(158,40,40,0.28)",padding:"10px 6px 14px"}}>
+    <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:200,background:"rgba(7,14,23,0.97)",backdropFilter:"blur(20px)",borderTop:"1px solid rgba(158,40,40,0.28)",padding:"10px 8px 18px"}}>
       <div style={{fontSize:8,color:C.dim,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",marginBottom:7}}>15 Weapons</div>
-      <div style={{display:"flex",gap:3,justifyContent:"center",overflowX:"auto",padding:"0 2px",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:5,padding:"0 8px",maxWidth:280,margin:"0 auto"}}>
         {WEAPONS.map(w => {
           const done = declared[w.id];
           const active = w.id === activeId;
@@ -387,11 +387,11 @@ export default function ArmedAndAnchored({ session, profile }) {
             <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} title={w.title}
               style={{background:active?"linear-gradient(145deg,rgba(158,40,40,0.4),rgba(158,40,40,0.18))":done?"rgba(158,40,40,0.12)":"rgba(255,255,255,0.04)",
                 border:`1px solid ${active?"rgba(158,40,40,0.7)":done?"rgba(158,40,40,0.3)":"rgba(255,255,255,0.07)"}`,
-                borderRadius:9,width:36,height:36,cursor:"pointer",fontSize:16,
-                display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,
+                borderRadius:9,width:"100%",aspectRatio:"1/1",cursor:"pointer",fontSize:18,
+                display:"flex",alignItems:"center",justifyContent:"center",
                 transition:"all .15s",
                 boxShadow:active?"0 0 14px rgba(158,40,40,0.55)":"none",
-                transform:active?"translateY(-4px) scale(1.12)":"none",
+                transform:active?"scale(1.08)":"none",
                 position:"relative"}}>
               {w.icon}
               {done && !active && <span style={{position:"absolute",top:1,right:2,fontSize:6,color:C.redL,lineHeight:1}}>✦</span>}
@@ -423,7 +423,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   )
 
   if (!selected) return (
-    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(158,40,40,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90,animation:"fadeIn 0.4s ease"}}>
+    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(158,40,40,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:200,animation:"fadeIn 0.4s ease"}}>
       <div style={{borderBottom:`1px solid ${C.border}`,padding:"28px 24px 22px",textAlign:"center",background:"linear-gradient(180deg,rgba(158,40,40,0.07),transparent)"}}>
         <div style={{fontSize:11,color:C.red,letterSpacing:"0.22em",fontFamily:"'Cinzel',Georgia,serif",textTransform:"uppercase",marginBottom:10,opacity:0.9}}>Elora Radiance Co.</div>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12,marginBottom:5}}>
@@ -459,18 +459,18 @@ export default function ArmedAndAnchored({ session, profile }) {
 
       <div style={{padding:"14px 18px 40px"}}>
         <div style={{fontSize:9,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>15 Weapons of the Believer</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))",gap:9}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8}}>
           {WEAPONS.map(w => {
             const done = declared[w.id];
             return (
-              <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{background:done?`linear-gradient(145deg,rgba(158,40,40,0.12),rgba(158,40,40,0.04))`:`linear-gradient(145deg,rgba(255,255,255,0.028),rgba(255,255,255,0.01))`,border:`1px solid ${done?"rgba(158,40,40,0.35)":C.border}`,borderRadius:14,padding:"16px 18px",cursor:"pointer",textAlign:"left",transition:"all .2s",position:"relative"}}>
+              <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{background:done?`linear-gradient(145deg,rgba(158,40,40,0.12),rgba(158,40,40,0.04))`:`linear-gradient(145deg,rgba(255,255,255,0.028),rgba(255,255,255,0.01))`,border:`1px solid ${done?"rgba(158,40,40,0.35)":C.border}`,borderRadius:12,padding:"12px 12px",cursor:"pointer",textAlign:"left",transition:"all .2s",position:"relative"}}>
                 {done && <div style={{position:"absolute",top:10,right:12,fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</div>}
-                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
-                  <span style={{fontSize:22}}>{w.icon}</span>
-                  <div style={{fontSize:9,color:acc(w),letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{w.tag}</div>
+                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
+                  <span style={{fontSize:18}}>{w.icon}</span>
+                  <div style={{fontSize:8,color:acc(w),letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{w.tag}</div>
                 </div>
-                <div style={{fontSize:15,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",lineHeight:1.25,marginBottom:4}}>{w.title}</div>
-                <div style={{fontSize:12,color:C.muted,fontStyle:"italic",lineHeight:1.4}}>{w.subtitle}</div>
+                <div style={{fontSize:13,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",lineHeight:1.25,marginBottom:3}}>{w.title}</div>
+                <div style={{fontSize:11,color:C.muted,fontStyle:"italic",lineHeight:1.35}}>{w.subtitle}</div>
               </button>
             );
           })}
@@ -518,7 +518,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         </div>
       </div>
 
-      <div style={{padding:"0 18px 80px"}}>
+      <div style={{padding:"0 18px 200px"}}>
         {tab === "scripture" && (
           <div>
             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>Key Passages</div>

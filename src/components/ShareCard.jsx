@@ -9,13 +9,21 @@ const C = {
 
 const TAGLINE = 'Stand firm. Fight from victory. — armedandanchored.vercel.app'
 
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxY) {
   const words = text.split(' ')
   let line = ''
   let currentY = y
   for (let i = 0; i < words.length; i++) {
     const testLine = line + words[i] + ' '
     if (ctx.measureText(testLine).width > maxWidth && i > 0) {
+      if (maxY && currentY + lineHeight > maxY) {
+        // Truncate with ellipsis on last visible line
+        while (ctx.measureText(line.trim() + '...').width > maxWidth && line.length > 0) {
+          line = line.slice(0, line.lastIndexOf(' ', line.length - 2)) + ' '
+        }
+        ctx.fillText(line.trim() + '...', x, currentY)
+        return currentY
+      }
       ctx.fillText(line.trim(), x, currentY)
       line = words[i] + ' '
       currentY += lineHeight
@@ -23,8 +31,17 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
       line = testLine
     }
   }
-  ctx.fillText(line.trim(), x, currentY)
+  if (!maxY || currentY <= maxY) {
+    ctx.fillText(line.trim(), x, currentY)
+  }
   return currentY
+}
+
+function getFontSize(text, maxChars) {
+  if (text.length < 120) return 44
+  if (text.length < 200) return 38
+  if (text.length < 300) return 34
+  return 30
 }
 
 export default function ShareCard({ weapon, onClose }) {
@@ -159,33 +176,40 @@ export default function ShareCard({ weapon, onClose }) {
     ctx.letterSpacing = '0.16em'
     ctx.fillText(content.label, W / 2, 438)
 
+    // Dynamic font size based on text length
+    const fontSize = getFontSize(content.main, 300)
+    const lineH = Math.round(fontSize * 1.55)
+    // Reserve space: reference needs ~60px, tagline area needs 130px from bottom
+    const textMaxY = content.sub ? H - 220 : H - 170
+
     // Main content quote
     ctx.fillStyle = '#EDE6D6'
-    ctx.font = 'italic 44px serif'
+    ctx.font = `italic ${fontSize}px serif`
     ctx.letterSpacing = '0.01em'
-    const endY = wrapText(ctx, content.main, W / 2, 510, W - 200, 66)
+    const endY = wrapText(ctx, content.main, W / 2, 510, W - 200, lineH, textMaxY)
 
     // Reference / sub
     if (content.sub) {
+      const refY = Math.min(endY + 52, H - 160)
       ctx.fillStyle = '#B08A4E'
-      ctx.font = '500 28px serif'
+      ctx.font = '500 26px serif'
       ctx.letterSpacing = '0.1em'
-      ctx.fillText(content.sub.toUpperCase(), W / 2, Math.max(endY + 48, 750))
+      ctx.fillText(content.sub.toUpperCase(), W / 2, refY)
     }
 
     // Bottom divider
     ctx.strokeStyle = 'rgba(176,138,78,0.3)'
     ctx.lineWidth = 1
     ctx.beginPath()
-    ctx.moveTo(120, H - 130)
-    ctx.lineTo(W - 120, H - 130)
+    ctx.moveTo(120, H - 118)
+    ctx.lineTo(W - 120, H - 118)
     ctx.stroke()
 
     // Tagline
     ctx.fillStyle = 'rgba(106,126,144,0.7)'
-    ctx.font = '400 24px serif'
+    ctx.font = '400 22px serif'
     ctx.letterSpacing = '0.06em'
-    ctx.fillText(TAGLINE, W / 2, H - 92)
+    ctx.fillText(TAGLINE, W / 2, H - 78)
 
     ctx.letterSpacing = '0'
     setImageReady(true)

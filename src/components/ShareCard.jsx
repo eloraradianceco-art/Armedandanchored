@@ -191,14 +191,46 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
     // Dynamic font size based on text length
     const fontSize = getFontSize(content.main, 300)
     const lineH = Math.round(fontSize * 1.55)
-    // Reserve space: reference needs ~60px, tagline area needs 130px from bottom
     const textMaxY = content.sub ? H - 220 : H - 170
 
-    // Main content quote
+    // Main content — handle numbered lists (split on newline)
     ctx.fillStyle = '#EDE6D6'
-    ctx.font = `italic ${fontSize}px serif`
     ctx.letterSpacing = '0.01em'
-    const endY = wrapText(ctx, content.main, W / 2, 510, W - 200, lineH, textMaxY)
+    let endY = 510
+
+    const lines = content.main.split('\n').filter(Boolean)
+    const isList = lines.length > 1 && lines[0].match(/^\d+\./)
+
+    if (isList) {
+      // Draw as left-aligned numbered list
+      const listFontSize = Math.min(fontSize, 36)
+      const listLineH = Math.round(listFontSize * 1.7)
+      const listX = 100
+      const listMaxW = W - 200
+      ctx.font = `${listFontSize}px serif`
+      ctx.textAlign = 'left'
+      let y = 510
+      for (const line of lines) {
+        if (y > textMaxY) break
+        // number bold, rest normal
+        const dotIdx = line.indexOf('. ')
+        const num = line.substring(0, dotIdx + 2)
+        const text = line.substring(dotIdx + 2)
+        ctx.font = `bold ${listFontSize}px serif`
+        ctx.fillStyle = 'rgba(201,72,72,0.9)'
+        ctx.fillText(num, listX, y)
+        const numW = ctx.measureText(num).width
+        ctx.font = `${listFontSize}px serif`
+        ctx.fillStyle = '#EDE6D6'
+        endY = wrapText(ctx, text, listX + numW, y, listMaxW - numW, listLineH, textMaxY)
+        y = endY + listLineH * 0.3
+        endY = y
+      }
+      ctx.textAlign = 'center'
+    } else {
+      ctx.font = `italic ${fontSize}px serif`
+      endY = wrapText(ctx, content.main, W / 2, 510, W - 200, lineH, textMaxY)
+    }
 
     // Reference / sub
     if (content.sub) {

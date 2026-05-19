@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from 'react'
 
 const C = {
-  bg: '#070E17', red: '#8C1F1F', redL: '#B83232', redF: 'rgba(140,31,31,0.14)',
-  redB: 'rgba(140,31,31,0.32)', gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)',
+  bg: '#070E17', red: '#9E2828', redL: '#C94848', redF: 'rgba(158,40,40,0.14)',
+  redB: 'rgba(158,40,40,0.32)', gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)',
   goldB: 'rgba(176,138,78,0.28)', cream: '#EDE6D6', text: '#C8BEAA',
-  muted: '#6A7E90', dim: '#3A4D5C', border: 'rgba(255,255,255,0.06)',
+  muted: '#7C90A2', dim: '#4E6070', border: 'rgba(255,255,255,0.06)',
 }
 
 const TAGLINE = 'Stand firm. Fight from victory. — armedandanchored.vercel.app'
@@ -96,7 +96,7 @@ export default function ShareCard({ weapon, onClose }) {
 
     // Radial gradient top-left (crimson)
     const g1 = ctx.createRadialGradient(W * 0.15, 0, 0, W * 0.15, 0, W * 0.65)
-    g1.addColorStop(0, 'rgba(139,32,32,0.32)')
+    g1.addColorStop(0, 'rgba(158,40,40,0.32)')
     g1.addColorStop(1, 'transparent')
     ctx.fillStyle = g1
     ctx.fillRect(0, 0, W, H)
@@ -115,7 +115,7 @@ export default function ShareCard({ weapon, onClose }) {
     ctx.strokeRect(pad, pad, W - pad * 2, H - pad * 2)
 
     // Inner border
-    ctx.strokeStyle = 'rgba(140,31,31,0.25)'
+    ctx.strokeStyle = 'rgba(158,40,40,0.25)'
     ctx.lineWidth = 1
     const pad2 = 52
     ctx.strokeRect(pad2, pad2, W - pad2 * 2, H - pad2 * 2)
@@ -143,7 +143,7 @@ export default function ShareCard({ weapon, onClose }) {
 
     // Elora Radiance Co.
     ctx.textAlign = 'center'
-    ctx.fillStyle = 'rgba(140,31,31,0.75)'
+    ctx.fillStyle = 'rgba(158,40,40,0.75)'
     ctx.font = '500 26px serif'
     ctx.letterSpacing = '0.18em'
     ctx.fillText('ELORA RADIANCE CO.', W / 2, 240)
@@ -171,7 +171,7 @@ export default function ShareCard({ weapon, onClose }) {
     const content = getContent(type)
 
     // Content label
-    ctx.fillStyle = 'rgba(140,31,31,0.65)'
+    ctx.fillStyle = 'rgba(158,40,40,0.65)'
     ctx.font = '500 24px serif'
     ctx.letterSpacing = '0.16em'
     ctx.fillText(content.label, W / 2, 438)
@@ -319,7 +319,7 @@ export default function ShareCard({ weapon, onClose }) {
         <div style={{ display: 'flex', gap: 10, marginBottom: 14 }}>
           <button onClick={handleShareImage} style={{
             ...btnBase, flex: 1.4,
-            background: 'linear-gradient(135deg,rgba(139,32,32,0.35),rgba(139,32,32,0.15))',
+            background: 'linear-gradient(135deg,rgba(158,40,40,0.35),rgba(158,40,40,0.15))',
             border: `1px solid ${C.redB}`, color: copiedImage ? '#7C9284' : C.cream,
           }}>
             {copiedImage ? '✓ Downloaded' : '🔗 Share Image'}

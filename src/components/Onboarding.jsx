@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
 const C = {
-  bg: '#070E17', red: '#8C1F1F', redL: '#B83232', redF: 'rgba(140,31,31,0.14)',
-  redB: 'rgba(140,31,31,0.32)', gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)',
+  bg: '#070E17', red: '#9E2828', redL: '#C94848', redF: 'rgba(158,40,40,0.14)',
+  redB: 'rgba(158,40,40,0.32)', gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)',
   goldB: 'rgba(176,138,78,0.28)', cream: '#EDE6D6', text: '#C8BEAA',
-  muted: '#6A7E90', dim: '#3A4D5C', border: 'rgba(255,255,255,0.06)',
+  muted: '#7C90A2', dim: '#4E6070', border: 'rgba(255,255,255,0.06)',
 }
 
 const SLIDES = [
@@ -71,7 +71,7 @@ export default function Onboarding({ onComplete }) {
     <div style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
-      background: `radial-gradient(ellipse at 20% 0%,rgba(139,32,32,0.18) 0%,transparent 55%),
+      background: `radial-gradient(ellipse at 20% 0%,rgba(158,40,40,0.18) 0%,transparent 55%),
                    radial-gradient(ellipse at 80% 100%,rgba(176,138,78,0.08) 0%,transparent 50%),${C.bg}`,
       fontFamily: "'EB Garamond',Georgia,serif", color: C.text,
       padding: '32px 24px', textAlign: 'center',
@@ -135,8 +135,8 @@ export default function Onboarding({ onComplete }) {
             setTimeout(() => onComplete(), 400)
           }}
             style={{
-              width: '100%', background: 'linear-gradient(135deg,rgba(139,32,32,0.4),rgba(139,32,32,0.18))',
-              border: '1px solid rgba(140,31,31,0.55)', color: C.cream,
+              width: '100%', background: 'linear-gradient(135deg,rgba(158,40,40,0.4),rgba(158,40,40,0.18))',
+              border: '1px solid rgba(158,40,40,0.55)', color: C.cream,
               padding: '18px', borderRadius: 14, cursor: 'pointer',
               fontSize: 16, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.1em',
               marginBottom: 16,
@@ -161,8 +161,8 @@ export default function Onboarding({ onComplete }) {
             <button
               onClick={() => setSlide(s => s + 1)}
               style={{
-                flex: 2, background: 'linear-gradient(135deg,rgba(139,32,32,0.3),rgba(139,32,32,0.12))',
-                border: '1px solid rgba(140,31,31,0.45)', color: C.cream,
+                flex: 2, background: 'linear-gradient(135deg,rgba(158,40,40,0.3),rgba(158,40,40,0.12))',
+                border: '1px solid rgba(158,40,40,0.45)', color: C.cream,
                 padding: '14px', borderRadius: 12, cursor: 'pointer',
                 fontSize: 14, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.07em',
               }}

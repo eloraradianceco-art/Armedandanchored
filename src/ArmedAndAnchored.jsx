@@ -606,7 +606,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         </div>
       </div>
 
-      <div style={{padding:"0 16px 60px"}}>
+      <div style={{padding:"0 16px 140px"}}>
         {tab === "scripture" && (
           <div>
             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>Key Passages</div>
@@ -714,7 +714,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         if (!prev) return null
         return (
           <button onClick={()=>{setTab(prev.id);window.scrollTo(0,0);}} title={prev.label} style={{
-            position:"fixed",bottom:36,left:18,
+            position:"fixed",bottom:44,left:18,
             background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,
             border:`1px solid ${accB(weapon)}`,color:acc(weapon),
             width:44,height:44,borderRadius:50,cursor:"pointer",fontSize:18,
@@ -729,7 +729,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
       {/* Bottom-center: weapon dock toggle */}
       <button onClick={()=>setDockOpen(o=>!o)} style={{
-        position:"fixed",bottom:36,left:"50%",transform:"translateX(-50%)",
+        position:"fixed",bottom:44,left:"50%",transform:"translateX(-50%)",
         background:dockOpen?C.redF:"rgba(7,14,23,0.92)",
         border:`1px solid ${dockOpen?C.redB:"rgba(158,40,40,0.3)"}`,
         color:dockOpen?C.redL:C.muted,
@@ -749,7 +749,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         if (!next) return null
         return (
           <button onClick={()=>{setTab(next.id);window.scrollTo(0,0);}} title={next.label} style={{
-            position:"fixed",bottom:36,right:18,
+            position:"fixed",bottom:44,right:18,
             background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,
             border:`1px solid ${accB(weapon)}`,color:acc(weapon),
             width:44,height:44,borderRadius:50,cursor:"pointer",fontSize:18,

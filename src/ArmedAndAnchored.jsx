@@ -389,7 +389,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   }
 
   const EmojDock = ({activeId}) => (
-    <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:200,fontFamily:"'EB Garamond',Georgia,serif"}}>
+    <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:202,fontFamily:"'EB Garamond',Georgia,serif"}}>
       {/* Backdrop when open */}
       {dockOpen && (
         <div onClick={()=>setDockOpen(false)}
@@ -707,8 +707,8 @@ export default function ArmedAndAnchored({ session, profile }) {
         )}
       </div>
 
-      {/* Bottom-left: previous tab */}
-      {(() => {
+      {/* Bottom-left: previous tab — hidden when dock open */}
+      {!dockOpen && (() => {
         const i = TABS.findIndex(t => t.id === tab)
         const prev = TABS[i - 1]
         if (!prev) return null

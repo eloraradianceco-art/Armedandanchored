@@ -355,47 +355,6 @@ export default function ArmedAndAnchored({ session, profile }) {
     </div>
   );
 
-  // ── PAYWALL ─────────────────────────────────────────────────────────────
-  if (!paid) return (
-    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:`radial-gradient(ellipse at 20% 0%,rgba(139,32,32,0.22) 0%,transparent 55%),radial-gradient(ellipse at 80% 100%,rgba(176,138,78,0.1) 0%,transparent 50%),#070E17`,fontFamily:"'EB Garamond',Georgia,serif",color:"#C8BEAA",padding:"24px",textAlign:"center"}}>
-      <div style={{maxWidth:480,width:"100%"}}>
-        <div style={{fontSize:11,color:"#8C1F1F",letterSpacing:"0.22em",fontFamily:"'Cinzel',Georgia,serif",textTransform:"uppercase",marginBottom:14,opacity:0.9}}>Elora Radiance Co.</div>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12,marginBottom:8}}>
-          <span style={{fontSize:26,opacity:0.6,transform:"scaleX(-1)",display:"inline-block"}}>⚔️</span>
-          <span style={{fontSize:32,fontWeight:700,color:"#EDE6D6",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",lineHeight:1.1}}>Armed & Anchored</span>
-          <span style={{fontSize:26,opacity:0.6,display:"inline-block"}}>⚔️</span>
-        </div>
-        <div style={{fontSize:12,color:"#6A7E90",letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:32}}>Spiritual Warfare Training Journal</div>
-
-        <div style={{background:"linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))",border:"1px solid rgba(176,138,78,0.2)",borderRadius:16,padding:"24px 26px",marginBottom:24}}>
-          <div style={{fontSize:26,marginBottom:12}}>⚧</div>
-          <p style={{fontSize:17,color:"#EDE6D6",lineHeight:1.8,marginBottom:10,fontStyle:"italic"}}>"Put on the whole armor of God, that you may be able to stand against the schemes of the devil."</p>
-          <div style={{fontSize:10,color:"#B08A4E",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:20}}>Ephesians 6:11</div>
-          <div style={{borderTop:"1px solid rgba(255,255,255,0.06)",paddingTop:18}}>
-            {["⚔️ 15 Warfare Weapons with full teaching","&#128081; Declarations + Warfare Prayers for each","&#127919; Enemy Tactics — how he attacks in each area","&#9997;️ Personal journal on every weapon","&#128279; Share any weapon instantly"].map((f,i) => (
-              <div key={i} style={{display:"flex",alignItems:"center",gap:10,marginBottom:9,textAlign:"left"}}>
-                <span style={{color:"#B08A4E",fontSize:13,flexShrink:0}}>✦</span>
-                <span style={{fontSize:15,color:"#C8BEAA",lineHeight:1.5}} dangerouslySetInnerHTML={{__html:f}}/>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {verifying ? (
-          <div style={{padding:"18px",fontSize:15,color:"#6A7E90",fontStyle:"italic"}}>Verifying payment...</div>
-        ) : payError ? (
-          <div style={{padding:"14px",fontSize:14,color:"#B83232",background:"rgba(140,31,31,0.1)",border:"1px solid rgba(140,31,31,0.3)",borderRadius:12,marginBottom:14}}>{payError}</div>
-        ) : null}
-
-        <a href={process.env.REACT_APP_STRIPE_PAYMENT_LINK || import.meta.env.VITE_STRIPE_PAYMENT_LINK || "#"}
-          style={{display:"block",background:"linear-gradient(135deg,rgba(139,32,32,0.35),rgba(139,32,32,0.15))",border:"1px solid rgba(140,31,31,0.5)",color:"#EDE6D6",padding:"16px 28px",borderRadius:14,fontSize:16,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.09em",textDecoration:"none",marginBottom:12,transition:"all .25s",cursor:"pointer"}}>
-          ⚔️ Get Lifetime Access
-        </a>
-
-        <p style={{fontSize:12,color:"#3A4D5C",lineHeight:1.7,marginTop:8}}>One-time payment &nbsp;•&nbsp; Instant access &nbsp;•&nbsp; All 15 weapons unlocked forever</p>
-      </div>
-    </div>
-  );
 
   if (!selected) return (
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(139,32,32,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90}}>

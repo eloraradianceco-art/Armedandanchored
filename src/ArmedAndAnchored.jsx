@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from './supabaseClient'
 import ShareCard from './components/ShareCard'
 import Settings from './components/Settings'
+import WeaponTool from './components/WeaponTool'
+import WeaponTool from './components/WeaponTool'
 
 // C palette defined dynamically inside component (light/dark mode);
 
@@ -208,6 +210,7 @@ const TABS = [
   {id:"tactics",label:"🎯 Enemy Tactics"},
   {id:"declare",label:"⚔️ Declare"},
   {id:"journal",label:"✍️ Journal"},
+  {id:"tool",label:"🛠️ Tool"},
 ];
 
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
@@ -295,6 +298,16 @@ export default function ArmedAndAnchored({ session, profile }) {
       field_value: value,
     }, { onConflict: 'user_id,weapon_id,field_key' })
   }, [userId, selected])
+
+  const getToolData = () => {
+    const raw = get('tool_data')
+    if (!raw) return {}
+    try { return JSON.parse(raw) } catch { return {} }
+  }
+
+  const setToolData = (newData) => {
+    set('tool_data', JSON.stringify(newData))
+  }
 
   const markDeclared = async (id) => {
     const newDec = { ...declared, [id]: true }
@@ -591,9 +604,15 @@ export default function ArmedAndAnchored({ session, profile }) {
             </div>
           </div>
         )}
+
+        {tab === "tool" && weapon && (
+          <div>
+            <WeaponTool weapon={weapon} data={getToolData()} onChange={setToolData} C={C} />
+          </div>
+        )}
       </div>
 
-      {tab !== "journal" && (
+      {tab !== "journal" && tab !== "tool" && (
         <button onClick={()=>{const i=TABS.findIndex(t=>t.id===tab);if(i<TABS.length-1){setTab(TABS[i+1].id);window.scrollTo(0,0);}}} style={{position:"fixed",bottom:82,right:18,background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,border:`1px solid ${accB(weapon)}`,color:acc(weapon),padding:"9px 18px",borderRadius:50,cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",boxShadow:"0 4px 20px rgba(0,0,0,0.4)",backdropFilter:"blur(10px)",zIndex:200,display:"flex",alignItems:"center",gap:7,transition:"all .2s"}}>
           {TABS[TABS.findIndex(t=>t.id===tab)+1]?.label} ›
         </button>

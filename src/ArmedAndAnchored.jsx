@@ -487,8 +487,8 @@ export default function ArmedAndAnchored({ session, profile }) {
         </div>
         <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>
           {declared[weapon.id] && <span style={{fontSize:10,color:"#C94848",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>&#10022; Deployed</span>}
-          <button onClick={()=>shareWeapon(weapon)} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:shareFlash===weapon.id?"#7C9284":"#B08A4E",borderRadius:8,padding:"5px 10px",cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",transition:"all .25s"}}>
-            {shareFlash===weapon.id ? "✓" : "🔗"}
+          <button onClick={()=>setShareCard({weapon,type:tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"})} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:"#B08A4E",borderRadius:8,padding:"5px 10px",cursor:"pointer",fontSize:12,transition:"all .25s"}}>
+            🖼
           </button>
         </div>
       </div>
@@ -512,13 +512,7 @@ export default function ArmedAndAnchored({ session, profile }) {
             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>Key Passages</div>
             {weapon.scriptures.map((s,i) => (
               <div key={i} style={{background:i===0?`linear-gradient(145deg,${accF(weapon)},rgba(255,255,255,0.01))`:C.bgCard,border:`1px solid ${i===0?accB(weapon):C.border}`,borderRadius:14,padding:"18px 20px",marginBottom:11}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9}}>
-                  <div style={{fontSize:9,color:acc(weapon),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{s.ref}</div>
-                  <button onClick={()=>shareText(`"${s.text}"
-— ${s.ref}
-
-${weapon.icon} ${weapon.title} | Armed & Anchored`)} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.2)",color:C.gold,borderRadius:8,padding:"3px 10px",cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif"}}>Share</button>
-                </div>
+                <div style={{fontSize:9,color:acc(weapon),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:9}}>{s.ref}</div>
                 <p style={{fontSize:18,color:C.cream,fontStyle:"italic",lineHeight:1.9,margin:0}}>"{s.text}"</p>
               </div>
             ))}
@@ -538,14 +532,9 @@ ${weapon.icon} ${weapon.title} | Armed & Anchored`)} style={{background:"rgba(17
                 <p style={{fontSize:15,color:C.text,lineHeight:1.75,margin:0}}>{weapon.fastingNote}</p>
               </div>
             )}
-            <div style={{display:"flex",gap:8,marginTop:12}}>
-              <button onClick={()=>shareText(`${weapon.icon} ${weapon.title}\n\n${weapon.teaching.substring(0,300)}...\n\nArmed & Anchored | Spiritual Warfare Training Journal`)} style={{flex:1,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em"}}>
-                🔗 Share Text
-              </button>
-              <button onClick={()=>setShareCard({weapon,type:'teaching'})} style={{flex:1,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em"}}>
-                🖼 Share Card
-              </button>
-            </div>
+            <button onClick={()=>setShareCard({weapon,type:'teaching'})} style={{width:"100%",marginTop:12,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+              🖼 Create Share Card
+            </button>
           </div>
         )}
 
@@ -563,14 +552,9 @@ ${weapon.icon} ${weapon.title} | Armed & Anchored`)} style={{background:"rgba(17
               <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:8}}>⚡ Deploy This Weapon</div>
               <p style={{fontSize:16,color:C.cream,lineHeight:1.8,margin:0}}>{weapon.challenge}</p>
             </div>
-            <div style={{display:"flex",gap:8,marginTop:10}}>
-              <button onClick={()=>shareText(`${weapon.icon} ${weapon.title} — Enemy Tactics\n\n${weapon.tactics.map((t,i)=>`${i+1}. ${t}`).join("\n")}\n\nArmed & Anchored | Spiritual Warfare Training Journal`)} style={{flex:1,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em"}}>
-                🔗 Share Text
-              </button>
-              <button onClick={()=>setShareCard({weapon,type:'tactics'})} style={{flex:1,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em"}}>
-                🖼 Share Card
-              </button>
-            </div>
+            <button onClick={()=>setShareCard({weapon,type:'tactics'})} style={{width:"100%",marginTop:10,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+              🖼 Create Share Card
+            </button>
           </div>
         )}
 
@@ -588,14 +572,9 @@ ${weapon.icon} ${weapon.title} | Armed & Anchored`)} style={{background:"rgba(17
             <button onClick={()=>markDeclared(weapon.id)} style={{width:"100%",background:declared[weapon.id]?`linear-gradient(135deg,rgba(124,146,132,0.2),rgba(124,146,132,0.08))`:`linear-gradient(135deg,rgba(158,40,40,0.3),rgba(158,40,40,0.12))`,border:`1px solid ${declared[weapon.id]?"rgba(124,146,132,0.4)":C.redB}`,color:declared[weapon.id]?"#7A9284":C.redL,padding:"13px",borderRadius:12,cursor:"pointer",fontSize:13,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",transition:"all .3s"}}>
               {deployFlash[weapon.id]?"✦ Weapon Deployed":declared[weapon.id]?"✦ Deployed — Speak It Again":"⚔️ Declare This — Mark as Deployed"}
             </button>
-            <div style={{display:"flex",gap:8,marginTop:10}}>
-              <button onClick={()=>shareWeapon(weapon)} style={{flex:1,background:C.goldF,border:`1px solid ${C.goldB}`,color:shareFlash===weapon.id?C.green:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",transition:"all .25s"}}>
-                {shareFlash===weapon.id ? "✓ Copied" : "🔗 Share Text"}
-              </button>
-              <button onClick={()=>setShareCard({weapon,type:'declaration'})} style={{flex:1,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em"}}>
-                🖼 Share Card
-              </button>
-            </div>
+            <button onClick={()=>setShareCard({weapon,type:'declaration'})} style={{width:"100%",marginTop:10,background:C.redF,border:`1px solid ${C.redB}`,color:C.redL,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+              🖼 Create Share Card
+            </button>
             <p style={{fontSize:12,color:C.dim,fontStyle:"italic",lineHeight:1.6,marginTop:10,textAlign:"center"}}>Speak the declaration and prayer aloud. The spoken word has spiritual weight.</p>
           </div>
         )}

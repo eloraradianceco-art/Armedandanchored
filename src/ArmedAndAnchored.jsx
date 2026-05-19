@@ -3,7 +3,6 @@ import { supabase } from './supabaseClient'
 import ShareCard from './components/ShareCard'
 import Settings from './components/Settings'
 import WeaponTool from './components/WeaponTool'
-import WeaponTool from './components/WeaponTool'
 
 // C palette defined dynamically inside component (light/dark mode);
 

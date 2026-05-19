@@ -257,6 +257,12 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   // ── LOAD ENTRIES FROM SUPABASE ──────────────────────────────────────────
   useEffect(() => {
+    const handler = () => setTabMenuOpen(false)
+    window.addEventListener('scroll', handler, {passive:true})
+    return () => window.removeEventListener('scroll', handler)
+  }, [])
+
+  useEffect(() => {
     if (!userId) return
     supabase
       .from('weapon_entries')
@@ -554,7 +560,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
       {/* Tab menu — fixed, no backdrop so content stays tappable */}
       {tabMenuOpen && (
-        <div style={{position:"fixed",top:0,left:0,right:0,zIndex:500,
+        <div onClick={()=>setTabMenuOpen(false)} style={{position:"fixed",top:0,left:0,right:0,bottom:0,zIndex:500,
           paddingTop:90}}>
           <div style={{
             background:"rgba(7,14,23,0.99)",backdropFilter:"blur(20px)",

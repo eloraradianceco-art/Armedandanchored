@@ -704,9 +704,29 @@ export default function ArmedAndAnchored({ session, profile }) {
         )}
       </div>
 
-      {/* Bottom-left: dock toggle */}
+      {/* Bottom-left: previous tab */}
+      {(() => {
+        const i = TABS.findIndex(t => t.id === tab)
+        const prev = TABS[i - 1]
+        if (!prev) return null
+        return (
+          <button onClick={()=>{setTab(prev.id);window.scrollTo(0,0);}} style={{
+            position:"fixed",bottom:36,left:18,
+            background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,
+            border:`1px solid ${accB(weapon)}`,color:acc(weapon),
+            padding:"9px 18px",borderRadius:50,cursor:"pointer",fontSize:11,
+            fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",
+            boxShadow:"0 4px 20px rgba(0,0,0,0.4)",backdropFilter:"blur(10px)",
+            zIndex:201,display:"flex",alignItems:"center",gap:7,transition:"all .2s",
+          }}>
+            ‹ {prev.label}
+          </button>
+        )
+      })()}
+
+      {/* Bottom-center: weapon dock toggle */}
       <button onClick={()=>setDockOpen(o=>!o)} style={{
-        position:"fixed",bottom:36,left:18,
+        position:"fixed",bottom:36,left:"50%",transform:"translateX(-50%)",
         background:dockOpen?C.redF:"rgba(7,14,23,0.92)",
         border:`1px solid ${dockOpen?C.redB:"rgba(158,40,40,0.3)"}`,
         color:dockOpen?C.redL:C.muted,
@@ -719,7 +739,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         {dockOpen ? "✕" : "⚔️"}
       </button>
 
-      {/* Bottom-right: next tab — hidden when dock open */}
+      {/* Bottom-right: next tab */}
       {!dockOpen && (() => {
         const i = TABS.findIndex(t => t.id === tab)
         const next = TABS[i + 1]

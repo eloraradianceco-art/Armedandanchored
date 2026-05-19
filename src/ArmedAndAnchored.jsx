@@ -289,7 +289,19 @@ export default function ArmedAndAnchored({ session, profile }) {
     }, { onConflict: 'user_id,weapon_id,field_key' })
   }
 
-  const goWk = (id) => { setSelected(id); setTab('scripture'); setDay(-1) }
+  const goWk = (id) => { setSelected(id); setTab('scripture'); setDay(-1); window.scrollTo(0,0) }
+
+  const shareText = async (text) => {
+    if (navigator.share) {
+      try { await navigator.share({ title: 'Armed & Anchored', text }) } catch {}
+    } else {
+      try { 
+        await navigator.clipboard.writeText(text)
+        setShareFlash('text')
+        setTimeout(() => setShareFlash(null), 2000) 
+      } catch {}
+    }
+  }
 
   const shareApp = async () => {
     const url = window.location.href
@@ -337,7 +349,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           const done = declared[w.id];
           const active = w.id === activeId;
           return (
-            <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");}} title={w.title}
+            <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} title={w.title}
               style={{background:active?"linear-gradient(145deg,rgba(139,32,32,0.4),rgba(139,32,32,0.18))":done?"rgba(139,32,32,0.12)":"rgba(255,255,255,0.04)",
                 border:`1px solid ${active?"rgba(139,32,32,0.7)":done?"rgba(139,32,32,0.3)":"rgba(255,255,255,0.07)"}`,
                 borderRadius:9,width:36,height:36,cursor:"pointer",fontSize:16,
@@ -394,7 +406,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           {WEAPONS.map(w => {
             const done = declared[w.id];
             return (
-              <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");}} style={{background:done?`linear-gradient(145deg,rgba(139,32,32,0.12),rgba(139,32,32,0.04))`:`linear-gradient(145deg,rgba(255,255,255,0.028),rgba(255,255,255,0.01))`,border:`1px solid ${done?"rgba(139,32,32,0.35)":C.border}`,borderRadius:14,padding:"16px 18px",cursor:"pointer",textAlign:"left",transition:"all .2s",position:"relative"}}>
+              <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{background:done?`linear-gradient(145deg,rgba(139,32,32,0.12),rgba(139,32,32,0.04))`:`linear-gradient(145deg,rgba(255,255,255,0.028),rgba(255,255,255,0.01))`,border:`1px solid ${done?"rgba(139,32,32,0.35)":C.border}`,borderRadius:14,padding:"16px 18px",cursor:"pointer",textAlign:"left",transition:"all .2s",position:"relative"}}>
                 {done && <div style={{position:"absolute",top:10,right:12,fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</div>}
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
                   <span style={{fontSize:22}}>{w.icon}</span>
@@ -427,7 +439,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   return (
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 50% 0%, ${accF(weapon).replace("0.1","0.2")} 0%, transparent 50%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90}}>
       <div style={{position:"sticky",top:0,zIndex:100,background:"rgba(7,14,23,0.94)",backdropFilter:"blur(14px)",borderBottom:`1px solid ${C.border}`,padding:"11px 16px",display:"flex",alignItems:"center",gap:12}}>
-        <button onClick={()=>setSelected(null)} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,width:34,height:34,borderRadius:8,cursor:"pointer",fontSize:17,flexShrink:0}}>‹</button>
+        <button onClick={()=>{setSelected(null);window.scrollTo(0,0);}} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,width:34,height:34,borderRadius:8,cursor:"pointer",fontSize:17,flexShrink:0}}>‹</button>
         <div style={{flex:1,minWidth:0}}>
           <div style={{fontSize:9,color:acc(weapon),letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{weapon.tag}</div>
           <div style={{fontSize:14,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{weapon.icon} {weapon.title}</div>
@@ -448,7 +460,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         </div>
         <div style={{display:"flex",gap:4,flexWrap:"nowrap",overflowX:"auto",paddingBottom:14,scrollbarWidth:"none"}}>
           {TABS.map(t => (
-            <button key={t.id} onClick={()=>setTab(t.id)} style={{background:tab===t.id?`linear-gradient(135deg,${accF(weapon)},rgba(255,255,255,0.02))`:"transparent",border:`1px solid ${tab===t.id?accB(weapon):C.border}`,color:tab===t.id?acc(weapon):C.muted,padding:"6px 11px",borderRadius:8,cursor:"pointer",fontSize:11,whiteSpace:"nowrap",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",transition:"all .18s",flexShrink:0}}>{t.label}</button>
+            <button key={t.id} onClick={()=>{setTab(t.id);window.scrollTo(0,0);}} style={{background:tab===t.id?`linear-gradient(135deg,${accF(weapon)},rgba(255,255,255,0.02))`:"transparent",border:`1px solid ${tab===t.id?accB(weapon):C.border}`,color:tab===t.id?acc(weapon):C.muted,padding:"6px 11px",borderRadius:8,cursor:"pointer",fontSize:11,whiteSpace:"nowrap",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",transition:"all .18s",flexShrink:0}}>{t.label}</button>
           ))}
         </div>
       </div>
@@ -459,10 +471,19 @@ export default function ArmedAndAnchored({ session, profile }) {
             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>Key Passages</div>
             {weapon.scriptures.map((s,i) => (
               <div key={i} style={{background:i===0?`linear-gradient(145deg,${accF(weapon)},rgba(255,255,255,0.01))`:C.bgCard,border:`1px solid ${i===0?accB(weapon):C.border}`,borderRadius:14,padding:"18px 20px",marginBottom:11}}>
-                <div style={{fontSize:9,color:acc(weapon),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:9}}>{s.ref}</div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9}}>
+                  <div style={{fontSize:9,color:acc(weapon),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{s.ref}</div>
+                  <button onClick={()=>shareText(`"${s.text}"
+— ${s.ref}
+
+${weapon.icon} ${weapon.title} | Armed & Anchored`)} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.2)",color:C.gold,borderRadius:8,padding:"3px 10px",cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif"}}>Share</button>
+                </div>
                 <p style={{fontSize:18,color:C.cream,fontStyle:"italic",lineHeight:1.9,margin:0}}>"{s.text}"</p>
               </div>
             ))}
+            <button onClick={()=>setShareCardWeapon(weapon)} style={{width:"100%",marginTop:4,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+              🖼 Create Share Card for Social Media
+            </button>
           </div>
         )}
 
@@ -476,6 +497,9 @@ export default function ArmedAndAnchored({ session, profile }) {
                 <p style={{fontSize:15,color:C.text,lineHeight:1.75,margin:0}}>{weapon.fastingNote}</p>
               </div>
             )}
+            <button onClick={()=>shareText(`${weapon.icon} ${weapon.title}\n\n${weapon.teaching.substring(0,300)}...\n\nArmed & Anchored | Spiritual Warfare Training Journal`)} style={{width:"100%",marginTop:12,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+              🔗 Share This Teaching
+            </button>
           </div>
         )}
 
@@ -493,6 +517,9 @@ export default function ArmedAndAnchored({ session, profile }) {
               <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:8}}>⚡ Deploy This Weapon</div>
               <p style={{fontSize:16,color:C.cream,lineHeight:1.8,margin:0}}>{weapon.challenge}</p>
             </div>
+            <button onClick={()=>shareText(`${weapon.icon} ${weapon.title} — Know the Enemy's Tactics\n\n${weapon.tactics.map((t,i)=>`${i+1}. ${t}`).join("\n")}\n\nArmed & Anchored | Spiritual Warfare Training Journal`)} style={{width:"100%",marginTop:10,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+              🔗 Share Enemy Tactics
+            </button>
           </div>
         )}
 
@@ -521,7 +548,8 @@ export default function ArmedAndAnchored({ session, profile }) {
           <div>
             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:7}}>Battle Journal</div>
             <p style={{fontSize:13,color:C.muted,fontStyle:"italic",lineHeight:1.7,marginBottom:14}}>What is the Holy Spirit showing you through this weapon? What areas of your life does it address? What is your response?</p>
-            <textarea rows={10} value={journal[weapon.id]||""} onChange={e=>saveJournal(weapon.id,e.target.value)} placeholder="Write your response, reflections, and warfare notes here..." style={{width:"100%",background:"rgba(255,255,255,0.03)",border:`1px solid ${C.borderGold}`,borderRadius:14,color:C.cream,fontSize:17,lineHeight:1.9,padding:"14px 16px",fontFamily:"'EB Garamond',Georgia,serif",outline:"none",resize:"vertical",boxSizing:"border-box",minHeight:200}}/>
+            <textarea rows={10} value={get('journal')} onChange={e=>set('journal',e.target.value)} placeholder="Write your response, reflections, and warfare notes here..." style={{width:"100%",background:"rgba(255,255,255,0.03)",border:`1px solid ${C.borderGold}`,borderRadius:14,color:C.cream,fontSize:17,lineHeight:1.9,padding:"14px 16px",fontFamily:"'EB Garamond',Georgia,serif",outline:"none",resize:"vertical",boxSizing:"border-box",minHeight:200}}/>
+            <div style={{marginTop:12,fontSize:11,color:C.dim,fontStyle:"italic",textAlign:"center"}}>Saved automatically to your account across all devices</div>
             <div style={{marginTop:14,background:C.goldF,border:`1px solid ${C.goldB}`,borderRadius:12,padding:"13px 16px"}}>
               <div style={{fontSize:9,color:C.gold,letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>This Week's Challenge</div>
               <p style={{fontSize:15,color:C.text,lineHeight:1.75,margin:0}}>{weapon.challenge}</p>
@@ -531,7 +559,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       </div>
 
       {tab !== "journal" && (
-        <button onClick={()=>{const i=TABS.findIndex(t=>t.id===tab);if(i<TABS.length-1)setTab(TABS[i+1].id);}} style={{position:"fixed",bottom:82,right:18,background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,border:`1px solid ${accB(weapon)}`,color:acc(weapon),padding:"9px 18px",borderRadius:50,cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",boxShadow:"0 4px 20px rgba(0,0,0,0.4)",backdropFilter:"blur(10px)",zIndex:200,display:"flex",alignItems:"center",gap:7,transition:"all .2s"}}>
+        <button onClick={()=>{const i=TABS.findIndex(t=>t.id===tab);if(i<TABS.length-1){setTab(TABS[i+1].id);window.scrollTo(0,0);}}} style={{position:"fixed",bottom:82,right:18,background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,border:`1px solid ${accB(weapon)}`,color:acc(weapon),padding:"9px 18px",borderRadius:50,cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",boxShadow:"0 4px 20px rgba(0,0,0,0.4)",backdropFilter:"blur(10px)",zIndex:200,display:"flex",alignItems:"center",gap:7,transition:"all .2s"}}>
           {TABS[TABS.findIndex(t=>t.id===tab)+1]?.label} ›
         </button>
       )}

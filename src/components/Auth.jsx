@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { supabase } from '../supabaseClient'
 
 const C = {
-  bg: '#070E17', red: '#8C1F1F', redL: '#B83232', redF: 'rgba(140,31,31,0.14)',
-  redB: 'rgba(140,31,31,0.32)', gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)',
+  bg: '#070E17', red: '#9E2828', redL: '#C94848', redF: 'rgba(158,40,40,0.14)',
+  redB: 'rgba(158,40,40,0.32)', gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)',
   goldB: 'rgba(176,138,78,0.28)', cream: '#EDE6D6', text: '#C8BEAA',
-  muted: '#6A7E90', dim: '#3A4D5C', border: 'rgba(255,255,255,0.06)',
+  muted: '#7C90A2', dim: '#4E6070', border: 'rgba(255,255,255,0.06)',
 }
 
 const INP = {
@@ -48,7 +48,7 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
     <div style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
-      background: `radial-gradient(ellipse at 20% 0%,rgba(139,32,32,0.18) 0%,transparent 55%),#070E17`,
+      background: `radial-gradient(ellipse at 20% 0%,rgba(158,40,40,0.18) 0%,transparent 55%),#070E17`,
       fontFamily: "'EB Garamond',Georgia,serif", color: '#C8BEAA',
       padding: '24px', textAlign: 'center',
     }}>
@@ -71,9 +71,9 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
             style={{
               flex: 1, padding: '11px', cursor: 'pointer', fontSize: 13,
               fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.07em',
-              background: mode === 'signin' ? 'rgba(140,31,31,0.2)' : 'transparent',
+              background: mode === 'signin' ? 'rgba(158,40,40,0.2)' : 'transparent',
               border: 'none',
-              color: mode === 'signin' ? '#B83232' : C.muted,
+              color: mode === 'signin' ? '#C94848' : C.muted,
               transition: 'all .2s',
             }}
           >
@@ -84,9 +84,9 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
             style={{
               flex: 1, padding: '11px', cursor: 'pointer', fontSize: 13,
               fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.07em',
-              background: mode === 'signup' ? 'rgba(140,31,31,0.2)' : 'transparent',
+              background: mode === 'signup' ? 'rgba(158,40,40,0.2)' : 'transparent',
               border: 'none', borderLeft: `1px solid ${C.border}`,
-              color: mode === 'signup' ? '#B83232' : C.muted,
+              color: mode === 'signup' ? '#C94848' : C.muted,
               transition: 'all .2s',
             }}
           >
@@ -95,7 +95,7 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
         </div>
 
         {isNewUser && mode === 'signup' && (
-          <div style={{ background: 'rgba(140,31,31,0.1)', border: '1px solid rgba(140,31,31,0.3)', borderRadius: 12, padding: '12px 16px', marginBottom: 20, fontSize: 14, color: '#B83232' }}>
+          <div style={{ background: 'rgba(158,40,40,0.1)', border: '1px solid rgba(158,40,40,0.3)', borderRadius: 12, padding: '12px 16px', marginBottom: 20, fontSize: 14, color: '#C94848' }}>
             ✦ Payment confirmed — create your account to access the app
           </div>
         )}
@@ -122,7 +122,7 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
         </div>
 
         {error && (
-          <div style={{ background: 'rgba(140,31,31,0.1)', border: '1px solid rgba(140,31,31,0.3)', borderRadius: 10, padding: '10px 14px', marginBottom: 14, fontSize: 13, color: '#B83232', textAlign: 'left' }}>
+          <div style={{ background: 'rgba(158,40,40,0.1)', border: '1px solid rgba(158,40,40,0.3)', borderRadius: 10, padding: '10px 14px', marginBottom: 14, fontSize: 13, color: '#C94848', textAlign: 'left' }}>
             {error}
           </div>
         )}
@@ -131,8 +131,8 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
           onClick={handleSubmit} disabled={loading}
           style={{
             width: '100%',
-            background: loading ? 'rgba(140,31,31,0.1)' : 'linear-gradient(135deg,rgba(139,32,32,0.35),rgba(139,32,32,0.15))',
-            border: '1px solid rgba(140,31,31,0.5)',
+            background: loading ? 'rgba(158,40,40,0.1)' : 'linear-gradient(135deg,rgba(158,40,40,0.35),rgba(158,40,40,0.15))',
+            border: '1px solid rgba(158,40,40,0.5)',
             color: loading ? C.muted : '#EDE6D6',
             padding: '14px', borderRadius: 12,
             cursor: loading ? 'default' : 'pointer',

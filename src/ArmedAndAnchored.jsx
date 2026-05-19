@@ -1,15 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from './supabaseClient'
 import ShareCard from './components/ShareCard'
+import Settings from './components/Settings'
 
-const C = {
-  bg: "#070E17",bgCard: "rgba(255,255,255,0.025)",mid: "#0D1B2A",
-  red: "#9E2828",redL: "#C94848",redF: "rgba(158,40,40,0.14)",redB: "rgba(158,40,40,0.32)",
-  gold: "#B08A4E",goldL: "#D4A853",goldF: "rgba(176,138,78,0.11)",goldB: "rgba(176,138,78,0.28)",
-  steel: "#6A8099",steelF: "rgba(106,128,153,0.12)",steelB: "rgba(106,128,153,0.3)",
-  cream: "#EDE6D6",text: "#C8BEAA",muted: "#7C90A2",dim: "#4E6070",
-  border: "rgba(255,255,255,0.06)",borderGold: "rgba(176,138,78,0.2)",borderRed: "rgba(158,40,40,0.3)",
-};
+// C palette defined dynamically inside component (light/dark mode);
 
 const WEAPONS = [
   { id:1, icon:"⚔️", tag:"FOUNDATIONS", title:"The Reality of the Battle", subtitle:"You Are at War Whether You Know It or Not", color:"red",
@@ -231,6 +225,10 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [shareFlash, setShareFlash] = useState(null)
   const [shareCardWeapon, setShareCardWeapon] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
+  const [lightMode, setLightMode] = useState(() => {
+    try { return localStorage.getItem('aa_lightmode') === 'true' } catch { return false }
+  })
 
   const weapon = selected ? WEAPONS.find(w => w.id === selected) : null
 
@@ -326,6 +324,12 @@ export default function ArmedAndAnchored({ session, profile }) {
     await supabase.auth.signOut()
   }
 
+  const toggleLightMode = () => {
+    const next = !lightMode
+    setLightMode(next)
+    try { localStorage.setItem('aa_lightmode', String(next)) } catch {}
+  }
+
   const daysComplete = (id) => entries.filter(e => e.weapon_id === id && e.field_key.startsWith('tr_') && (e.field_value || '').trim()).length
   const completedCount = WEAPONS.filter(w => declared[w.id]).length
 
@@ -368,6 +372,26 @@ export default function ArmedAndAnchored({ session, profile }) {
   );
 
 
+
+  // Dynamic palette — switches with lightMode
+  const C = lightMode ? {
+    bg: "#F2EDE3", bgCard: "rgba(0,0,0,0.04)", mid: "#E8E0D0",
+    red: "#9E2828", redL: "#C94848", redF: "rgba(158,40,40,0.1)", redB: "rgba(158,40,40,0.25)",
+    gold: "#8B6A30", goldL: "#A07A38", goldF: "rgba(139,106,48,0.12)", goldB: "rgba(139,106,48,0.3)",
+    steel: "#5A6878", steelF: "rgba(90,104,120,0.12)", steelB: "rgba(90,104,120,0.3)",
+    cream: "#1A1209", text: "#3D2E1A", muted: "#7A6A5A", dim: "#B0A090",
+    border: "rgba(0,0,0,0.08)", borderGold: "rgba(139,106,48,0.25)", borderRed: "rgba(158,40,40,0.2)",
+    green: "#4A7A5A",
+  } : {
+    bg: "#070E17", bgCard: "rgba(255,255,255,0.025)", mid: "#0D1B2A",
+    red: "#9E2828", redL: "#C94848", redF: "rgba(158,40,40,0.14)", redB: "rgba(158,40,40,0.32)",
+    gold: "#B08A4E", goldL: "#D4A853", goldF: "rgba(176,138,78,0.11)", goldB: "rgba(176,138,78,0.28)",
+    steel: "#6A8099", steelF: "rgba(106,128,153,0.12)", steelB: "rgba(106,128,153,0.3)",
+    cream: "#EDE6D6", text: "#C8BEAA", muted: "#7C90A2", dim: "#4E6070",
+    border: "rgba(255,255,255,0.06)", borderGold: "rgba(176,138,78,0.2)", borderRed: "rgba(158,40,40,0.3)",
+    green: "#7C9284",
+  }
+
   // Inject fadeIn keyframe once
   if (typeof document !== 'undefined' && !document.getElementById('aa-fadein')) {
     const s = document.createElement('style')
@@ -375,6 +399,16 @@ export default function ArmedAndAnchored({ session, profile }) {
     s.textContent = '@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }'
     document.head.appendChild(s)
   }
+
+  // Settings overlay
+  if (showSettings) return (
+    <Settings
+      profile={profile}
+      lightMode={lightMode}
+      onToggleLightMode={toggleLightMode}
+      onClose={() => setShowSettings(false)}
+    />
+  )
 
   if (!selected) return (
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(158,40,40,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90,animation:"fadeIn 0.4s ease"}}>
@@ -392,6 +426,9 @@ export default function ArmedAndAnchored({ session, profile }) {
           </div>
           <button onClick={shareApp} style={{background:C.goldF,border:`1px solid ${C.goldB}`,color:shareFlash==="home"?C.green:C.gold,borderRadius:20,padding:"5px 14px",cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",transition:"all .25s"}}>
             {shareFlash==="home" ? "✓ Copied" : "🔗 Share"}
+          </button>
+          <button onClick={()=>setShowSettings(true)} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:20,padding:"5px 12px",cursor:"pointer",fontSize:14,transition:"all .25s"}}>
+            ⚙️
           </button>
         </div>
         {completedCount > 0 && (

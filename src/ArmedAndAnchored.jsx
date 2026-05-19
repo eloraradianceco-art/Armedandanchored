@@ -280,6 +280,9 @@ export default function ArmedAndAnchored({ session, profile }) {
       })
   }, [userId])
 
+  // Scroll to top whenever weapon changes or returns home
+  useEffect(() => { window.scrollTo(0, 0) }, [selected])
+
   // ── GET / SET ENTRY ─────────────────────────────────────────────────────
   const get = (fieldKey) => {
     const e = entries.find(e => e.weapon_id === selected && e.field_key === fieldKey)
@@ -510,15 +513,6 @@ export default function ArmedAndAnchored({ session, profile }) {
     <EmojDock activeId={null}/>
     </div>
   );
-
-  if (shareCard) {
-    return (
-      <>
-        <ShareCard weapon={shareCard.weapon} initialType={shareCard.type} onClose={() => setShareCard(null)} />
-        <div style={{filter:'blur(4px)',pointerEvents:'none',position:'fixed',inset:0,background:C.bg}}/>
-      </>
-    )
-  }
 
   return (
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 50% 0%, ${accF(weapon).replace("0.1","0.2")} 0%, transparent 50%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90}}>
@@ -767,11 +761,14 @@ export default function ArmedAndAnchored({ session, profile }) {
           </button>
         )
       })()}
+      {/* Share Card Overlay */}
+      {shareCard && (
+        <>
+          <ShareCard weapon={shareCard.weapon} initialType={shareCard.type} onClose={() => setShareCard(null)} />
+          <div style={{filter:'blur(4px)',pointerEvents:'none',position:'fixed',inset:0,zIndex:490,background:C.bg}}/>
+        </>
+      )}
       <EmojDock activeId={selected}/>
     </div>
   );
-
-  // ── SHARE CARD OVERLAY ─────────────────────────────────────────────────
-  // (renders on top of everything when shareCard is set)
-}  // Scroll to top whenever weapon changes or returns home
-  useEffect(() => { window.scrollTo(0,0) }, [selected])
+}

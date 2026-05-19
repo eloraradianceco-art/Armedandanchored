@@ -11,7 +11,7 @@ const C = {
 const INP = {
   width: '100%', background: 'rgba(255,255,255,0.04)',
   border: '1px solid rgba(176,138,78,0.2)', borderRadius: 10,
-  color: C.cream, fontSize: 16, padding: '13px 16px',
+  color: '#EDE6D6', fontSize: 16, padding: '13px 16px',
   fontFamily: "'EB Garamond',Georgia,serif", outline: 'none',
   boxSizing: 'border-box',
 }
@@ -23,11 +23,6 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [message, setMessage] = useState(null)
-
-  // Check if user arrived directly to sign in (not from Stripe)
-  const params = new URLSearchParams(window.location.search)
-  const directSignin = params.get('signin') === 'true'
 
   const handleSubmit = async () => {
     if (!email || !password) { setError('Please enter your email and password.'); return }
@@ -35,19 +30,16 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
     setLoading(true); setError(null)
 
     if (mode === 'signup') {
-      const { data, error } = await supabase.auth.signUp({ email, password })
+      const { error } = await supabase.auth.signUp({ email, password })
       if (error) { setError(error.message); setLoading(false); return }
-
-      // If they came from Stripe, verify payment and mark profile as paid
       if (stripeSessionId && onPaymentVerify) {
         await onPaymentVerify(stripeSessionId)
       }
-      onComplete?.(true) // true = new user → show onboarding
-
+      onComplete?.(true)
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) { setError(error.message); setLoading(false); return }
-      onComplete?.(false) // false = returning user → skip onboarding
+      onComplete?.(false)
     }
     setLoading(false)
   }
@@ -56,20 +48,50 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
     <div style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
-      background: `radial-gradient(ellipse at 20% 0%,rgba(139,32,32,0.18) 0%,transparent 55%),${C.bg}`,
-      fontFamily: "'EB Garamond',Georgia,serif", color: C.text,
+      background: `radial-gradient(ellipse at 20% 0%,rgba(139,32,32,0.18) 0%,transparent 55%),#070E17`,
+      fontFamily: "'EB Garamond',Georgia,serif", color: '#C8BEAA',
       padding: '24px', textAlign: 'center',
     }}>
       <div style={{ maxWidth: 400, width: '100%' }}>
 
+        {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 6 }}>
           <span style={{ fontSize: 22, opacity: 0.6, transform: 'scaleX(-1)', display: 'inline-block' }}>⚔️</span>
-          <span style={{ fontSize: 26, fontWeight: 700, color: C.cream, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.04em' }}>Armed & Anchored</span>
+          <span style={{ fontSize: 26, fontWeight: 700, color: '#EDE6D6', fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.04em' }}>Armed & Anchored</span>
           <span style={{ fontSize: 22, opacity: 0.6 }}>⚔️</span>
         </div>
-
         <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 32 }}>
           {mode === 'signup' ? 'Create Your Account' : 'Welcome Back, Warrior'}
+        </div>
+
+        {/* Mode toggle tabs */}
+        <div style={{ display: 'flex', gap: 0, marginBottom: 24, border: `1px solid ${C.border}`, borderRadius: 10, overflow: 'hidden' }}>
+          <button
+            onClick={() => { setMode('signin'); setError(null) }}
+            style={{
+              flex: 1, padding: '11px', cursor: 'pointer', fontSize: 13,
+              fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.07em',
+              background: mode === 'signin' ? 'rgba(140,31,31,0.2)' : 'transparent',
+              border: 'none',
+              color: mode === 'signin' ? '#B83232' : C.muted,
+              transition: 'all .2s',
+            }}
+          >
+            Sign In
+          </button>
+          <button
+            onClick={() => { setMode('signup'); setError(null) }}
+            style={{
+              flex: 1, padding: '11px', cursor: 'pointer', fontSize: 13,
+              fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.07em',
+              background: mode === 'signup' ? 'rgba(140,31,31,0.2)' : 'transparent',
+              border: 'none', borderLeft: `1px solid ${C.border}`,
+              color: mode === 'signup' ? '#B83232' : C.muted,
+              transition: 'all .2s',
+            }}
+          >
+            Sign Up
+          </button>
         </div>
 
         {isNewUser && mode === 'signup' && (
@@ -78,9 +100,14 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
           </div>
         )}
 
+        {/* Back button */}
         {onBack && (
-          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#6A7E90', cursor: 'pointer', fontSize: 13, fontFamily: "'inherit'", marginBottom: 16, textAlign: 'left', padding: 0 }}>← Back</button>
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.dim, cursor: 'pointer', fontSize: 13, fontFamily: 'inherit', marginBottom: 16, display: 'block' }}>
+            ← Back
+          </button>
         )}
+
+        {/* Inputs */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
           <input
             type="email" placeholder="Email address" value={email}
@@ -103,37 +130,28 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
         <button
           onClick={handleSubmit} disabled={loading}
           style={{
-            width: '100%', background: loading ? 'rgba(140,31,31,0.1)' : 'linear-gradient(135deg,rgba(139,32,32,0.35),rgba(139,32,32,0.15))',
-            border: '1px solid rgba(140,31,31,0.5)', color: loading ? C.muted : C.cream,
-            padding: '14px', borderRadius: 12, cursor: loading ? 'default' : 'pointer',
-            fontSize: 14, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.09em',
-            marginBottom: 16, transition: 'all .25s',
+            width: '100%',
+            background: loading ? 'rgba(140,31,31,0.1)' : 'linear-gradient(135deg,rgba(139,32,32,0.35),rgba(139,32,32,0.15))',
+            border: '1px solid rgba(140,31,31,0.5)',
+            color: loading ? C.muted : '#EDE6D6',
+            padding: '14px', borderRadius: 12,
+            cursor: loading ? 'default' : 'pointer',
+            fontSize: 14, fontFamily: "'Cinzel',Georgia,serif",
+            letterSpacing: '0.09em', transition: 'all .25s',
           }}
         >
           {loading ? 'Please wait...' : mode === 'signup' ? '⚔️ Create Account & Begin' : '⚔️ Sign In'}
         </button>
 
-        {!isNewUser && (
-          <div style={{ fontSize: 13, color: C.dim }}>
-            {mode === 'signin' ? (
-              <>
-                Don't have an account?{' '}
-                <button onClick={() => window.location.href = 'https://buy.stripe.com/dRm6oGezOalM1ef1Vp57W07'}
-                  style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 13, textDecoration: 'underline', fontFamily: 'inherit' }}>
-                  Get Access
-                </button>
-              </>
-            ) : (
-              <>
-                Already have an account?{' '}
-                <button onClick={() => setMode('signin')}
-                  style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 13, textDecoration: 'underline', fontFamily: 'inherit' }}>
-                  Sign In
-                </button>
-              </>
-            )}
+        {mode === 'signin' && !isNewUser && (
+          <div style={{ marginTop: 16, fontSize: 13, color: C.dim }}>
+            Don't have an account?{' '}
+            <a href="https://buy.stripe.com/dRm6oGezOalM1ef1Vp57W07" style={{ color: C.muted, fontSize: 13 }}>
+              Get Access
+            </a>
           </div>
         )}
+
       </div>
     </div>
   )

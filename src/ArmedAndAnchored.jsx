@@ -213,10 +213,32 @@ const TABS = [
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
 
 export default function ArmedAndAnchored({ session, profile }) {
+  const [lightMode, setLightMode] = useState(() => {
+    try { return localStorage.getItem('aa_lightmode') === 'true' } catch { return false }
+  })
   const userId = session?.user?.id
 
   // ── STATE ──────────────────────────────────────────────────────────────
   const [entries, setEntries] = useState([])
+  // Dynamic palette — switches with lightMode
+  const C = lightMode ? {
+    bg: "#F2EDE3", bgCard: "rgba(0,0,0,0.04)", mid: "#E8E0D0",
+    red: "#9E2828", redL: "#C94848", redF: "rgba(158,40,40,0.1)", redB: "rgba(158,40,40,0.25)",
+    gold: "#8B6A30", goldL: "#A07A38", goldF: "rgba(139,106,48,0.12)", goldB: "rgba(139,106,48,0.3)",
+    steel: "#5A6878", steelF: "rgba(90,104,120,0.12)", steelB: "rgba(90,104,120,0.3)",
+    cream: "#1A1209", text: "#3D2E1A", muted: "#7A6A5A", dim: "#B0A090",
+    border: "rgba(0,0,0,0.08)", borderGold: "rgba(139,106,48,0.25)", borderRed: "rgba(158,40,40,0.2)",
+    green: "#4A7A5A",
+  } : {
+    bg: "#070E17", bgCard: "rgba(255,255,255,0.025)", mid: "#0D1B2A",
+    red: "#9E2828", redL: "#C94848", redF: "rgba(158,40,40,0.14)", redB: "rgba(158,40,40,0.32)",
+    gold: "#B08A4E", goldL: "#D4A853", goldF: "rgba(176,138,78,0.11)", goldB: "rgba(176,138,78,0.28)",
+    steel: "#6A8099", steelF: "rgba(106,128,153,0.12)", steelB: "rgba(106,128,153,0.3)",
+    cream: "#EDE6D6", text: "#C8BEAA", muted: "#7C90A2", dim: "#4E6070",
+    border: "rgba(255,255,255,0.06)", borderGold: "rgba(176,138,78,0.2)", borderRed: "rgba(158,40,40,0.3)",
+    green: "#7C9284",
+  }
+
   const [selected, setSelected] = useState(null)
   const [tab, setTab] = useState("scripture")
   const [declared, setDeclared] = useState({})
@@ -226,9 +248,6 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [shareCardWeapon, setShareCardWeapon] = useState(null)
   const [saving, setSaving] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
-  const [lightMode, setLightMode] = useState(() => {
-    try { return localStorage.getItem('aa_lightmode') === 'true' } catch { return false }
-  })
 
   const weapon = selected ? WEAPONS.find(w => w.id === selected) : null
 
@@ -372,25 +391,6 @@ export default function ArmedAndAnchored({ session, profile }) {
   );
 
 
-
-  // Dynamic palette — switches with lightMode
-  const C = lightMode ? {
-    bg: "#F2EDE3", bgCard: "rgba(0,0,0,0.04)", mid: "#E8E0D0",
-    red: "#9E2828", redL: "#C94848", redF: "rgba(158,40,40,0.1)", redB: "rgba(158,40,40,0.25)",
-    gold: "#8B6A30", goldL: "#A07A38", goldF: "rgba(139,106,48,0.12)", goldB: "rgba(139,106,48,0.3)",
-    steel: "#5A6878", steelF: "rgba(90,104,120,0.12)", steelB: "rgba(90,104,120,0.3)",
-    cream: "#1A1209", text: "#3D2E1A", muted: "#7A6A5A", dim: "#B0A090",
-    border: "rgba(0,0,0,0.08)", borderGold: "rgba(139,106,48,0.25)", borderRed: "rgba(158,40,40,0.2)",
-    green: "#4A7A5A",
-  } : {
-    bg: "#070E17", bgCard: "rgba(255,255,255,0.025)", mid: "#0D1B2A",
-    red: "#9E2828", redL: "#C94848", redF: "rgba(158,40,40,0.14)", redB: "rgba(158,40,40,0.32)",
-    gold: "#B08A4E", goldL: "#D4A853", goldF: "rgba(176,138,78,0.11)", goldB: "rgba(176,138,78,0.28)",
-    steel: "#6A8099", steelF: "rgba(106,128,153,0.12)", steelB: "rgba(106,128,153,0.3)",
-    cream: "#EDE6D6", text: "#C8BEAA", muted: "#7C90A2", dim: "#4E6070",
-    border: "rgba(255,255,255,0.06)", borderGold: "rgba(176,138,78,0.2)", borderRed: "rgba(158,40,40,0.3)",
-    green: "#7C9284",
-  }
 
   // Inject fadeIn keyframe once
   if (typeof document !== 'undefined' && !document.getElementById('aa-fadein')) {

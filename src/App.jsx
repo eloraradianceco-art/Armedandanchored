@@ -13,9 +13,9 @@ class ErrorBoundary extends Component {
       return (
         <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#070E17', flexDirection: 'column', gap: 16, padding: 24, textAlign: 'center' }}>
           <div style={{ fontSize: 32 }}>⚔️</div>
-          <div style={{ fontSize: 14, color: '#B83232', fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.1em' }}>Something went wrong</div>
+          <div style={{ fontSize: 14, color: '#C94848', fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.1em' }}>Something went wrong</div>
           <div style={{ fontSize: 12, color: '#3A4D5C', maxWidth: 360, lineHeight: 1.6 }}>{this.state.error.message}</div>
-          <button onClick={() => window.location.reload()} style={{ marginTop: 8, background: 'rgba(140,31,31,0.2)', border: '1px solid rgba(140,31,31,0.4)', color: '#B83232', padding: '10px 20px', borderRadius: 10, cursor: 'pointer', fontSize: 12, fontFamily: "'Cinzel',Georgia,serif" }}>
+          <button onClick={() => window.location.reload()} style={{ marginTop: 8, background: 'rgba(158,40,40,0.2)', border: '1px solid rgba(158,40,40,0.4)', color: '#C94848', padding: '10px 20px', borderRadius: 10, cursor: 'pointer', fontSize: 12, fontFamily: "'Cinzel',Georgia,serif" }}>
             Reload
           </button>
         </div>

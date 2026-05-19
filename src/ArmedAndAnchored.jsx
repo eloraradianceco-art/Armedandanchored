@@ -4,11 +4,11 @@ import ShareCard from './components/ShareCard'
 
 const C = {
   bg: "#070E17",bgCard: "rgba(255,255,255,0.025)",mid: "#0D1B2A",
-  red: "#8C1F1F",redL: "#B83232",redF: "rgba(140,31,31,0.14)",redB: "rgba(140,31,31,0.32)",
+  red: "#9E2828",redL: "#C94848",redF: "rgba(158,40,40,0.14)",redB: "rgba(158,40,40,0.32)",
   gold: "#B08A4E",goldL: "#D4A853",goldF: "rgba(176,138,78,0.11)",goldB: "rgba(176,138,78,0.28)",
   steel: "#6A8099",steelF: "rgba(106,128,153,0.12)",steelB: "rgba(106,128,153,0.3)",
-  cream: "#EDE6D6",text: "#C8BEAA",muted: "#6A7E90",dim: "#3A4D5C",
-  border: "rgba(255,255,255,0.06)",borderGold: "rgba(176,138,78,0.2)",borderRed: "rgba(140,31,31,0.3)",
+  cream: "#EDE6D6",text: "#C8BEAA",muted: "#7C90A2",dim: "#4E6070",
+  border: "rgba(255,255,255,0.06)",borderGold: "rgba(176,138,78,0.2)",borderRed: "rgba(158,40,40,0.3)",
 };
 
 const WEAPONS = [
@@ -342,7 +342,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   }
 
   const EmojDock = ({activeId}) => (
-    <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:200,background:"rgba(7,14,23,0.97)",backdropFilter:"blur(20px)",borderTop:"1px solid rgba(139,32,32,0.28)",padding:"10px 6px 14px"}}>
+    <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:200,background:"rgba(7,14,23,0.97)",backdropFilter:"blur(20px)",borderTop:"1px solid rgba(158,40,40,0.28)",padding:"10px 6px 14px"}}>
       <div style={{fontSize:8,color:C.dim,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",marginBottom:7}}>15 Weapons</div>
       <div style={{display:"flex",gap:3,justifyContent:"center",overflowX:"auto",padding:"0 2px",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
         {WEAPONS.map(w => {
@@ -350,12 +350,12 @@ export default function ArmedAndAnchored({ session, profile }) {
           const active = w.id === activeId;
           return (
             <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} title={w.title}
-              style={{background:active?"linear-gradient(145deg,rgba(139,32,32,0.4),rgba(139,32,32,0.18))":done?"rgba(139,32,32,0.12)":"rgba(255,255,255,0.04)",
-                border:`1px solid ${active?"rgba(139,32,32,0.7)":done?"rgba(139,32,32,0.3)":"rgba(255,255,255,0.07)"}`,
+              style={{background:active?"linear-gradient(145deg,rgba(158,40,40,0.4),rgba(158,40,40,0.18))":done?"rgba(158,40,40,0.12)":"rgba(255,255,255,0.04)",
+                border:`1px solid ${active?"rgba(158,40,40,0.7)":done?"rgba(158,40,40,0.3)":"rgba(255,255,255,0.07)"}`,
                 borderRadius:9,width:36,height:36,cursor:"pointer",fontSize:16,
                 display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,
                 transition:"all .15s",
-                boxShadow:active?"0 0 14px rgba(139,32,32,0.55)":"none",
+                boxShadow:active?"0 0 14px rgba(158,40,40,0.55)":"none",
                 transform:active?"translateY(-4px) scale(1.12)":"none",
                 position:"relative"}}>
               {w.icon}
@@ -377,8 +377,8 @@ export default function ArmedAndAnchored({ session, profile }) {
   }
 
   if (!selected) return (
-    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(139,32,32,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90,animation:"fadeIn 0.4s ease"}}>
-      <div style={{borderBottom:`1px solid ${C.border}`,padding:"28px 24px 22px",textAlign:"center",background:"linear-gradient(180deg,rgba(139,32,32,0.07),transparent)"}}>
+    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(158,40,40,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90,animation:"fadeIn 0.4s ease"}}>
+      <div style={{borderBottom:`1px solid ${C.border}`,padding:"28px 24px 22px",textAlign:"center",background:"linear-gradient(180deg,rgba(158,40,40,0.07),transparent)"}}>
         <div style={{fontSize:11,color:C.red,letterSpacing:"0.22em",fontFamily:"'Cinzel',Georgia,serif",textTransform:"uppercase",marginBottom:10,opacity:0.9}}>Elora Radiance Co.</div>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12,marginBottom:5}}>
           <span style={{fontSize:24,opacity:0.6,transform:"scaleX(-1)",display:"inline-block"}}>⚔️</span>
@@ -402,7 +402,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       </div>
 
       <div style={{padding:"18px 18px 0"}}>
-        <div style={{background:`linear-gradient(135deg,rgba(139,32,32,0.1),rgba(176,138,78,0.06))`,border:`1px solid rgba(139,32,32,0.22)`,borderRadius:14,padding:"16px 20px",marginBottom:6}}>
+        <div style={{background:`linear-gradient(135deg,rgba(158,40,40,0.1),rgba(176,138,78,0.06))`,border:`1px solid rgba(158,40,40,0.22)`,borderRadius:14,padding:"16px 20px",marginBottom:6}}>
           <p style={{fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.8,margin:"0 0 8px"}}>"Put on the whole armor of God, that you may be able to stand against the schemes of the devil."</p>
           <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",textTransform:"uppercase"}}>Ephesians 6:11 (ESV)</div>
         </div>
@@ -414,7 +414,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           {WEAPONS.map(w => {
             const done = declared[w.id];
             return (
-              <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{background:done?`linear-gradient(145deg,rgba(139,32,32,0.12),rgba(139,32,32,0.04))`:`linear-gradient(145deg,rgba(255,255,255,0.028),rgba(255,255,255,0.01))`,border:`1px solid ${done?"rgba(139,32,32,0.35)":C.border}`,borderRadius:14,padding:"16px 18px",cursor:"pointer",textAlign:"left",transition:"all .2s",position:"relative"}}>
+              <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{background:done?`linear-gradient(145deg,rgba(158,40,40,0.12),rgba(158,40,40,0.04))`:`linear-gradient(145deg,rgba(255,255,255,0.028),rgba(255,255,255,0.01))`,border:`1px solid ${done?"rgba(158,40,40,0.35)":C.border}`,borderRadius:14,padding:"16px 18px",cursor:"pointer",textAlign:"left",transition:"all .2s",position:"relative"}}>
                 {done && <div style={{position:"absolute",top:10,right:12,fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</div>}
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
                   <span style={{fontSize:22}}>{w.icon}</span>
@@ -453,7 +453,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           <div style={{fontSize:14,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{weapon.icon} {weapon.title}</div>
         </div>
         <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>
-          {declared[weapon.id] && <span style={{fontSize:10,color:"#B83232",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>&#10022; Deployed</span>}
+          {declared[weapon.id] && <span style={{fontSize:10,color:"#C94848",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>&#10022; Deployed</span>}
           <button onClick={()=>shareWeapon(weapon)} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:shareFlash===weapon.id?"#7C9284":"#B08A4E",borderRadius:8,padding:"5px 10px",cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",transition:"all .25s"}}>
             {shareFlash===weapon.id ? "✓" : "🔗"}
           </button>
@@ -533,7 +533,7 @@ ${weapon.icon} ${weapon.title} | Armed & Anchored`)} style={{background:"rgba(17
 
         {tab === "declare" && (
           <div>
-            <div style={{background:`linear-gradient(145deg,rgba(139,32,32,0.12),rgba(139,32,32,0.04))`,border:`1px solid ${C.redB}`,borderRadius:16,padding:"22px",marginBottom:14,position:"relative",overflow:"hidden"}}>
+            <div style={{background:`linear-gradient(145deg,rgba(158,40,40,0.12),rgba(158,40,40,0.04))`,border:`1px solid ${C.redB}`,borderRadius:16,padding:"22px",marginBottom:14,position:"relative",overflow:"hidden"}}>
               <div style={{position:"absolute",top:-15,right:-15,fontSize:70,opacity:0.04,pointerEvents:"none"}}>⚔️</div>
               <div style={{fontSize:9,color:C.redL,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>⚔️ Spoken Declaration</div>
               <p style={{fontSize:18,color:C.cream,lineHeight:1.95,fontStyle:"italic",margin:0}}>"{weapon.declaration}"</p>
@@ -542,7 +542,7 @@ ${weapon.icon} ${weapon.title} | Armed & Anchored`)} style={{background:"rgba(17
               <div style={{fontSize:9,color:C.gold,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:10}}>🙏 Warfare Prayer</div>
               <p style={{fontSize:17,color:C.cream,lineHeight:1.95,margin:0,fontStyle:"italic"}}>{weapon.prayer}</p>
             </div>
-            <button onClick={()=>markDeclared(weapon.id)} style={{width:"100%",background:declared[weapon.id]?`linear-gradient(135deg,rgba(124,146,132,0.2),rgba(124,146,132,0.08))`:`linear-gradient(135deg,rgba(139,32,32,0.3),rgba(139,32,32,0.12))`,border:`1px solid ${declared[weapon.id]?"rgba(124,146,132,0.4)":C.redB}`,color:declared[weapon.id]?"#7A9284":C.redL,padding:"13px",borderRadius:12,cursor:"pointer",fontSize:13,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",transition:"all .3s"}}>
+            <button onClick={()=>markDeclared(weapon.id)} style={{width:"100%",background:declared[weapon.id]?`linear-gradient(135deg,rgba(124,146,132,0.2),rgba(124,146,132,0.08))`:`linear-gradient(135deg,rgba(158,40,40,0.3),rgba(158,40,40,0.12))`,border:`1px solid ${declared[weapon.id]?"rgba(124,146,132,0.4)":C.redB}`,color:declared[weapon.id]?"#7A9284":C.redL,padding:"13px",borderRadius:12,cursor:"pointer",fontSize:13,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",transition:"all .3s"}}>
               {deployFlash[weapon.id]?"✦ Weapon Deployed":declared[weapon.id]?"✦ Deployed — Speak It Again":"⚔️ Declare This — Mark as Deployed"}
             </button>
             <button onClick={()=>shareWeapon(weapon)} style={{width:"100%",marginTop:10,background:C.goldF,border:`1px solid ${C.goldB}`,color:shareFlash===weapon.id?C.green:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",transition:"all .25s"}}>

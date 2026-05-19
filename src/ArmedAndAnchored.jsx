@@ -249,6 +249,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [shareFlash, setShareFlash] = useState(null)
   const [shareCard, setShareCard] = useState(null) // {weapon, type}
   const [dockOpen, setDockOpen] = useState(false)
+  const [tabMenuOpen, setTabMenuOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
 
@@ -391,19 +392,10 @@ export default function ArmedAndAnchored({ session, profile }) {
         transform:dockOpen?"translateY(0)":"translateY(calc(100% - 32px))",
         transition:"transform 0.3s cubic-bezier(0.32,0.72,0,1)",
       }}>
-        {/* Handle / Arrow */}
-        <button onClick={()=>setDockOpen(o=>!o)} style={{
-          width:"100%",padding:"6px 0 2px",background:"transparent",border:"none",
-          cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,
-        }}>
-          <div style={{width:32,height:3,borderRadius:2,background:"rgba(158,40,40,0.5)"}}/>
-          <span style={{fontSize:10,color:C.redL,letterSpacing:"0.12em",
-            fontFamily:"'Cinzel',Georgia,serif",textTransform:"uppercase",
-            transform:dockOpen?"rotate(180deg)":"none",transition:"transform 0.3s",
-            display:"block",lineHeight:1.4}}>
-            {dockOpen ? "▼" : "▲"}
-          </span>
-        </button>
+        {/* Drag pill only - toggle via bottom-left button */}
+        <div style={{display:"flex",justifyContent:"center",padding:"8px 0 4px"}}>
+          <div style={{width:36,height:3,borderRadius:2,background:"rgba(158,40,40,0.4)"}}/>
+        </div>
         {/* Grid */}
         <div style={{padding:"6px 16px 20px"}}>
           <div style={{fontSize:8,color:C.dim,letterSpacing:"0.12em",textTransform:"uppercase",
@@ -536,21 +528,59 @@ export default function ArmedAndAnchored({ session, profile }) {
             <button onClick={()=>setShareCard({weapon,type:tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"})} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:"#B08A4E",borderRadius:8,padding:"5px 9px",cursor:"pointer",fontSize:12}}>🖼</button>
           </div>
         </div>
-        {/* Row 2: tabs */}
-        <div style={{display:"flex",gap:0,borderTop:`1px solid ${C.border}`,overflowX:"auto",scrollbarWidth:"none"}}>
-          {TABS.map(t => (
-            <button key={t.id} onClick={()=>{setTab(t.id);window.scrollTo(0,0);}} style={{
-              flex:1,background:tab===t.id?`linear-gradient(180deg,${accF(weapon)},rgba(255,255,255,0.01))`:"transparent",
-              borderBottom:`2px solid ${tab===t.id?acc(weapon):"transparent"}`,
-              borderTop:"none",borderLeft:"none",borderRight:`1px solid ${C.border}`,
-              color:tab===t.id?acc(weapon):C.muted,
-              padding:"9px 4px",cursor:"pointer",fontSize:10,whiteSpace:"nowrap",
-              fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.03em",
-              transition:"all .18s",minWidth:0,
-            }}>{t.label}</button>
-          ))}
+        {/* Row 2: current tab label + hamburger */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",
+          borderTop:`1px solid ${C.border}`,padding:"0 14px"}}>
+          <span style={{fontSize:12,color:acc(weapon),fontFamily:"'Cinzel',Georgia,serif",
+            letterSpacing:"0.06em",padding:"8px 0"}}>
+            {TABS.find(t=>t.id===tab)?.label}
+          </span>
+          <button onClick={()=>setTabMenuOpen(o=>!o)} style={{
+            background:"transparent",border:"none",color:C.muted,
+            cursor:"pointer",padding:"8px 0 8px 16px",fontSize:16,lineHeight:1,
+            display:"flex",alignItems:"center",gap:6,
+          }}>
+            <span style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",
+              letterSpacing:"0.06em"}}>{tabMenuOpen?"Close":"Sections"}</span>
+            <span style={{display:"flex",flexDirection:"column",gap:3}}>
+              <span style={{display:"block",width:16,height:1.5,background:tabMenuOpen?C.redL:C.muted,borderRadius:1,transition:"all .2s"}}/>
+              <span style={{display:"block",width:12,height:1.5,background:tabMenuOpen?C.redL:C.muted,borderRadius:1,transition:"all .2s"}}/>
+              <span style={{display:"block",width:16,height:1.5,background:tabMenuOpen?C.redL:C.muted,borderRadius:1,transition:"all .2s"}}/>
+            </span>
+          </button>
         </div>
+        {/* Dropdown tab menu */}
+        {tabMenuOpen && (
+          <div style={{position:"absolute",top:"100%",left:0,right:0,zIndex:200,
+            background:"rgba(7,14,23,0.98)",backdropFilter:"blur(20px)",
+            borderBottom:`1px solid ${C.redB}`,
+            boxShadow:"0 8px 32px rgba(0,0,0,0.5)"}}>
+            {TABS.map((t,i) => (
+              <button key={t.id} onClick={()=>{setTab(t.id);setTabMenuOpen(false);window.scrollTo(0,0);}}
+                style={{
+                  width:"100%",display:"flex",alignItems:"center",gap:14,
+                  background:tab===t.id?C.redF:"transparent",
+                  border:"none",borderBottom:i<TABS.length-1?`1px solid ${C.border}`:"none",
+                  color:tab===t.id?C.cream:C.muted,
+                  padding:"14px 18px",cursor:"pointer",textAlign:"left",
+                  transition:"all .18s",
+                }}>
+                <span style={{fontSize:18,width:24,textAlign:"center"}}>{t.label.split(' ')[0]}</span>
+                <span style={{fontSize:15,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em"}}>
+                  {t.label.split(' ').slice(1).join(' ')}
+                </span>
+                {tab===t.id && <span style={{marginLeft:"auto",color:C.redL,fontSize:12}}>✦</span>}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Close tab menu when tapping outside */}
+      {tabMenuOpen && (
+        <div onClick={()=>setTabMenuOpen(false)}
+          style={{position:"fixed",inset:0,zIndex:150,background:"rgba(0,0,0,0.3)"}}/>
+      )}
 
       <div style={{padding:"16px 16px 0"}}>
         <div style={{textAlign:"center",marginBottom:16}}>
@@ -648,16 +678,45 @@ export default function ArmedAndAnchored({ session, profile }) {
 
         {tab === "tool" && weapon && (
           <div>
-            <WeaponTool weapon={weapon} data={getToolData()} onChange={setToolData} C={C} />
+            <WeaponTool weapon={weapon} C={C} get={get} set={set} />
           </div>
         )}
       </div>
 
-      {tab !== "journal" && tab !== "tool" && (
-        <button onClick={()=>{const i=TABS.findIndex(t=>t.id===tab);if(i<TABS.length-1){setTab(TABS[i+1].id);window.scrollTo(0,0);}}} style={{position:"fixed",bottom:82,right:18,background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,border:`1px solid ${accB(weapon)}`,color:acc(weapon),padding:"9px 18px",borderRadius:50,cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",boxShadow:"0 4px 20px rgba(0,0,0,0.4)",backdropFilter:"blur(10px)",zIndex:200,display:"flex",alignItems:"center",gap:7,transition:"all .2s"}}>
-          {TABS[TABS.findIndex(t=>t.id===tab)+1]?.label} ›
-        </button>
-      )}
+      {/* Bottom-left: dock toggle */}
+      <button onClick={()=>setDockOpen(o=>!o)} style={{
+        position:"fixed",bottom:18,left:18,
+        background:dockOpen?C.redF:"rgba(7,14,23,0.92)",
+        border:`1px solid ${dockOpen?C.redB:"rgba(158,40,40,0.3)"}`,
+        color:dockOpen?C.redL:C.muted,
+        width:44,height:44,borderRadius:50,cursor:"pointer",
+        fontSize:16,boxShadow:"0 4px 20px rgba(0,0,0,0.4)",
+        backdropFilter:"blur(10px)",zIndex:201,
+        display:"flex",alignItems:"center",justifyContent:"center",
+        transition:"all .25s",
+      }}>
+        {dockOpen ? "✕" : "⚔️"}
+      </button>
+
+      {/* Bottom-right: next tab */}
+      {(() => {
+        const i = TABS.findIndex(t => t.id === tab)
+        const next = TABS[i + 1]
+        if (!next) return null
+        return (
+          <button onClick={()=>{setTab(next.id);window.scrollTo(0,0);}} style={{
+            position:"fixed",bottom:18,right:18,
+            background:`linear-gradient(135deg,${accF(weapon).replace("0.1","0.32")},${accF(weapon)})`,
+            border:`1px solid ${accB(weapon)}`,color:acc(weapon),
+            padding:"9px 18px",borderRadius:50,cursor:"pointer",fontSize:11,
+            fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",
+            boxShadow:"0 4px 20px rgba(0,0,0,0.4)",backdropFilter:"blur(10px)",
+            zIndex:201,display:"flex",alignItems:"center",gap:7,transition:"all .2s",
+          }}>
+            {next.label} ›
+          </button>
+        )
+      })()}
       <EmojDock activeId={selected}/>
     </div>
   );

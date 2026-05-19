@@ -1,233 +1,137 @@
 import { useRef, useState } from 'react'
 
+const C = {
+  bg: '#070E17', red: '#8C1F1F', redL: '#B83232', redF: 'rgba(140,31,31,0.14)',
+  redB: 'rgba(140,31,31,0.32)', gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)',
+  goldB: 'rgba(176,138,78,0.28)', cream: '#EDE6D6', text: '#C8BEAA',
+  muted: '#6A7E90', dim: '#3A4D5C', border: 'rgba(255,255,255,0.06)',
+}
+
 export default function ShareCard({ weapon, onClose }) {
-  const canvasRef = useRef(null)
+  const [cardType, setCardType] = useState('scripture')
   const [shareFlash, setShareFlash] = useState(false)
-  const [cardType, setCardType] = useState('scripture') // 'scripture' | 'declaration'
+  const [copied, setCopied] = useState(false)
 
   const scripture = weapon.scriptures[0]
 
-  const drawCard = (type) => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    const W = 1080, H = 1080
-    canvas.width = W
-    canvas.height = H
-
-    // Background
-    ctx.fillStyle = '#070E17'
-    ctx.fillRect(0, 0, W, H)
-
-    // Gradient overlay top
-    const gTop = ctx.createRadialGradient(W * 0.2, 0, 0, W * 0.2, 0, W * 0.7)
-    gTop.addColorStop(0, 'rgba(139,32,32,0.28)')
-    gTop.addColorStop(1, 'transparent')
-    ctx.fillStyle = gTop
-    ctx.fillRect(0, 0, W, H)
-
-    // Gradient overlay bottom
-    const gBot = ctx.createRadialGradient(W * 0.8, H, 0, W * 0.8, H, W * 0.6)
-    gBot.addColorStop(0, 'rgba(176,138,78,0.14)')
-    gBot.addColorStop(1, 'transparent')
-    ctx.fillStyle = gBot
-    ctx.fillRect(0, 0, W, H)
-
-    // Border
-    ctx.strokeStyle = 'rgba(176,138,78,0.22)'
-    ctx.lineWidth = 2
-    ctx.strokeRect(32, 32, W - 64, H - 64)
-
-    // Inner accent line
-    ctx.strokeStyle = 'rgba(140,31,31,0.3)'
-    ctx.lineWidth = 1
-    ctx.strokeRect(44, 44, W - 88, H - 88)
-
-    // Top: Elora Radiance Co.
-    ctx.fillStyle = 'rgba(140,31,31,0.8)'
-    ctx.font = '500 28px Cinzel, Georgia, serif'
-    ctx.textAlign = 'center'
-    ctx.letterSpacing = '0.2em'
-    ctx.fillText('ELORA RADIANCE CO.', W / 2, 110)
-
-    // Weapon icon + title
-    ctx.font = '700 52px EB Garamond, Georgia, serif'
-    ctx.fillStyle = '#EDE6D6'
-    ctx.fillText(`${weapon.icon}  ${weapon.title}`, W / 2, 200)
-
-    // Divider
-    ctx.strokeStyle = 'rgba(176,138,78,0.35)'
-    ctx.lineWidth = 1
-    ctx.beginPath()
-    ctx.moveTo(120, 240)
-    ctx.lineTo(W - 120, 240)
-    ctx.stroke()
-
-    if (type === 'scripture') {
-      // Quote mark
-      ctx.font = 'italic 120px EB Garamond, Georgia, serif'
-      ctx.fillStyle = 'rgba(140,31,31,0.25)'
-      ctx.fillText('\u201C', 80, 360)
-
-      // Scripture text — wrap it
-      ctx.font = 'italic 42px EB Garamond, Georgia, serif'
-      ctx.fillStyle = '#EDE6D6'
-      wrapText(ctx, scripture.text, W / 2, 320, W - 200, 62)
-
-      // Reference
-      ctx.font = '500 32px Cinzel, Georgia, serif'
-      ctx.fillStyle = '#B08A4E'
-      ctx.fillText(scripture.ref, W / 2, H - 200)
-
-    } else {
-      // Declaration
-      ctx.font = '500 30px Cinzel, Georgia, serif'
-      ctx.fillStyle = 'rgba(140,31,31,0.7)'
-      ctx.fillText('DECLARATION', W / 2, 290)
-
-      ctx.font = 'italic 38px EB Garamond, Georgia, serif'
-      ctx.fillStyle = '#EDE6D6'
-      wrapText(ctx, `"${weapon.declaration}"`, W / 2, 340, W - 160, 58)
-    }
-
-    // Bottom — Armed & Anchored
-    ctx.font = '600 36px Cinzel, Georgia, serif'
-    ctx.fillStyle = '#EDE6D6'
-    ctx.fillText('⚔  Armed & Anchored  ⚔', W / 2, H - 120)
-
-    ctx.font = '400 24px Cinzel, Georgia, serif'
-    ctx.fillStyle = 'rgba(106,126,144,0.7)'
-    ctx.fillText('Spiritual Warfare Training Journal', W / 2, H - 72)
-  }
-
-  const wrapText = (ctx, text, x, startY, maxWidth, lineHeight) => {
-    const words = text.split(' ')
-    let line = ''
-    let y = startY
-    for (let i = 0; i < words.length; i++) {
-      const testLine = line + words[i] + ' '
-      const metrics = ctx.measureText(testLine)
-      if (metrics.width > maxWidth && i > 0) {
-        ctx.fillText(line.trim(), x, y)
-        line = words[i] + ' '
-        y += lineHeight
-      } else {
-        line = testLine
-      }
-    }
-    ctx.fillText(line.trim(), x, y)
-  }
-
-  const handleGenerate = (type) => {
-    setCardType(type)
-    setTimeout(() => drawCard(type), 50)
-  }
-
+  // Share the text content directly — works everywhere, no canvas issues
   const handleShare = async () => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    canvas.toBlob(async (blob) => {
-      if (!blob) return
-      const file = new File([blob], `armed-anchored-${weapon.id}.png`, { type: 'image/png' })
-      if (navigator.share && navigator.canShare?.({ files: [file] })) {
-        try { await navigator.share({ files: [file], title: `Armed & Anchored: ${weapon.title}` }) } catch {}
-      } else {
-        // Fallback: download
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url; a.download = `armed-anchored-${weapon.title.toLowerCase().replace(/\s+/g,'-')}.png`
-        a.click(); URL.revokeObjectURL(url)
-      }
-      setShareFlash(true)
-      setTimeout(() => setShareFlash(false), 2000)
-    })
+    let text = ''
+    if (cardType === 'scripture') {
+      text = `⚔️ ${weapon.title}\n\n"${scripture.text}"\n— ${scripture.ref}\n\nArmed & Anchored | Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
+    } else if (cardType === 'declaration') {
+      text = `⚔️ ${weapon.title} — Declaration\n\n"${weapon.declaration}"\n\nArmed & Anchored | Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
+    } else {
+      text = `⚔️ ${weapon.title} — Warfare Prayer\n\n${weapon.prayer}\n\nArmed & Anchored | Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
+    }
+
+    if (navigator.share) {
+      try { await navigator.share({ title: `Armed & Anchored: ${weapon.title}`, text }) } catch {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(text)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2500)
+      } catch {}
+    }
   }
 
-  const C = {
-    bg: '#070E17', redL: '#B83232', redF: 'rgba(140,31,31,0.14)', redB: 'rgba(140,31,31,0.32)',
-    gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)', goldB: 'rgba(176,138,78,0.28)',
-    cream: '#EDE6D6', text: '#C8BEAA', muted: '#6A7E90', border: 'rgba(255,255,255,0.06)',
-  }
+  const content = cardType === 'scripture'
+    ? { label: 'Scripture', quote: `"${scripture.text}"`, sub: `— ${scripture.ref}` }
+    : cardType === 'declaration'
+    ? { label: 'Declaration', quote: `"${weapon.declaration}"`, sub: null }
+    : { label: 'Warfare Prayer', quote: weapon.prayer, sub: null }
 
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 500,
-      background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)',
+      background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(12px)',
       display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', padding: 20,
+      justifyContent: 'center', padding: '20px', overflowY: 'auto',
     }}>
       <div style={{ maxWidth: 480, width: '100%' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <div style={{ fontSize: 13, color: C.muted, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.1em' }}>
-            SHARE CARD
+          <div style={{ fontSize: 11, color: C.muted, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            Share Card — {weapon.icon} {weapon.title}
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 20 }}>×</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 22, lineHeight: 1 }}>×</button>
         </div>
 
-        {/* Card type selector */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-          {[['scripture', '📖 Scripture'], ['declaration', '⚔️ Declaration']].map(([type, label]) => (
-            <button
-              key={type}
-              onClick={() => handleGenerate(type)}
-              style={{
-                flex: 1, background: cardType === type ? C.redF : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${cardType === type ? C.redB : C.border}`,
-                color: cardType === type ? C.redL : C.muted,
-                padding: '10px', borderRadius: 10, cursor: 'pointer',
-                fontSize: 13, fontFamily: "'Cinzel',Georgia,serif",
-                letterSpacing: '0.06em', transition: 'all .2s',
-              }}
-            >
-              {label}
-            </button>
+        {/* Type selector */}
+        <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
+          {[['scripture','📖 Scripture'],['declaration','⚔️ Declaration'],['prayer','🙏 Prayer']].map(([type, label]) => (
+            <button key={type} onClick={() => setCardType(type)} style={{
+              flex: 1, background: cardType === type ? C.redF : 'rgba(255,255,255,0.04)',
+              border: `1px solid ${cardType === type ? C.redB : C.border}`,
+              color: cardType === type ? C.redL : C.muted,
+              padding: '8px 4px', borderRadius: 10, cursor: 'pointer',
+              fontSize: 11, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.04em',
+              transition: 'all .2s',
+            }}>{label}</button>
           ))}
         </div>
 
-        {/* Canvas preview */}
-        <canvas
-          ref={canvasRef}
-          style={{
-            width: '100%', borderRadius: 12,
-            border: `1px solid ${C.border}`, display: 'block',
-            background: '#070E17', marginBottom: 14,
-            aspectRatio: '1/1',
-          }}
-          onClick={() => handleGenerate(cardType)}
-        />
+        {/* Card Preview */}
+        <div style={{
+          background: `radial-gradient(ellipse at 20% 0%,rgba(139,32,32,0.25) 0%,transparent 55%), radial-gradient(ellipse at 80% 100%,rgba(176,138,78,0.12) 0%,transparent 50%), #070E17`,
+          border: '1px solid rgba(176,138,78,0.25)',
+          borderRadius: 16, padding: '28px 24px', marginBottom: 16,
+          position: 'relative', overflow: 'hidden',
+        }}>
+          {/* Decorative border */}
+          <div style={{ position: 'absolute', inset: 8, border: '1px solid rgba(140,31,31,0.2)', borderRadius: 12, pointerEvents: 'none' }} />
 
-        {!canvasRef.current?.width && (
-          <div
-            onClick={() => handleGenerate('scripture')}
-            style={{
-              width: '100%', aspectRatio: '1/1', borderRadius: 12,
-              border: `1px solid ${C.border}`, display: 'flex',
-              alignItems: 'center', justifyContent: 'center',
-              background: 'rgba(255,255,255,0.02)', cursor: 'pointer',
-              flexDirection: 'column', gap: 8, marginBottom: 14,
-            }}
-          >
-            <div style={{ fontSize: 32 }}>⚔️</div>
-            <div style={{ fontSize: 13, color: C.muted, fontFamily: "'Cinzel',Georgia,serif" }}>Tap to generate card</div>
+          <div style={{ fontSize: 10, color: C.red, letterSpacing: '0.2em', fontFamily: "'Cinzel',Georgia,serif", textTransform: 'uppercase', marginBottom: 14, opacity: 0.8, textAlign: 'center' }}>
+            Elora Radiance Co.
           </div>
-        )}
 
-        {/* Share / Download button */}
-        <button
-          onClick={handleShare}
-          style={{
-            width: '100%', background: shareFlash ? 'rgba(124,146,132,0.2)' : 'linear-gradient(135deg,rgba(139,32,32,0.3),rgba(139,32,32,0.12))',
-            border: `1px solid ${shareFlash ? 'rgba(124,146,132,0.4)' : C.redB}`,
-            color: shareFlash ? '#7C9284' : C.cream,
-            padding: '14px', borderRadius: 12, cursor: 'pointer',
-            fontSize: 14, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.08em',
-            transition: 'all .25s',
-          }}
-        >
-          {shareFlash ? '✓ Saved' : '🔗 Share / Download Card'}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 6 }}>
+            <span style={{ fontSize: 18, opacity: 0.55, transform: 'scaleX(-1)', display: 'inline-block' }}>⚔️</span>
+            <span style={{ fontSize: 20, fontWeight: 700, color: C.cream, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.03em' }}>Armed & Anchored</span>
+            <span style={{ fontSize: 18, opacity: 0.55 }}>⚔️</span>
+          </div>
+
+          <div style={{ fontSize: 10, color: C.muted, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 18, textAlign: 'center' }}>
+            {weapon.icon} {weapon.title}
+          </div>
+
+          <div style={{ borderTop: '1px solid rgba(176,138,78,0.18)', borderBottom: '1px solid rgba(176,138,78,0.18)', padding: '18px 0', marginBottom: 14 }}>
+            <div style={{ fontSize: 9, color: C.gold, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10, textAlign: 'center' }}>
+              {content.label}
+            </div>
+            <p style={{ fontSize: 15, color: C.cream, fontStyle: 'italic', lineHeight: 1.8, textAlign: 'center', margin: 0 }}>
+              {content.quote.length > 200 ? content.quote.substring(0, 200) + '...' : content.quote}
+            </p>
+            {content.sub && (
+              <div style={{ fontSize: 11, color: C.gold, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: 10, textAlign: 'center' }}>
+                {content.sub}
+              </div>
+            )}
+          </div>
+
+          <div style={{ fontSize: 10, color: C.dim, textAlign: 'center', fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.1em' }}>
+            SPIRITUAL WARFARE TRAINING JOURNAL
+          </div>
+        </div>
+
+        {/* Share button */}
+        <button onClick={handleShare} style={{
+          width: '100%',
+          background: copied ? 'rgba(124,146,132,0.2)' : 'linear-gradient(135deg,rgba(139,32,32,0.35),rgba(139,32,32,0.15))',
+          border: `1px solid ${copied ? 'rgba(124,146,132,0.4)' : C.redB}`,
+          color: copied ? '#7C9284' : C.cream,
+          padding: '14px', borderRadius: 12, cursor: 'pointer',
+          fontSize: 14, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.08em',
+          transition: 'all .25s', marginBottom: 10,
+        }}>
+          {copied ? '✓ Copied to Clipboard' : '🔗 Share / Copy'}
         </button>
+
+        <p style={{ fontSize: 12, color: C.dim, textAlign: 'center', lineHeight: 1.6 }}>
+          On mobile — tap Share to post directly to Instagram, Messages, or any app.{'\n'}On desktop — copies to clipboard to paste anywhere.
+        </p>
       </div>
     </div>
   )

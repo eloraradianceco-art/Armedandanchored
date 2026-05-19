@@ -44,9 +44,9 @@ function getFontSize(text, maxChars) {
   return 30
 }
 
-export default function ShareCard({ weapon, onClose }) {
+export default function ShareCard({ weapon, onClose, initialType = 'scripture' }) {
   const canvasRef = useRef(null)
-  const [cardType, setCardType] = useState('scripture')
+  const [cardType, setCardType] = useState(initialType)
   const [imageReady, setImageReady] = useState(false)
   const [copiedImage, setCopiedImage] = useState(false)
   const [copiedText, setCopiedText] = useState(false)
@@ -57,29 +57,41 @@ export default function ShareCard({ weapon, onClose }) {
   const getContent = (type) => {
     if (type === 'scripture') return {
       label: 'SCRIPTURE',
-      main: `\u201c${scripture.text}\u201d`,
+      main: `“${scripture.text}”`,
       sub: scripture.ref,
     }
     if (type === 'declaration') return {
       label: 'DECLARATION',
-      main: `\u201c${weapon.declaration}\u201d`,
+      main: `“${weapon.declaration}”`,
+      sub: null,
+    }
+    if (type === 'teaching') return {
+      label: 'WARFARE TEACHING',
+      main: weapon.teaching.split('\n\n')[0],
+      sub: null,
+    }
+    if (type === 'tactics') return {
+      label: 'KNOW THE ENEMY',
+      main: weapon.tactics.slice(0, 3).map((t, i) => `${i + 1}. ${t}`).join('\n'),
       sub: null,
     }
     return {
       label: 'WARFARE PRAYER',
-      main: weapon.prayer.length > 280 ? weapon.prayer.substring(0, 280) + '\u2026' : weapon.prayer,
+      main: weapon.prayer.length > 280 ? weapon.prayer.substring(0, 280) + '…' : weapon.prayer,
       sub: null,
     }
   }
 
   const getSuggestedCaption = (type) => {
-    if (type === 'scripture') {
-      return `\u201c${scripture.text}\u201d \u2014 ${scripture.ref}\n\nWeapon ${weapon.id}: ${weapon.title}\n\nArmed & Anchored \u2014 Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
-    }
-    if (type === 'declaration') {
-      return `${weapon.icon} ${weapon.title} \u2014 Spoken Declaration\n\n\u201c${weapon.declaration}\u201d\n\nArmed & Anchored \u2014 Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
-    }
-    return `${weapon.icon} ${weapon.title} \u2014 Warfare Prayer\n\n${weapon.prayer}\n\nArmed & Anchored \u2014 Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
+    if (type === 'scripture')
+      return `“${scripture.text}” — ${scripture.ref}\n\nWeapon ${weapon.id}: ${weapon.title}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
+    if (type === 'declaration')
+      return `${weapon.icon} ${weapon.title} — Spoken Declaration\n\n“${weapon.declaration}”\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
+    if (type === 'teaching')
+      return `${weapon.icon} ${weapon.title} — Warfare Teaching\n\n${weapon.teaching.split('\n\n')[0]}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
+    if (type === 'tactics')
+      return `${weapon.icon} ${weapon.title} — Know the Enemy\'s Tactics\n\n${weapon.tactics.map((t, i) => `${i + 1}. ${t}`).join('\n')}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
+    return `${weapon.icon} ${weapon.title} — Warfare Prayer\n\n${weapon.prayer}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmedandanchored.vercel.app`
   }
 
   const drawCard = async (type) => {
@@ -278,14 +290,14 @@ export default function ShareCard({ weapon, onClose }) {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <div style={{ fontSize: 14, color: C.cream, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            Share This {cardType === 'scripture' ? 'Verse' : cardType === 'declaration' ? 'Declaration' : 'Prayer'}
+            {cardType === 'scripture' ? 'Share This Verse' : cardType === 'teaching' ? 'Share Teaching' : cardType === 'tactics' ? 'Share Tactics' : cardType === 'declaration' ? 'Share Declaration' : 'Share Prayer'}
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 24, lineHeight: 1 }}>×</button>
         </div>
 
         {/* Card type selector */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-          {[['scripture', '📖 Scripture'], ['declaration', '⚔️ Declaration'], ['prayer', '🙏 Prayer']].map(([type, label]) => (
+          {[['scripture','📖 Scripture'],['teaching','📜 Teaching'],['tactics','🎯 Tactics'],['declaration','⚔️ Declaration'],['prayer','🙏 Prayer']].map(([type, label]) => (
             <button key={type} onClick={() => { setCardType(type); setImageReady(false) }} style={{
               flex: 1, background: cardType === type ? C.redF : 'rgba(255,255,255,0.04)',
               border: `1px solid ${cardType === type ? C.redB : C.border}`,

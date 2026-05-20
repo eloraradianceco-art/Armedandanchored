@@ -264,16 +264,20 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
       endY = drawWrapped(content.main, W/2, CONTENT_TOP, textMaxW, lh)
     }
 
-    // ── Reference / sub (fixed position in footer zone) ───────────────────
+    // ── Reference — follows text, not fixed position ─────────────────────
+    let afterContentY = endY
     if (content.sub) {
+      const refLineY = Math.min(endY + 44, H - 210)
       ctx.strokeStyle = th.refLine; ctx.lineWidth = 1
-      ctx.beginPath(); ctx.moveTo(200, FOOTER_TOP); ctx.lineTo(W-200, FOOTER_TOP); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(200, refLineY); ctx.lineTo(W-200, refLineY); ctx.stroke()
       ctx.fillStyle = th.ref; ctx.font = '500 28px serif'; ctx.letterSpacing = '0.12em'
-      ctx.fillText(content.sub.toUpperCase(), W/2, FOOTER_TOP + 46)
+      const refTextY = refLineY + 42
+      ctx.fillText(content.sub.toUpperCase(), W/2, refTextY)
+      afterContentY = refTextY
     }
 
-    // ── Bottom footer ──────────────────────────────────────────────────────
-    const footerY = content.sub ? 980 : 940
+    // ── Bottom footer — always anchored to bottom ──────────────────────────
+    const footerY = H - 90
     ctx.strokeStyle = th.refLine; ctx.lineWidth = 1
     ctx.beginPath(); ctx.moveTo(110, footerY - 52); ctx.lineTo(W-110, footerY - 52); ctx.stroke()
 

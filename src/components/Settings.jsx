@@ -154,6 +154,34 @@ export default function Settings({ profile, lightMode, onToggleLightMode, onClos
             </button>
           </div>
 
+          {/* More from Elora Radiance */}
+          <div style={{ marginTop: 24, marginBottom: 8 }}>
+            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>More from Elora Radiance Co.</div>
+          </div>
+          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '12px 16px', marginBottom: 0 }}>
+            <p style={{ fontSize: 13, color: C.muted, fontStyle: 'italic', lineHeight: 1.7, marginBottom: 14 }}>
+              The Anchored Steps devotional series — daily Scripture, reflection, and prayer for those walking steadily with God.
+            </p>
+            {[
+              { label: 'Anchored Steps · Year 1', desc: 'The original daily devotional', url: 'https://anchored-steps.vercel.app/', icon: '⚓' },
+              { label: 'Anchored Steps · Year 2', desc: 'Continuing the journey', url: 'https://anchored-steps-year2.vercel.app/', icon: '⚓' },
+            ].map(app => (
+              <a key={app.url} href={app.url} target="_blank" rel="noopener noreferrer" style={{
+                display: 'flex', alignItems: 'center', gap: 14,
+                padding: '13px 14px', borderRadius: 12, marginBottom: 8,
+                background: C.goldF, border: `1px solid ${C.goldB}`,
+                textDecoration: 'none', transition: 'all .2s',
+              }}>
+                <span style={{ fontSize: 22, flexShrink: 0 }}>{app.icon}</span>
+                <span style={{ flex: 1 }}>
+                  <span style={{ display: 'block', fontSize: 13, color: C.cream, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.05em', marginBottom: 2 }}>{app.label}</span>
+                  <span style={{ display: 'block', fontSize: 12, color: C.muted, fontStyle: 'italic' }}>{app.desc}</span>
+                </span>
+                <span style={{ fontSize: 13, color: C.gold }}>↗</span>
+              </a>
+            ))}
+          </div>
+
           {/* About */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>
             <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>About</div>

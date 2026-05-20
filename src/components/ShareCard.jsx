@@ -38,10 +38,10 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxY) {
 }
 
 function getFontSize(text, maxChars) {
-  if (text.length < 120) return 44
-  if (text.length < 200) return 38
-  if (text.length < 300) return 34
-  return 30
+  if (text.length < 100) return 52
+  if (text.length < 180) return 46
+  if (text.length < 280) return 42
+  return 38
 }
 
 export default function ShareCard({ weapon, onClose, initialType = 'scripture' }) {
@@ -135,68 +135,72 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
     ctx.strokeStyle = th.border2; ctx.lineWidth = 1
     ctx.strokeRect(pad2, pad2, W-pad2*2, H-pad2*2)
 
-    // ── Compact header ──────────────────────────────────────────────────────
-    // Icon — small, left of title
-    let iconEndX = W / 2
+    // ── Original header (large, centered) ─────────────────────────────────
+    ctx.textAlign = 'center'
+
+    // Icon centered at top
     try {
       const img = new Image()
       await new Promise(res => { img.onload = res; img.onerror = res; img.src = '/icon.png' })
       if (img.complete && img.naturalWidth > 0) {
-        const iSize = 56
-        const iX = W/2 - 160
+        const iSize = 110
+        const iX = (W - iSize) / 2
         ctx.save()
         ctx.beginPath()
-        ctx.roundRect(iX, 66, iSize, iSize, 12)
+        ctx.roundRect(iX, 90, iSize, iSize, 22)
         ctx.clip()
-        ctx.drawImage(img, iX, 66, iSize, iSize)
+        ctx.drawImage(img, iX, 90, iSize, iSize)
         ctx.restore()
-        iconEndX = iX + iSize + 14
       }
     } catch {}
 
-    ctx.textAlign = 'left'
-    // Armed & Anchored
-    ctx.fillStyle = th.title
-    ctx.font = 'bold 38px serif'
-    ctx.letterSpacing = '0.03em'
-    ctx.fillText('Armed & Anchored', iconEndX, 96)
-    // Weapon tag
-    ctx.fillStyle = th.weapon
-    ctx.font = '400 22px serif'
-    ctx.letterSpacing = '0.06em'
-    ctx.fillText(`${weapon.icon}  ${weapon.title}`, iconEndX, 124)
+    // Elora Radiance Co.
+    ctx.fillStyle = th.brand
+    ctx.font = '500 26px serif'
+    ctx.letterSpacing = '0.18em'
+    ctx.fillText('ELORA RADIANCE CO.', W / 2, 248)
 
-    ctx.textAlign = 'center'
+    // Armed & Anchored title
+    ctx.fillStyle = th.title
+    ctx.font = 'bold 58px serif'
+    ctx.letterSpacing = '0.04em'
+    ctx.fillText('Armed & Anchored', W / 2, 318)
+
+    // Weapon line
+    ctx.fillStyle = th.weapon
+    ctx.font = '400 30px serif'
+    ctx.letterSpacing = '0.08em'
+    ctx.fillText(`${weapon.icon}  ${weapon.title.toUpperCase()}`, W / 2, 368)
 
     // Divider
     ctx.strokeStyle = th.divider; ctx.lineWidth = 1
-    ctx.beginPath(); ctx.moveTo(80, 152); ctx.lineTo(W-80, 152); ctx.stroke()
+    ctx.beginPath(); ctx.moveTo(120, 400); ctx.lineTo(W - 120, 400); ctx.stroke()
 
     const content = getContent(type)
 
     // Content label
     ctx.fillStyle = th.label
-    ctx.font = '500 22px serif'
-    ctx.letterSpacing = '0.14em'
-    ctx.fillText(content.label, W/2, 192)
+    ctx.font = '500 24px serif'
+    ctx.letterSpacing = '0.16em'
+    ctx.fillText(content.label, W / 2, 444)
 
     // Dynamic font size based on text length
     const fontSize = getFontSize(content.main, 300)
     const lineH = Math.round(fontSize * 1.55)
-    const textMaxY = content.sub ? H - 200 : H - 150
+    const textMaxY = content.sub ? H - 220 : H - 170
 
-        // Main content — detect newline-separated list vs paragraph
+    // Main content
     ctx.fillStyle = th.body
     ctx.letterSpacing = '0.01em'
-    let endY = 210
+    let endY = 500
 
     // Split on any newline variant
     const rawLines = content.main.split(/\n|\\n/).filter(s => s.trim())
     const isList = rawLines.length > 1 && /^\d+\./.test(rawLines[0])
 
     if (isList) {
-      const listFontSize = 34
-      const listLineH = 56
+      const listFontSize = 42
+      const listLineH = 66
       const listX = 90
       const listMaxW = W - 180
       ctx.textAlign = 'left'

@@ -3,9 +3,10 @@ import { supabase } from '../supabaseClient'
 
 const STRIPE_LINK = 'https://buy.stripe.com/dRm6oGezOalM1ef1Vp57W07'
 
-export default function Settings({ profile, lightMode, onToggleLightMode, onClose }) {
+export default function Settings({ profile, userId, weapons, lightMode, onToggleLightMode, onClose }) {
   const [copiedReferral, setCopiedReferral] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   const C = lightMode ? {
     bg: '#F2EDE3', bgCard: 'rgba(0,0,0,0.04)', border: 'rgba(0,0,0,0.08)',
@@ -37,6 +38,69 @@ export default function Settings({ profile, lightMode, onToggleLightMode, onClos
         setTimeout(() => setCopiedReferral(false), 2500)
       } catch {}
     }
+  }
+
+  const handleExport = async () => {
+    if (!userId || exporting) return
+    setExporting(true)
+    try {
+      const { data } = await supabase.from('weapon_entries')
+        .select('*').eq('user_id', userId)
+      const get = (wId, key) => data?.find(e => e.weapon_id === wId && e.field_key === key)?.field_value || ''
+      const lines = []
+      lines.push('ARMED & ANCHORED — SPIRITUAL WARFARE JOURNAL')
+      lines.push('Elora Radiance Co. | armedandanchored.vercel.app')
+      lines.push(`Exported: ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`)
+      lines.push('='.repeat(50))
+      if (weapons) {
+        for (const w of weapons) {
+          const journal = get(w.id, 'journal')
+          const declared = get(w.id, 'declared') === 'true'
+          const hasData = journal || declared || data?.some(e => e.weapon_id === w.id)
+          if (!hasData) continue
+          lines.push('')
+          lines.push(`${w.icon} WEAPON ${w.id}: ${w.title.toUpperCase()}`)
+          lines.push('-'.repeat(40))
+          if (declared) lines.push('✦ Declaration deployed')
+          // Memorized verses
+          w.scriptures.forEach((s, i) => {
+            if (get(w.id, `mem_${i}`) === 'true')
+              lines.push(`✓ Memorized: ${s.ref}`)
+          })
+          if (journal) {
+            lines.push('')
+            lines.push('JOURNAL ENTRY:')
+            lines.push(journal)
+          }
+          // Tool entries
+          const toolKeys = [...new Set(data?.filter(e=>e.weapon_id===w.id&&e.field_key.startsWith('tool_')).map(e=>e.field_key)||[])]
+          for (const key of toolKeys) {
+            try {
+              const entries = JSON.parse(get(w.id, key) || '[]')
+              if (entries.length) {
+                lines.push('')
+                lines.push(`TOOL LOG (${key.replace('tool_','')}):`)
+                entries.slice(0,5).forEach(e => {
+                  lines.push(`  [${e.date||''}] ${Object.values(e).filter(v=>typeof v==='string'&&v!==e.date).join(' — ')}`)
+                })
+              }
+            } catch {}
+          }
+        }
+      }
+      lines.push('')
+      lines.push('='.repeat(50))
+      lines.push('Stand firm. Fight from victory.')
+      const blob = new Blob([lines.join('
+')], { type: 'text/plain' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `armed-anchored-journal-${new Date().toISOString().split('T')[0]}.txt`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (e) { console.error(e) }
+    setExporting(false)
   }
 
   const handleSignOut = async () => {
@@ -193,6 +257,27 @@ export default function Settings({ profile, lightMode, onToggleLightMode, onClos
             <Row icon="🌿" label="Elora Radiance Co." border={false}>
               <span style={{ fontSize: 11, color: C.dim }}>eloraradiance.com</span>
             </Row>
+          </div>
+
+          {/* Export Journal */}
+          <div style={{ marginTop: 24, marginBottom: 8 }}>
+            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Your Data</div>
+          </div>
+          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '16px' }}>
+            <p style={{ fontSize: 14, color: C.text, lineHeight: 1.7, marginBottom: 14 }}>
+              Download all your journal entries, declarations, tool logs, and memorized verses as a text file.
+            </p>
+            <button onClick={handleExport} disabled={exporting} style={{
+              width: '100%',
+              background: exporting ? 'rgba(255,255,255,0.03)' : C.goldF,
+              border: `1px solid ${exporting ? C.border : C.goldB}`,
+              color: exporting ? C.muted : C.gold,
+              padding: '13px', borderRadius: 12, cursor: exporting ? 'default' : 'pointer',
+              fontSize: 13, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.08em',
+              transition: 'all .25s',
+            }}>
+              {exporting ? 'Preparing Export…' : '📥 Export Journal'}
+            </button>
           </div>
 
         </div>

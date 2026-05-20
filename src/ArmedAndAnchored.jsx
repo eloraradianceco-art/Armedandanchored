@@ -457,7 +457,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   )
 
   if (!selected) return (
-    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(158,40,40,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:48,animation:"fadeIn 0.4s ease"}}>
+    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(158,40,40,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90,animation:"fadeIn 0.4s ease"}}>
       <div style={{borderBottom:`1px solid ${C.border}`,padding:"28px 24px 22px",textAlign:"center",background:"linear-gradient(180deg,rgba(158,40,40,0.07),transparent)"}}>
         <div style={{fontSize:11,color:C.red,letterSpacing:"0.22em",fontFamily:"'Cinzel',Georgia,serif",textTransform:"uppercase",marginBottom:10,opacity:0.9}}>Elora Radiance Co.</div>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12,marginBottom:5}}>
@@ -491,7 +491,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         </div>
       </div>
 
-      <div style={{padding:"14px 18px 40px"}}>
+      <div style={{padding:"14px 18px 20px"}}>
         <div style={{fontSize:9,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>15 Weapons of the Believer</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr",gap:8}}>
           {WEAPONS.map(w => {

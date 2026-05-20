@@ -146,9 +146,36 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
         {mode === 'signin' && !isNewUser && (
           <div style={{ marginTop: 16, fontSize: 13, color: C.dim }}>
             Don't have an account?{' '}
-            <a href="https://buy.stripe.com/dRm6oGezOalM1ef1Vp57W07" style={{ color: C.muted, fontSize: 13 }}>
+            <button onClick={()=>{ window.location.href='https://buy.stripe.com/dRm6oGezOalM1ef1Vp57W07' }}
+              style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 13, textDecoration: 'underline', fontFamily: 'inherit', padding: 0 }}>
               Get Access
-            </a>
+            </button>
+          </div>
+        )}
+
+        {/* Add to Home Screen — shown after Stripe payment */}
+        {isNewUser && (
+          <div style={{ marginTop: 28, background: 'rgba(176,138,78,0.07)', border: '1px solid rgba(176,138,78,0.22)', borderRadius: 14, padding: '18px 18px 14px', textAlign: 'left' }}>
+            <div style={{ fontSize: 10, color: C.gold, letterSpacing: '0.16em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 10 }}>
+              📱 Add to Your Home Screen
+            </div>
+            <p style={{ fontSize: 13, color: C.text, lineHeight: 1.65, marginBottom: 14 }}>
+              Armed & Anchored works like a native app — add it to your home screen for instant one-tap access, no App Store needed.
+            </p>
+            {[
+              { os: '🍎 iPhone / iPad (Safari)', steps: ['Tap the Share button ⎋ at the bottom of Safari', 'Scroll and tap "Add to Home Screen"', 'Tap "Add" — done ✓'] },
+              { os: '🤖 Android (Chrome)', steps: ['Tap the three-dot menu ⋮ at the top right', 'Tap "Add to Home Screen" or "Install App"', 'Tap "Add" — done ✓'] },
+            ].map(p => (
+              <div key={p.os} style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 11, color: C.gold, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.06em', marginBottom: 6 }}>{p.os}</div>
+                {p.steps.map((step, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
+                    <span style={{ fontSize: 11, color: C.redL, flexShrink: 0, minWidth: 14, fontFamily: "'Cinzel',Georgia,serif" }}>{i+1}.</span>
+                    <span style={{ fontSize: 13, color: C.muted, lineHeight: 1.5 }}>{step}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         )}
 

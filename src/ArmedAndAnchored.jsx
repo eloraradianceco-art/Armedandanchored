@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from './supabaseClient'
 import ShareCard from './components/ShareCard'
+import Dashboard from './components/Dashboard'
 import Settings from './components/Settings'
 import WeaponTool from './components/WeaponTool'
 
@@ -353,11 +354,14 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [shareFlash, setShareFlash] = useState(null)
   const [shareCard, setShareCard] = useState(null) // {weapon, type}
   const [memorizeVerse, setMemorizeVerse] = useState(null) // {text, ref, idx}
+  const [translation, setTranslation] = useState('original') // original | kjv | web
+  const [translatedVerses, setTranslatedVerses] = useState({}) // key: weaponId_idx_translation
   const [journalSaved, setJournalSaved] = useState(false)
   const [dockOpen, setDockOpen] = useState(false)
   const [tabMenuOpen, setTabMenuOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [showDashboard, setShowDashboard] = useState(false)
 
   const weapon = selected ? WEAPONS.find(w => w.id === selected) : null
 
@@ -491,6 +495,20 @@ export default function ArmedAndAnchored({ session, profile }) {
     color: C.cream, fontSize: 17, lineHeight: 1.9,
     padding: '14px 16px', fontFamily: "'EB Garamond',Georgia,serif",
     outline: 'none', resize: 'vertical', boxSizing: 'border-box',
+  }
+
+  const fetchTranslation = async (ref, weaponId, idx, trans) => {
+    const key = `${weaponId}_${idx}_${trans}`
+    if (translatedVerses[key]) return
+    // Normalize ref: remove translation label, lowercase
+    const clean = ref.replace(/\s*\([^)]+\)\s*$/, '').trim()
+    try {
+      const res = await fetch(`https://bible-api.com/${encodeURIComponent(clean)}?translation=${trans}`)
+      const data = await res.json()
+      if (data.text) {
+        setTranslatedVerses(prev => ({...prev, [key]: data.text.trim()}))
+      }
+    } catch {}
   }
 
   const MemorizeModal = ({verse, onClose, get, set, C}) => {
@@ -776,6 +794,17 @@ export default function ArmedAndAnchored({ session, profile }) {
     document.head.appendChild(s)
   }
 
+  // Dashboard overlay
+  if (showDashboard) return (
+    <Dashboard
+      userId={userId}
+      weapons={WEAPONS}
+      onClose={()=>setShowDashboard(false)}
+      onSelectWeapon={(id)=>{setSelected(id);setTab("scripture");window.scrollTo(0,0)}}
+      C={C}
+    />
+  )
+
   // Settings overlay
   if (showSettings) return (
     <Settings
@@ -803,7 +832,10 @@ export default function ArmedAndAnchored({ session, profile }) {
           <button onClick={shareApp} style={{background:C.goldF,border:`1px solid ${C.goldB}`,color:shareFlash==="home"?C.green:C.gold,borderRadius:20,padding:"5px 14px",cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",transition:"all .25s"}}>
             {shareFlash==="home" ? "✓ Copied" : "🔗 Share"}
           </button>
-          <button onClick={()=>setShowSettings(true)} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:20,padding:"5px 12px",cursor:"pointer",fontSize:14,transition:"all .25s"}}>
+          <button onClick={()=>setShowDashboard(true)} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:10,padding:"8px 12px",cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",transition:"all .25s"}}>
+            📊
+          </button>
+                    <button onClick={()=>setShowSettings(true)} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:20,padding:"5px 12px",cursor:"pointer",fontSize:14,transition:"all .25s"}}>
             ⚙️
           </button>
         </div>
@@ -822,7 +854,34 @@ export default function ArmedAndAnchored({ session, profile }) {
       </div>
 
       <div style={{padding:"14px 18px 20px"}}>
-        <div style={{fontSize:9,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>15 Weapons of the Believer</div>
+        {/* Daily Verse */}
+        {(() => {
+          const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0).getTime()) / 86400000)
+          const all = WEAPONS.flatMap(w => w.scriptures.map(s => ({...s, weapon:w})))
+          const daily = all[dayOfYear % all.length]
+          return (
+            <div style={{background:"linear-gradient(145deg,rgba(176,138,78,0.1),rgba(176,138,78,0.04))",
+              border:"1px solid rgba(176,138,78,0.25)",borderRadius:14,padding:"16px 18px",marginBottom:20}}>
+              <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",
+                fontFamily:"'Cinzel',Georgia,serif",marginBottom:8}}>✦ Verse of the Day</div>
+              <p style={{fontSize:16,color:C.cream,fontStyle:"italic",lineHeight:1.85,margin:"0 0 10px"}}>
+                "{daily.text.length > 160 ? daily.text.substring(0,157)+'...' : daily.text}"
+              </p>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <span style={{fontSize:12,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+                  {daily.ref}
+                </span>
+                <button onClick={()=>{setSelected(daily.weapon.id);setTab("scripture");window.scrollTo(0,0);}}
+                  style={{background:"transparent",border:"1px solid rgba(176,138,78,0.3)",
+                    color:C.gold,padding:"5px 12px",borderRadius:20,cursor:"pointer",fontSize:11,
+                    fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>
+                  {daily.weapon.icon} Open
+                </button>
+              </div>
+            </div>
+          )
+        })()}
+        <div style={{fontSize:9,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>{WEAPONS.length} Weapons of the Believer</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr",gap:8}}>
           {WEAPONS.map(w => {
             const done = declared[w.id];
@@ -940,10 +999,31 @@ export default function ArmedAndAnchored({ session, profile }) {
         {tab === "scripture" && (
           <div>
             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>Key Passages</div>
-            {weapon.scriptures.map((s,i) => (
+            {/* Translation selector */}
+            <div style={{display:"flex",gap:6,marginBottom:14,alignItems:"center"}}>
+              <span style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",flexShrink:0}}>Translation:</span>
+              {[['original','Original'],['kjv','KJV'],['web','WEB']].map(([t,label]) => (
+                <button key={t} onClick={()=>{setTranslation(t);if(t!=='original'){weapon.scriptures.forEach((s,i)=>fetchTranslation(s.ref,weapon.id,i,t))}}}
+                  style={{padding:"5px 10px",borderRadius:20,cursor:"pointer",fontSize:10,
+                    fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em",
+                    background:translation===t?C.redF:"transparent",
+                    border:`1px solid ${translation===t?C.redB:C.border}`,
+                    color:translation===t?C.redL:C.muted,transition:"all .2s"}}>
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {weapon.scriptures.map((s,i) => {
+              const tvKey = `${weapon.id}_${i}_${translation}`
+              const displayText = translation==='original' ? s.text : (translatedVerses[tvKey] || s.text)
+              const isLoading = translation!=='original' && !translatedVerses[tvKey]
+              return (
               <div key={i} style={{background:i===0?`linear-gradient(145deg,${accF(weapon)},rgba(255,255,255,0.01))`:C.bgCard,border:`1px solid ${i===0?accB(weapon):C.border}`,borderRadius:14,padding:"18px 20px",marginBottom:11}}>
                 <div style={{fontSize:9,color:acc(weapon),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:9}}>{s.ref}</div>
-                <p style={{fontSize:18,color:C.cream,fontStyle:"italic",lineHeight:1.9,marginBottom:14}}>"{s.text}"</p>
+                <p style={{fontSize:18,color:isLoading?C.dim:C.cream,fontStyle:"italic",lineHeight:1.9,marginBottom:14}}>
+                  {isLoading ? "Loading..." : `"${displayText}"`}
+                </p>
                 <button onClick={()=>setMemorizeVerse({text:s.text,ref:s.ref,idx:i})} style={{
                   padding:"7px 14px",borderRadius:20,cursor:"pointer",fontSize:11,
                   fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em",
@@ -954,7 +1034,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                   {get(`mem_${i}`)==="true" ? "✓ Memorized" : "✦ Memorize"}
                 </button>
               </div>
-            ))}
+            )})}
             <button onClick={()=>{setShareCard({weapon,type:'scripture'});setTabMenuOpen(false);}} style={{width:"100%",marginTop:12,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"13px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
               🖼 Create Share Card for Social Media
             </button>

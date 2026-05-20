@@ -389,20 +389,25 @@ export default function ArmedAndAnchored({ session, profile }) {
   }
 
   const EmojDock = ({activeId}) => (
-    <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:dockOpen?202:199,fontFamily:"'EB Garamond',Georgia,serif"}}>
-      {/* Backdrop when open */}
+    <>
+      {/* Backdrop — separate from dock so it doesn't affect dock hit area */}
       {dockOpen && (
         <div onClick={()=>setDockOpen(false)}
-          style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:-1}}/>
+          style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:200}}/>
       )}
-      {/* Drawer */}
+      {/* Dock — transform on the OUTER container so closed dock has zero hit area */}
       <div style={{
+        position:"fixed",bottom:0,left:0,right:0,
+        zIndex:dockOpen?202:201,
+        fontFamily:"'EB Garamond',Georgia,serif",
         background:"rgba(7,14,23,0.98)",backdropFilter:"blur(20px)",
         borderTop:"1px solid rgba(158,40,40,0.35)",
-        transform:dockOpen?"translateY(0)":"translateY(calc(100% - 32px))",
+        borderRadius:"20px 20px 0 0",
+        transform:dockOpen?"translateY(0)":"translateY(calc(100% - 0px))",
         transition:"transform 0.3s cubic-bezier(0.32,0.72,0,1)",
+        pointerEvents:dockOpen?"all":"none",
       }}>
-        {/* Drag pill only - toggle via bottom-left button */}
+        {/* Drag pill */}
         <div style={{display:"flex",justifyContent:"center",padding:"8px 0 4px"}}>
           <div style={{width:36,height:3,borderRadius:2,background:"rgba(158,40,40,0.4)"}}/>
         </div>
@@ -433,7 +438,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 
 

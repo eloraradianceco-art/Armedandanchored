@@ -8,11 +8,13 @@ const C = {
 const STRIPE_LINK = 'https://buy.stripe.com/dRm6oGezOalM1ef1Vp57W07'
 
 const FEATURES = [
-  { icon: '⚔️', text: '15 Weapons of Spiritual Warfare — full teaching on each' },
-  { icon: '🎯', text: 'Enemy Tactics — exactly how he attacks in every area' },
-  { icon: '📢', text: 'Spoken Declarations + Warfare Prayers per weapon' },
-  { icon: '✍️', text: 'Personal battle journal — saved across all your devices' },
-  { icon: '🔗', text: 'Share any weapon instantly — scripture, declaration, prayer' },
+  { icon: '⚔️', text: '23 Weapons of Spiritual Warfare — deep teaching, tactics, prayer, and declaration on each' },
+  { icon: '🎯', text: 'Enemy Tactics — exactly how he attacks in every area of your life' },
+  { icon: '🧠', text: '3-mode scripture memorization — recall, fill the gaps, and write it out' },
+  { icon: '🛠️', text: 'Interactive training tools for every weapon — battle logs, trackers, and warfare journals' },
+  { icon: '✍️', text: 'Personal battle journal saved to your account — access on any device' },
+  { icon: '📊', text: 'Progress dashboard — track your arsenal readiness across all 23 weapons' },
+  { icon: '🔗', text: 'Premium share cards — scripture, declaration, and prayer cards for social media' },
 ]
 
 export default function Paywall({ onShowSignIn }) {
@@ -59,20 +61,20 @@ export default function Paywall({ onShowSignIn }) {
           </div>
         </div>
 
-        <a
-          href={STRIPE_LINK}
+        <button
+          onClick={() => { window.location.href = STRIPE_LINK }}
           style={{
-            display: 'block', background: 'linear-gradient(135deg,rgba(158,40,40,0.4),rgba(158,40,40,0.18))',
+            width: '100%', background: 'linear-gradient(135deg,rgba(158,40,40,0.4),rgba(158,40,40,0.18))',
             border: '1px solid rgba(158,40,40,0.55)', color: C.cream,
             padding: '16px 28px', borderRadius: 14, fontSize: 16,
             fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.09em',
-            textDecoration: 'none', marginBottom: 12, cursor: 'pointer',
+            marginBottom: 12, cursor: 'pointer',
           }}
         >
           ⚔️ Get Lifetime Access
-        </a>
+        </button>
         <p style={{ fontSize: 12, color: C.dim, lineHeight: 1.7 }}>
-          One-time payment &nbsp;•&nbsp; Instant access &nbsp;•&nbsp; All 15 weapons unlocked forever
+          One-time payment &nbsp;•&nbsp; Instant access &nbsp;•&nbsp; All 23 weapons unlocked forever
         </p>
 
         <div style={{ marginTop: 24, fontSize: 13, color: C.dim }}>

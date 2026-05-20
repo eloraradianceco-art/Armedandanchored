@@ -1156,6 +1156,102 @@ function TongueAudit({C,get,set}){return <SimpleJournalTool C={C} get={get} set=
 function HumilityLog({C,get,set}){return <SimpleJournalTool C={C} get={get} set={set} key_="tool_humble" promptText="Where have you been striving in your own strength? Record the surrender — what you handed to God and when."/>}
 function RestLog({C,get,set}){return <SimpleJournalTool C={C} get={get} set={set} key_="tool_rest" promptText="Record your rest practice — moments of stillness, what surfaced, what you surrendered. What did God show you in the quiet?"/>}
 
+
+const TOOL_INFO = {
+  1: {
+    howTo: "Log spiritual battles you are actively facing or have faced. For each entry, choose a category and write what you observed — the attack, the context, or what you discerned. Review your log over time to spot enemy patterns in your life.",
+    tip: "Keeping a battle log trains you to recognize attacks as spiritual, not circumstantial.",
+  },
+  2: {
+    howTo: "Each morning, tap each piece of armor to check it on for the day. The check resets daily so this becomes a consistent warfare ritual. Work through all seven pieces intentionally — don't rush it.",
+    tip: "Saying each piece aloud as you tap it significantly increases its impact.",
+  },
+  3: {
+    howTo: "Identify a stronghold — a lie you keep believing. Write the lie, then write the truth that counters it from Scripture. Each day you declare the truth, tap 'Declared Today' to track your streak. Strongholds fall through consistent truth replacement.",
+    tip: "Focus on one stronghold at a time. Trying to break three at once dilutes the work.",
+  },
+  4: {
+    howTo: "When you notice a spiritual attack, log it here. Record the type of attack (fear, accusation, distraction, etc.), the method the enemy used, and how you responded. Over time you will see your specific enemy playbook.",
+    tip: "Patterns only become visible when you write them down. Don't rely on memory.",
+  },
+  5: {
+    howTo: "Before a fast, set your intention and duration here. During the fast, tap 'Start Fast' to activate it and log revelations as they come. When complete, tap 'End Fast' and record what God showed you.",
+    tip: "A fast without an intention is just hunger. Set the purpose before you begin.",
+  },
+  6: {
+    howTo: "Write a personal declaration based on a truth God is building in you. Then speak it aloud daily and tap the streak counter each day you declare it. The goal is 30 consecutive days of speaking this truth over yourself.",
+    tip: "Your declaration should be present-tense and first-person: 'I am... I have... I walk in...'",
+  },
+  7: {
+    howTo: "When a lying thought surfaces, write it down. Then write the truth that counters it from Scripture. Each time you return to that truth and renew your mind against the lie, tap the renewal counter. Watch the lie lose its grip over time.",
+    tip: "The goal is not to suppress the thought but to replace it. Write the truth until you believe it.",
+  },
+  8: {
+    howTo: "Name each fear you carry — be specific. Assign a scripture to each one that speaks directly to it. Track whether each fear is 'losing ground' in your life. When a fear has no more power, mark it.",
+    tip: "Vague fear is harder to fight than named fear. The more specific you are, the more targeted your warfare.",
+  },
+  9: {
+    howTo: "Record significant worship moments — times when you pressed into God in worship and something shifted. Note what you declared or sang, and any atmospheric change you sensed. This builds your worship testimony.",
+    tip: "Atmospheric shifts in worship are real. Tracking them builds your faith to press through dry seasons.",
+  },
+  10: {
+    howTo: "List generational patterns you have identified in your family line — sins, strongholds, or curses. For each one, write a new inheritance declaration: what you are establishing in your generation instead. This is your spiritual inheritance document.",
+    tip: "You cannot break what you have not named. Be honest and specific.",
+  },
+  11: {
+    howTo: "When a thought or impression comes, log it here. Note where you believe it came from — God, the enemy, or your own flesh. Record how you responded. Over time you will grow in distinguishing the voices.",
+    tip: "God's voice builds up, corrects gently, and aligns with Scripture. The enemy accuses, condemns, and creates panic.",
+  },
+  12: {
+    howTo: "Record situations where you exercised spiritual authority — in prayer, declaration, or direct confrontation. Note what the situation was, what action you took, and the outcome. This is your authority testimony log.",
+    tip: "Reviewing past victories builds the faith to act in future ones.",
+  },
+  13: {
+    howTo: "Add names and prayer requests to your intercession list. For each person, record specific requests and track how many times you have prayed. When God moves, mark breakthrough and record what happened.",
+    tip: "Specific intercession produces specific testimonies. General prayer produces general results.",
+  },
+  14: {
+    howTo: "Write your covenant commitments in the area of purity — specific things you are committing to. Each day you honor the covenant, mark your daily check-in. This builds a streak of faithfulness you can see.",
+    tip: "Accountability begins with a written commitment. Vague intentions produce vague results.",
+  },
+  15: {
+    howTo: "Write your commitment to finish — what you are persevering toward and why it matters. Weekly, return to recommit. If you miss a week, use the notes field honestly. This tool is about showing up even when you want to quit.",
+    tip: "The enemy's goal is not always dramatic defeat. Often it is just making you stop showing up.",
+  },
+  16: {
+    howTo: "When you invoke the name of Jesus over a specific situation — in prayer, declaration, or spiritual confrontation — log it here. Build a record of the situations where you have exercised the authority of His name.",
+    tip: "The name of Jesus is not a formula — it is backed by relationship. Journal from that place.",
+  },
+  17: {
+    howTo: "When the enemy accuses you of something — past sin, unworthiness, failure — write the accusation down, then save it. The act of naming it counters its power, and the tool automatically declares the blood of Jesus over it.",
+    tip: "An accusation loses power when you name it and refuse to carry it. Don't let it stay silent in your mind.",
+  },
+  18: {
+    howTo: "Record moments when you chose praise as a weapon — in the middle of a battle, in worship, in declaration. Note what you declared and any atmospheric shift you noticed. Build your praise testimony.",
+    tip: "Praise before breakthrough is faith. Praise after breakthrough is thanksgiving. Both are warfare.",
+  },
+  19: {
+    howTo: "List every person — including yourself — you need to forgive. Optionally describe the offense. As you work through forgiveness in prayer, tap 'Release' to mark them released. This is your forgiveness inventory.",
+    tip: "You do not need to feel it to choose it. Mark released when you make the choice, not when the feeling follows.",
+  },
+  20: {
+    howTo: "After praying with another believer in agreement, record who you prayed with, what you agreed on, and what happened. Build a testimony of corporate prayer breakthroughs.",
+    tip: "Agreement prayer is qualitatively different from solo prayer. Track it separately.",
+  },
+  21: {
+    howTo: "Throughout your day, notice negative declarations you speak — over yourself, your situation, your future. Log the negative word and the scriptural replacement you chose instead. Over time you will rewire your confession.",
+    tip: "Most negative confession happens on autopilot. This tool makes it conscious so you can change it.",
+  },
+  22: {
+    howTo: "When you catch yourself striving in your own strength — trying to fix, control, or carry something God should be carrying — log it here. Record what you surrendered and when. This is your surrender journal.",
+    tip: "Striving often feels like faith. The difference is whether God is leading or you are.",
+  },
+  23: {
+    howTo: "Record your rest practice — times you sat in silence, surrendered anxiety, or chose stillness before God. Note what surfaced and what you released. Over time this builds a practice of warfare through trust.",
+    tip: "Silence before God is not emptiness — it is posture. Come expectant, not blank.",
+  },
+}
+
 const TOOLS = {
   1: BattleLog,
   2: ArmorCheck,
@@ -1191,6 +1287,7 @@ export { TOOL_NAMES }
 
 export default function WeaponTool({ weapon, C, get, set }) {
   const Tool = TOOLS[weapon.id]
+  const info = TOOL_INFO[weapon.id]
   if (!Tool) return (
     <div style={{padding:'32px',textAlign:'center',color:C.muted,fontStyle:'italic',fontSize:15}}>
       Tool coming soon for this weapon.
@@ -1198,11 +1295,29 @@ export default function WeaponTool({ weapon, C, get, set }) {
   )
   return (
     <div>
+      {/* Tool name */}
       <div style={{fontSize:9,color:C.muted,letterSpacing:'0.16em',textTransform:'uppercase',
-        fontFamily:"'Cinzel',Georgia,serif",marginBottom:4}}>{TOOL_NAMES[weapon.id]}</div>
-      <p style={{fontSize:14,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:20}}>
-        Your personal warfare tool for {weapon.title.toLowerCase()}.
-      </p>
+        fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>{TOOL_NAMES[weapon.id]}</div>
+
+      {/* How to use card */}
+      {info && (
+        <div style={{background:'rgba(176,138,78,0.07)',border:`1px solid rgba(176,138,78,0.2)`,
+          borderRadius:12,padding:'14px 16px',marginBottom:20}}>
+          <div style={{fontSize:9,color:'rgba(176,138,78,0.8)',letterSpacing:'0.14em',
+            textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",marginBottom:8}}>
+            ⚡ How to Use
+          </div>
+          <p style={{fontSize:14,color:C.text,lineHeight:1.75,margin:'0 0 10px'}}>
+            {info.howTo}
+          </p>
+          <div style={{borderTop:`1px solid rgba(176,138,78,0.15)`,paddingTop:8}}>
+            <span style={{fontSize:12,color:'rgba(176,138,78,0.7)',fontStyle:'italic'}}>
+              💡 {info.tip}
+            </span>
+          </div>
+        </div>
+      )}
+
       <Tool C={C} get={get} set={set} />
     </div>
   )

@@ -17,8 +17,8 @@ const SLIDES = [
   },
   {
     icon: '🛡️',
-    title: '15 Weapons of the Believer',
-    subtitle: 'From the Full Armor of God to Breaking Strongholds, Fasting, Intercession, and Finishing the Fight.',
+    title: '23 Weapons of the Believer',
+    subtitle: 'From the Full Armor of God to the Name of Jesus, the Blood of the Lamb, Praise, Forgiveness, Humility, and Rest in God.',
     detail: 'Tap any weapon from the bottom dock to jump straight to it.',
     color: C.gold,
   },
@@ -45,10 +45,17 @@ const SLIDES = [
     color: C.redL,
   },
   {
-    icon: '🔗',
-    title: 'Share the Weapons',
-    subtitle: 'Send any weapon\'s scripture and declaration to someone who needs it — one tap from the declare tab or the nav bar.',
-    detail: 'The word of your testimony is a weapon for you and for those who hear it.',
+    icon: '🧠',
+    title: 'Memorize the Word',
+    subtitle: 'Every scripture has a built-in memorization tool with three methods — Read & Recall, Fill the Gaps, and Write it Out.',
+    detail: 'The sword of the Spirit is the Word of God. The sharper it is in memory, the deadlier it is in battle.',
+    color: C.redL,
+  },
+  {
+    icon: '🛠️',
+    title: 'Train with Every Weapon',
+    subtitle: 'Each weapon has an interactive training tool — battle logs, stronghold breakers, fear inventories, and more.',
+    detail: 'Track your progress across all 23 weapons from your personal dashboard.',
     color: C.gold,
   },
   {

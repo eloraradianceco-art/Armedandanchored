@@ -91,8 +91,7 @@ export default function Settings({ profile, userId, weapons, lightMode, onToggle
       lines.push('')
       lines.push('='.repeat(50))
       lines.push('Stand firm. Fight from victory.')
-      const blob = new Blob([lines.join('
-')], { type: 'text/plain' })
+      const blob = new Blob([lines.join('\n')], { type: 'text/plain' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url

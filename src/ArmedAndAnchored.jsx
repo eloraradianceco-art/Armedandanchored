@@ -201,6 +201,110 @@ const WEAPONS = [
     challenge:"Identify one area where you have been tempted to give up or slow down in your spiritual life. Recommit to it this week with one concrete, measurable action. Ask someone to hold you accountable.",
     fastingNote:"A focused fast at a point of spiritual weariness has historically produced renewed clarity and fire. Don't fast when you feel strong — fast when you feel like quitting.",
   },
+  { id:16, icon:"✝️", tag:"THRONE NAME", title:"The Name of Jesus", subtitle:"Authority Above All Authority", color:"crimson",
+    scriptures:[
+      {ref:"Philippians 2:9–11 (ESV)",text:"Therefore God has highly exalted him and bestowed on him the name that is above every name, so that at the name of Jesus every knee should bow, in heaven and on earth and under the earth, and every tongue confess that Jesus Christ is Lord, to the glory of God the Father."},
+      {ref:"Acts 4:12 (NIV)",text:"Salvation is found in no one else, for there is no other name under heaven given to mankind by which we must be saved."},
+      {ref:"Mark 16:17 (NKJV)",text:"And these signs will follow those who believe: In My name they will cast out demons; they will speak with new tongues."},
+    ],
+    teaching:"Every weapon in the arsenal of a believer is wielded in a name. Not a title. Not a concept. A name — the name of Jesus. Philippians 2 does not say that every knee should bow at the rank of Christ or the position of Christ. It says at the NAME of Jesus. There is something about the name itself that carries divine weight.\n\nThe early church didn't pray for better strategies — they prayed for boldness to speak His name. They didn't ask for more resources — they said, 'Silver and gold I have none, but what I have I give you: In the name of Jesus Christ of Nazareth, rise and walk.'\n\nThe enemy knows the name. He fears it — not as a magic word, but as the declaration of a legitimate authority. When a believer speaks the name of Jesus from a place of relationship and faith, they are invoking the full backing of heaven.\n\nCareless, routine use of the name erodes its power in our own perception. When the name becomes filler, it loses weight in our hearts — not in heaven, but in us. The weapon requires a heart that believes what the name carries.",
+    tactics:["Desensitizing believers through casual, routine use of the name until it loses weight","Creating doubt about whether ordinary believers actually carry delegated authority","Causing believers to treat the name as a formula rather than a relationship","Making believers feel unworthy to speak the name with authority"],
+    declaration:"I carry the name that is above every name. At the name of Jesus every knee must bow — including every principality, every power, and every assignment of hell against my life, my family, and my purpose. I speak this name with authority, not casualness, knowing I carry the full backing of heaven.",
+    prayer:"Lord Jesus, let me never speak Your name carelessly. Teach me to wield it with the reverence and authority it carries. Where I have used Your name as a phrase rather than a weapon, forgive me. Restore the weight of it in my heart. Let every declaration I make in Your name be backed by relationship, not just religion. Amen.",
+    challenge:"This week, begin every prayer with a deliberate pause — speaking the name of Jesus slowly, with intention. Before you ask for anything, let the name itself be your declaration of authority.",
+    fastingNote:"Fasting paired with speaking the name of Jesus in prayer has historically preceded breakthrough that no amount of striving could produce. Many reports of deliverance and healing have come from exactly this combination.",
+  },
+  { id:17, icon:"🩸", tag:"COVENANT BLOOD", title:"The Blood of Jesus", subtitle:"The Silencer of Every Accusation", color:"crimson",
+    scriptures:[
+      {ref:"Revelation 12:11 (NKJV)",text:"And they overcame him by the blood of the Lamb and by the word of their testimony, and they did not love their lives to the death."},
+      {ref:"Hebrews 9:14 (ESV)",text:"How much more will the blood of Christ, who through the eternal Spirit offered himself without blemish to God, purify our conscience from dead works to serve the living God."},
+      {ref:"1 John 1:7 (NIV)",text:"But if we walk in the light, as he is in God, who is in the light, we have fellowship with one another, and the blood of Jesus, his Son, purifies us from all sin."},
+    ],
+    teaching:"Revelation 12:11 gives us the testimony of overcoming believers — and the blood of the Lamb is listed first. Before testimony, before sacrifice, before strategy: the blood. The blood is the foundation on which every other weapon rests.\n\nThe blood of Jesus does several things that nothing else can do. It silences the accuser. Satan's primary title in Revelation is 'the accuser of the brethren' — and the only counter to accusation is the blood. When the enemy points to your past, the blood speaks louder. When shame says you're disqualified, the blood says the debt was paid at Calvary.\n\nHebrews 9:14 tells us the blood purifies our conscience. Many believers are spiritually defeated not by the enemy's power but by their own unclean conscience — carrying guilt for sins that have already been paid. The blood doesn't just legally forgive — it cleanses the conscience that keeps replaying the wrong.\n\nThis is not sentiment. This is legal language. The blood of the Lamb has satisfied the righteous requirement of the law on your behalf. The court of heaven has ruled in your favor. The accuser has no valid case.",
+    tactics:["Keeping old sins accessible to memory to produce shame that weakens faith","Confusing conviction (Holy Spirit) with condemnation (the enemy)","Causing believers to minimize the power of the blood by making salvation feel ordinary","Creating spiritual guilt for sins already confessed and forgiven"],
+    declaration:"I am covered by the blood of Jesus Christ. Every accusation the enemy raises against me was nailed to the cross. I do not carry the guilt of forgiven sin. My conscience is cleansed. My record is cleared. I stand before God not in my own righteousness but in the righteousness purchased by the blood of the Lamb.",
+    prayer:"Father, I receive the full power of the blood of Jesus over my life. Where the enemy has used my past against me, I declare: that was paid at Calvary. I repent of carrying guilt You have already removed. Cleanse my conscience by the blood of Your Son. Let me stand in the court of heaven with confidence — not in my record, but in His. Amen.",
+    challenge:"Every time this week the enemy accuses you of a past sin you've already confessed, say aloud: 'That was covered at Calvary. I am cleansed by the blood of Jesus.' Do not argue, defend, or spiral — just declare and move on.",
+    fastingNote:"Fasting combined with meditating on the blood of Jesus has been reported by believers throughout history as producing deep inner cleansing — a quieting of guilt and shame that prayer alone had not fully resolved.",
+  },
+  { id:18, icon:"🎺", tag:"BATTLE PRAISE", title:"Praise as a Weapon", subtitle:"God Inhabits the Praises of His People", color:"gold",
+    scriptures:[
+      {ref:"2 Chronicles 20:22 (NKJV)",text:"Now when they began to sing and to praise, the LORD set ambushes against the people of Ammon, Moab, and Mount Seir, who had come against Judah; and they were defeated."},
+      {ref:"Psalm 22:3 (KJV)",text:"But thou art holy, O thou that inhabitest the praises of Israel."},
+      {ref:"Acts 16:25–26 (NIV)",text:"About midnight Paul and Silas were praying and singing hymns to God, and the other prisoners were listening to them. Suddenly there was such a violent earthquake that the foundations of the prison were shaken. At once all the prison doors flew open, and everyone's chains came loose."},
+    ],
+    teaching:"When King Jehoshaphat faced three armies with no military solution, he sent worshippers to the front lines — not soldiers. This is not metaphor. It is recorded military history in Scripture. When they began to sing and to praise, the Lord set ambushes against the enemy. The battle was won before a single sword was drawn, by the sound of worship.\n\nPaul and Silas in prison. Midnight. Beaten. Chains. No visible way out. They sang. And the prison shook.\n\nPraise is not denial of reality. Praise is the declaration of a higher reality. When you praise God in the midst of a battle, you are not pretending the battle isn't happening. You are declaring that God is greater than what you're facing — and you are inviting His presence into the situation.\n\nGod inhabits — literally dwells in — the praises of His people. Where His presence comes, darkness must leave. Praise shifts the atmosphere before the circumstances shift. It is one of the most offensive weapons in the believer's arsenal — not reactive, but initiating.",
+    tactics:["Making circumstances feel too serious for praise, turning worship into a luxury","Convincing believers that praise must be emotional to be real","Using joylessness and spiritual heaviness to thicken the atmosphere","Creating the lie that praising God before a breakthrough is presumptuous"],
+    declaration:"I will praise God in the storm. I will sing in the midnight. My praise is not dependent on my circumstances — it is a declaration of who God is regardless of what I see. I lift my voice as a weapon and invite the presence of God into every battle I face.",
+    prayer:"Lord, teach me to praise You when it's hard. Where I have been silent in battles that called for worship, forgive me and restore the song. I praise You now — not because things are perfect, but because You are. Inhabit this praise and shift the atmosphere around me. Let chains break and doors open. Amen.",
+    challenge:"For five minutes each morning this week, praise God out loud — not asking for anything, just declaring who He is. If you feel resistance, treat the resistance as confirmation that this weapon is working.",
+    fastingNote:"Worship-led fasting — where fasting is combined with extended praise rather than only petition — has produced some of the most significant spiritual breakthroughs in church history. The 2 Chronicles 20 model: fast, worship, watch God fight.",
+  },
+  { id:19, icon:"🕊️", tag:"BREAKING CHAINS", title:"The Weapon of Forgiveness", subtitle:"Closing the Door Offense Opens", color:"steel",
+    scriptures:[
+      {ref:"Ephesians 4:26–27 (ESV)",text:"Be angry and do not sin; do not let the sun go down on your anger, and give no opportunity to the devil."},
+      {ref:"Matthew 6:14–15 (NKJV)",text:"For if you forgive men their trespasses, your heavenly Father will also forgive you. But if you do not forgive men their trespasses, neither will your Father forgive your trespasses."},
+      {ref:"2 Corinthians 2:10–11 (NKJV)",text:"Now whom you forgive anything, I also forgive. For if indeed I have forgiven anything, I have forgiven that one for your sake in the presence of Christ, lest Satan should take advantage of us; for we are not ignorant of his devices."},
+    ],
+    teaching:"Unforgiveness is not just a relational wound — it is a spiritual open door. Paul explicitly connects unforgiveness to Satan taking advantage. The word 'devices' is the Greek word noema — the schemes, the thought patterns, the mental playbooks of the enemy. Unforgiveness is one of the most reliable playbooks he uses.\n\nWhen you choose not to forgive, you do not punish the person who wronged you — you punish yourself. You hand the enemy a legal foothold in your own soul. You keep yourself in a prison built from someone else's debt.\n\nForgiveness is not trust. Forgiveness is not reconciliation. Forgiveness is not saying what was done was acceptable. Forgiveness is releasing the debt — handing the case to God's court, not because the person deserves it, but because you refuse to be enslaved to what they did.\n\nEphesians 4 says do not let the sun go down on your anger — give no place to the devil. Every night unforgiveness is nursed, the foothold deepens. The longer the door stays open, the harder it is to close.",
+    tactics:["Keeping wounds fresh and injustice alive in memory so forgiveness feels impossible","Confusing forgiveness with condoning wrong, making it feel like betrayal of justice","Using hurt to justify bitterness, and bitterness to justify escalating spiritual blindness","Causing believers to wait for an apology before forgiving — an apology that may never come"],
+    declaration:"I release everyone who has wronged me into the hands of a righteous God. I choose forgiveness as a weapon, not weakness. I close every door that unforgiveness has opened in my life. I do not carry what God has said I can lay down. I am free — and I walk in that freedom today.",
+    prayer:"Father, show me anyone I've been holding in an unforgiveness prison. Give me the grace to forgive what I cannot excuse in my own strength. I release them to You. I close the door the enemy has used in my life through this wound. Heal what was broken. Restore what was taken. And let me walk free. In Jesus' name, amen.",
+    challenge:"Write the name of one person — or even God Himself — that you have not fully forgiven. Pray a blessing over them every day this week. You do not have to feel it at first. Do it as an act of your will and watch the feeling follow.",
+    fastingNote:"Fasting has historically broken the emotional attachment to wounds that the mind alone could not release. The combination of fasting and choosing forgiveness has been reported to produce a supernatural peace that bypasses human reasoning.",
+  },
+  { id:20, icon:"🔗", tag:"CORPORATE POWER", title:"Unity and Agreement", subtitle:"Where Two or Three Agree, Heaven Moves", color:"steel",
+    scriptures:[
+      {ref:"Matthew 18:19–20 (ESV)",text:"Again I say to you, if two of you agree on earth about anything they ask, it will be done for them by my Father in heaven. For where two or three are gathered in my name, there am I among them."},
+      {ref:"Ecclesiastes 4:12 (ESV)",text:"And though a man might prevail against one who is alone, two will withstand him — a threefold cord is not quickly broken."},
+      {ref:"Acts 1:14 (NKJV)",text:"These all continued with one accord in prayer and supplication, with the women and Mary the mother of Jesus, and with His brothers."},
+    ],
+    teaching:"The upper room was not a solo prayer meeting. Before Pentecost came, 120 people were gathered in one accord. Jesus promised that where two or three gather in His name, He would be there — not as an idea but as a presence. And He promised that what two agree on earth would be done by the Father in heaven.\n\nThis is not just about prayer meetings. Unity is warfare. The enemy knows that isolated believers are vulnerable and that united believers are dangerous. One of his most consistent strategies is division — church splits, relational wounds, theological arguments that become barriers, competitive spirits that fragment the body.\n\nEcclesiastes 4:12 speaks of a threefold cord — two people united with God Himself — that is not quickly broken. Your individual prayer is powerful. Your prayer in agreement with even one other believer is qualitatively different.\n\nThe early church prayed together before every major breakthrough. Before the apostles were released for ministry. Before Paul's first missionary journey. Before the first Gentile outpouring. They agreed. And heaven moved.",
+    tactics:["Causing division and strife among believers to fragment corporate prayer","Making individuals feel their personal prayers are sufficient and community is optional","Using offense, comparison, and competitive spirits to break relationships of agreement","Creating theological disputes that become walls between warriors who should stand together"],
+    declaration:"I stand in agreement with the body of Christ. I refuse isolation. I refuse division. Where two or three are gathered in His name, He is there — and I will be one of those two or three. Together we are a cord that cannot be quickly broken. Heaven moves when we agree.",
+    prayer:"Lord, knit my heart with other believers in holy agreement. Where I have isolated myself — from pride, from hurt, or from independence — draw me back into the body. Show me who I am called to stand in agreement with for this season. And let our unity be a threat to the enemy's agenda. Amen.",
+    challenge:"Find one other believer this week and spend 10 minutes praying together in specific agreement about one thing. Not general prayer — choose one thing, agree out loud, and trust together.",
+    fastingNote:"Corporate fasting — believers fasting together for a shared breakthrough — carries a different weight than individual fasting. The church in Antioch fasted together, and it produced apostolic commissioning. Consider calling even one other person into a shared fast.",
+  },
+  { id:21, icon:"🗣️", tag:"WORDS OF POWER", title:"The Power of the Tongue", subtitle:"Life and Death Are in Your Words", color:"crimson",
+    scriptures:[
+      {ref:"Proverbs 18:21 (NKJV)",text:"Death and life are in the power of the tongue, and those who love it will eat its fruits."},
+      {ref:"Matthew 12:37 (ESV)",text:"For by your words you will be justified, and by your words you will be condemned."},
+      {ref:"Mark 11:23 (NKJV)",text:"For assuredly, I say to you, whoever says to this mountain, 'Be removed and be cast into the sea,' and does not doubt in his heart, but believes that those things he will say will be done, he will have whatever he says."},
+    ],
+    teaching:"Proverbs 18:21 is one of the most sobering verses in all of Scripture. Death and life — not minor things, not preferences, but life and death — are in the power of the tongue. This is not hyperbole. It is a spiritual principle as reliable as gravity.\n\nWhat you consistently speak, you are consistently agreeing with. Every time you speak death over yourself — 'I'll never change,' 'This will never get better,' 'I'm just not good enough' — you are making an agreement in the spiritual realm. And the enemy holds you to it.\n\nJesus linked mountain-moving faith directly to what you say: 'he will have whatever he says.' Not whatever he believes privately. Whatever he says. The mouth is the release mechanism of faith or fear, of agreement with God or agreement with the enemy.\n\nThis is not positive thinking. It is not name-it-claim-it theology stripped of truth. It is aligning your words with the truth of God's Word — declaring what God has said to be true, refusing to declare what the enemy suggests, and understanding that your words are weapons in a spiritual war.",
+    tactics:["Filling the mind with negative reports until negative confession feels like honesty","Using careless words to open agreements with darkness the believer never consciously intended","Making declarations feel like lying when circumstances contradict them","Creating a culture of complaint and negativity that the believer unconsciously participates in"],
+    declaration:"I bring my tongue under the lordship of Jesus Christ. I refuse to declare what the enemy wants me to agree with. I will speak life — over my mind, my body, my family, my calling, my finances, and my future. My words are seeds, and I am planting life.",
+    prayer:"Lord, set a guard over my mouth. Let me not speak carelessly what opens doors I don't intend to open. Show me where I have been in agreement with the enemy through my words and help me repent and realign. Teach me to speak as You speak — calling things that are not as though they are. Amen.",
+    challenge:"For 24 hours, monitor every negative declaration that comes out of your mouth. Each time you catch one, replace it immediately with a scriptural declaration over that same area. Write down the patterns you notice.",
+    fastingNote:"Fasting is one of the most effective ways to discipline the tongue — because it disciplines the body at its most basic level. Many believers report that periods of fasting produce a marked change in the quality of their words.",
+  },
+  { id:22, icon:"🙇", tag:"LOWLY STRENGTH", title:"The Weapon of Humility", subtitle:"God Opposes the Proud, Arms the Humble", color:"steel",
+    scriptures:[
+      {ref:"James 4:6–7 (ESV)",text:"But he gives more grace. Therefore it says, 'God opposes the proud but gives grace to the humble.' Submit yourselves therefore to God. Resist the devil, and he will flee from you."},
+      {ref:"1 Peter 5:5–6 (NIV)",text:"All of you, clothe yourselves with humility toward one another, because, 'God opposes the proud but shows favor to the humble.' Humble yourselves, therefore, under God's mighty hand, that he may lift you up in due time."},
+      {ref:"Matthew 23:12 (ESV)",text:"Whoever exalts himself will be humbled, and whoever humbles himself will be exalted."},
+    ],
+    teaching:"James 4:6–7 contains one of the most powerful one-two sequences in all of warfare scripture. It does not say: first resist the devil. It says: first submit to God — then resist the devil, and he will flee.\n\nThe order matters. Spiritual authority flows from submission. A soldier who isn't under authority has no authority to give. When a believer tries to resist the enemy from a place of pride — self-reliance, independence from God, spiritual arrogance — the resistance is hollow. God opposes the proud. Not ignores — opposes. You cannot wage effective spiritual war with the God of heaven working against your pride.\n\nHumility is not self-deprecation or the denial of gifting. It is the accurate assessment of your complete dependence on God. It is the posture that says: I cannot fight this battle. But He can. And I am His.\n\nThis posture unlocks grace — and grace is the divine empowerment to do what you cannot do in your own strength. Humble yourself. Receive grace. Then — and only then — resist. And when you do, the enemy flees.",
+    tactics:["Feeding pride through comparison, recognition, and spiritual performance to undermine submission","Making humility look like weakness to believers who equate authority with self-confidence","Using offense and wounded ego to pull believers out from under God's covering","Causing self-reliance to masquerade as faith — striving in one's own strength and calling it warfare"],
+    declaration:"I humble myself before the mighty hand of God. I resist every temptation to fight this battle in my own strength. I submit to God fully — and from that place of submission, I resist the devil and declare: you must flee. Not by my power, but by grace given to the humble.",
+    prayer:"Father, root out every seed of pride that gives the enemy a foothold in my life. Show me where I have been self-reliant rather than God-dependent, where I have tried to wage war in my own strength and wondered why nothing changed. I submit to You now. Give me the grace that is only available to the humble. And let the enemy flee. Amen.",
+    challenge:"Identify one area where you've been fighting in your own strength. Write it down, repent of the self-reliance, and spend five minutes specifically asking God to fight that battle for you.",
+    fastingNote:"Fasting is one of the most physical acts of humility available to the believer. To deny the body what it demands is to declare: my spirit governs my flesh. Many warriors find fasting produces a dramatic drop in the kind of spiritual pride that blocks breakthrough.",
+  },
+  { id:23, icon:"🕊️", tag:"WARFARE THROUGH REST", title:"The Weapon of Rest", subtitle:"In Quietness and Trust Is Your Strength", color:"steel",
+    scriptures:[
+      {ref:"Isaiah 30:15 (ESV)",text:"For thus said the Lord God, the Holy One of Israel, 'In returning and rest you shall be saved; in quietness and in trust shall be your strength.' But you were unwilling."},
+      {ref:"Psalm 46:10 (ESV)",text:"Be still, and know that I am God. I will be exalted among the nations, I will be exalted in the earth!"},
+      {ref:"Matthew 11:28–29 (NIV)",text:"Come to me, all you who are weary and burdened, and I will give you rest. Take my yoke upon you and learn from me, for I am gentle and humble in heart, and you will find rest for your souls."},
+    ],
+    teaching:"Isaiah 30:15 is one of the most countercultural warfare verses in Scripture. In the middle of military threat, when the temptation was to run to Egypt for military alliance, God said: your strength is in quietness and trust. Not strategy. Not speed. Not force. Quietness. Trust.\n\nAnd then the saddest two words in the verse: 'but you were unwilling.'\n\nThe enemy keeps the believer exhausted on purpose. Busyness. Anxiety. Endless spiritual activity with no spiritual rest. Performance in place of presence. He knows that a weary warrior fights poorly, hears God poorly, and becomes vulnerable to the kind of slow erosion that doesn't feel dramatic — just draining.\n\nBe still and know that I am God is not just invitation — it is warfare. The stillness itself is the act of declaring: God is in control. I am not. I do not need to strive. I do not need to manufacture the breakthrough. I simply need to be present to the One who already holds the outcome.\n\nRest is not laziness. It is the opposite of unbelief. It is the act of trusting God enough to stop trying to carry what He already carries.",
+    tactics:["Creating spiritual busyness that replaces intimacy with performance","Using anxiety and fear to keep the believer in a state of striving rather than trusting","Making rest feel irresponsible — like something that only those with less at stake can afford","Filling silence with distraction so the believer never learns to be still before God"],
+    declaration:"I will not fight this battle in my own strength. I lay down striving. I lay down anxiety. I choose the weapon of rest — trusting the God who holds my situation, my future, and my enemy in His hands. My strength is in quietness and trust. I be still. I know He is God.",
+    prayer:"Father, forgive me for striving when You asked me to trust. Forgive me for filling silence with noise instead of meeting You in the stillness. Teach me the warfare of rest. Show me what it means to be still and know that You are God — not just as a concept, but as a daily practice. Let my rest be a declaration that You are enough. Amen.",
+    challenge:"Spend 15 minutes today in complete silence before God — no requests, no worship music, no agenda. Just be still. If your mind races, write what surfaces on paper and then set it aside. Practice returning to stillness.",
+    fastingNote:"Rest-fasting — fasting combined with extended silence and stillness rather than intense intercession — is one of the most underused forms of spiritual warfare. Many believers have found that what months of striving couldn't accomplish, a day of resting before God in fasting produced.",
+  },
 ];
 
 const TABS = [
@@ -248,6 +352,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [deployFlash, setDeployFlash] = useState({})
   const [shareFlash, setShareFlash] = useState(null)
   const [shareCard, setShareCard] = useState(null) // {weapon, type}
+  const [memorizeVerse, setMemorizeVerse] = useState(null) // {text, ref, idx}
   const [journalSaved, setJournalSaved] = useState(false)
   const [dockOpen, setDockOpen] = useState(false)
   const [tabMenuOpen, setTabMenuOpen] = useState(false)
@@ -386,6 +491,66 @@ export default function ArmedAndAnchored({ session, profile }) {
     color: C.cream, fontSize: 17, lineHeight: 1.9,
     padding: '14px 16px', fontFamily: "'EB Garamond',Georgia,serif",
     outline: 'none', resize: 'vertical', boxSizing: 'border-box',
+  }
+
+  const MemorizeModal = ({verse, onClose, get, set, C}) => {
+    const [revealed, setRevealed] = useState(false)
+    const isMemorized = get(`mem_${verse.idx}`) === "true"
+    return (
+      <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:600,
+        display:"flex",alignItems:"center",justifyContent:"center",padding:24}}
+        onClick={onClose}>
+        <div onClick={e=>e.stopPropagation()} style={{
+          background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,
+          border:`1px solid ${C.goldB}`,borderRadius:20,padding:28,
+          maxWidth:400,width:"100%",boxShadow:"0 20px 60px rgba(0,0,0,0.6)",
+        }}>
+          <div style={{textAlign:"center"}}>
+            <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",
+              letterSpacing:"0.16em",textTransform:"uppercase",marginBottom:12}}>
+              ✦ Memorize
+            </div>
+            <div style={{fontSize:14,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",
+              letterSpacing:"0.1em",marginBottom:20,paddingBottom:16,
+              borderBottom:`1px solid rgba(176,138,78,0.2)`}}>
+              {verse.ref}
+            </div>
+            {!revealed ? (
+              <div>
+                <p style={{fontSize:14,color:C.muted,fontStyle:"italic",marginBottom:20,lineHeight:1.7}}>
+                  Try to recall this verse from memory — then tap to reveal and check yourself.
+                </p>
+                <button onClick={()=>setRevealed(true)} style={{
+                  background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,
+                  padding:"12px 28px",borderRadius:50,cursor:"pointer",fontSize:12,
+                  fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",
+                }}>Reveal Verse</button>
+              </div>
+            ) : (
+              <div>
+                <p style={{fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.85,marginBottom:20}}>
+                  "{verse.text}"
+                </p>
+                {isMemorized ? (
+                  <div style={{fontSize:13,color:C.green,marginBottom:14,fontFamily:"'Cinzel',Georgia,serif"}}>✓ Already memorized</div>
+                ) : (
+                  <button onClick={()=>{set(`mem_${verse.idx}`,"true");onClose();}} style={{
+                    width:"100%",background:"rgba(124,146,132,0.15)",
+                    border:"1px solid rgba(124,146,132,0.4)",color:C.green,
+                    padding:"13px",borderRadius:12,cursor:"pointer",fontSize:13,
+                    fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",marginBottom:10,
+                  }}>✓ I've Got It — Mark Memorized</button>
+                )}
+                <button onClick={onClose} style={{
+                  width:"100%",background:"transparent",border:"none",
+                  color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"'EB Garamond',Georgia,serif",
+                }}>Keep Practicing</button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const EmojDock = ({activeId}) => (
@@ -621,10 +786,25 @@ export default function ArmedAndAnchored({ session, profile }) {
                 <p style={{fontSize:18,color:C.cream,fontStyle:"italic",lineHeight:1.9,margin:0}}>"{s.text}"</p>
               </div>
             ))}
-            <button onClick={()=>{setShareCard({weapon,type:'scripture'});setTabMenuOpen(false);}} style={{width:"100%",marginTop:4,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
-              🖼 Create Share Card for Social Media
+            <button onClick={()=>{setShareCard({weapon,type:'scripture'});setTabMenuOpen(false);}} style={{flex:1,marginTop:4,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+              🖼 Share Card
             </button>
           </div>
+          {/* Memorize buttons per scripture */}
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:10}}>
+            {weapon.scriptures.map((s,i) => (
+              <button key={i} onClick={()=>setMemorizeVerse({text:s.text,ref:s.ref,idx:i})} style={{
+                flex:"1 1 auto",padding:"9px 12px",borderRadius:12,cursor:"pointer",fontSize:11,
+                fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em",
+                background:get(`mem_${i}`)==="true"?"rgba(124,146,132,0.15)":C.redF,
+                border:`1px solid ${get(`mem_${i}`)==="true"?"rgba(124,146,132,0.4)":C.redB}`,
+                color:get(`mem_${i}`)==="true"?C.green:C.redL,transition:"all .2s",
+              }}>
+                {get(`mem_${i}`)==="true" ? "✓ Memorized" : `✦ Memorize ${weapon.scriptures.length>1?s.ref:"Verse"}`}
+              </button>
+            ))}
+          </div>
+        </div>
         )}
 
         {tab === "teaching" && (
@@ -766,6 +946,65 @@ export default function ArmedAndAnchored({ session, profile }) {
           </button>
         )
       })()}
+      {/* Memorize Modal */}
+      {memorizeVerse && <MemorizeModal verse={memorizeVerse} onClose={()=>setMemorizeVerse(null)} get={get} set={set} C={C} />}
+      {/* memorize modal handled by MemorizeModal component above */ false && (() => { return (
+          <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:600,
+            display:"flex",alignItems:"center",justifyContent:"center",padding:24}}
+            onClick={()=>setMemorizeVerse(null)}>
+            <div onClick={e=>e.stopPropagation()} style={{
+              background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,
+              border:`1px solid ${C.goldB}`,borderRadius:20,padding:28,
+              maxWidth:400,width:"100%",boxShadow:"0 20px 60px rgba(0,0,0,0.6)",
+            }}>
+              <div style={{textAlign:"center",marginBottom:20}}>
+                <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",
+                  letterSpacing:"0.16em",textTransform:"uppercase",marginBottom:12}}>
+                  ✦ Memorize This Verse
+                </div>
+                <div style={{fontSize:14,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",
+                  letterSpacing:"0.1em",marginBottom:16}}>
+                  {memorizeVerse.ref}
+                </div>
+                {!revealed ? (
+                  <div>
+                    <p style={{fontSize:14,color:C.muted,fontStyle:"italic",marginBottom:16,lineHeight:1.7}}>
+                      Try to recall this verse from memory, then reveal to check yourself.
+                    </p>
+                    <button onClick={()=>setRevealed(true)} style={{
+                      background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,
+                      padding:"11px 24px",borderRadius:50,cursor:"pointer",fontSize:12,
+                      fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",
+                    }}>Reveal Verse</button>
+                  </div>
+                ) : (
+                  <div>
+                    <p style={{fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.85,
+                      marginBottom:20,borderTop:`1px solid ${C.borderGold}`,paddingTop:16}}>
+                      "{memorizeVerse.text}"
+                    </p>
+                    <button onClick={()=>{set(`mem_${memorizeVerse.idx}`,"true");setMemorizeVerse(null);}} style={{
+                      width:"100%",background:"rgba(124,146,132,0.15)",
+                      border:"1px solid rgba(124,146,132,0.4)",color:C.green,
+                      padding:"13px",borderRadius:12,cursor:"pointer",fontSize:13,
+                      fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",marginBottom:10,
+                    }}>✓ I've Got It — Mark Memorized</button>
+                    <button onClick={()=>setMemorizeVerse(null)} style={{
+                      width:"100%",background:"transparent",border:"none",
+                      color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"'EB Garamond',Georgia,serif",
+                    }}>Keep Practicing</button>
+                  </div>
+                )}
+                {isMemorized && (
+                  <div style={{marginTop:12,fontSize:12,color:C.green,fontFamily:"'Cinzel',Georgia,serif"}}>
+                    ✓ Already marked as memorized
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )
+      })()} */
       {/* Share Card Overlay */}
       {shareCard && (
         <>

@@ -789,7 +789,6 @@ export default function ArmedAndAnchored({ session, profile }) {
             <button onClick={()=>{setShareCard({weapon,type:'scripture'});setTabMenuOpen(false);}} style={{flex:1,marginTop:4,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
               🖼 Share Card
             </button>
-          </div>
           {/* Memorize buttons per scripture */}
           <div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:10}}>
             {weapon.scriptures.map((s,i) => (

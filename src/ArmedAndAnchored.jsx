@@ -955,8 +955,8 @@ export default function ArmedAndAnchored({ session, profile }) {
                 </button>
               </div>
             ))}
-            <button onClick={()=>{setShareCard({weapon,type:'scripture'});setTabMenuOpen(false);}} style={{flex:1,marginTop:4,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
-              🖼 Share Card
+            <button onClick={()=>{setShareCard({weapon,type:'scripture'});setTabMenuOpen(false);}} style={{width:"100%",marginTop:12,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"13px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
+              🖼 Create Share Card for Social Media
             </button>
         </div>
         )}
@@ -1102,63 +1102,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       })()}
       {/* Memorize Modal */}
       {memorizeVerse && <MemorizeModal verse={memorizeVerse} onClose={()=>setMemorizeVerse(null)} get={get} set={set} C={C} />}
-      {/* memorize modal handled by MemorizeModal component above */ false && (() => { return (
-          <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:600,
-            display:"flex",alignItems:"center",justifyContent:"center",padding:24}}
-            onClick={()=>setMemorizeVerse(null)}>
-            <div onClick={e=>e.stopPropagation()} style={{
-              background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,
-              border:`1px solid ${C.goldB}`,borderRadius:20,padding:28,
-              maxWidth:400,width:"100%",boxShadow:"0 20px 60px rgba(0,0,0,0.6)",
-            }}>
-              <div style={{textAlign:"center",marginBottom:20}}>
-                <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",
-                  letterSpacing:"0.16em",textTransform:"uppercase",marginBottom:12}}>
-                  ✦ Memorize This Verse
-                </div>
-                <div style={{fontSize:14,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",
-                  letterSpacing:"0.1em",marginBottom:16}}>
-                  {memorizeVerse.ref}
-                </div>
-                {!revealed ? (
-                  <div>
-                    <p style={{fontSize:14,color:C.muted,fontStyle:"italic",marginBottom:16,lineHeight:1.7}}>
-                      Try to recall this verse from memory, then reveal to check yourself.
-                    </p>
-                    <button onClick={()=>setRevealed(true)} style={{
-                      background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,
-                      padding:"11px 24px",borderRadius:50,cursor:"pointer",fontSize:12,
-                      fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",
-                    }}>Reveal Verse</button>
-                  </div>
-                ) : (
-                  <div>
-                    <p style={{fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.85,
-                      marginBottom:20,borderTop:`1px solid ${C.borderGold}`,paddingTop:16}}>
-                      "{memorizeVerse.text}"
-                    </p>
-                    <button onClick={()=>{set(`mem_${memorizeVerse.idx}`,"true");setMemorizeVerse(null);}} style={{
-                      width:"100%",background:"rgba(124,146,132,0.15)",
-                      border:"1px solid rgba(124,146,132,0.4)",color:C.green,
-                      padding:"13px",borderRadius:12,cursor:"pointer",fontSize:13,
-                      fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",marginBottom:10,
-                    }}>✓ I've Got It — Mark Memorized</button>
-                    <button onClick={()=>setMemorizeVerse(null)} style={{
-                      width:"100%",background:"transparent",border:"none",
-                      color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"'EB Garamond',Georgia,serif",
-                    }}>Keep Practicing</button>
-                  </div>
-                )}
-                {isMemorized && (
-                  <div style={{marginTop:12,fontSize:12,color:C.green,fontFamily:"'Cinzel',Georgia,serif"}}>
-                    ✓ Already marked as memorized
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )
-      })()} */
+
       {/* Share Card Overlay */}
       {shareCard && (
         <>

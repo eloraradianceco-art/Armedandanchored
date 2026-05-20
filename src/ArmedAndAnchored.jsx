@@ -354,8 +354,8 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [shareFlash, setShareFlash] = useState(null)
   const [shareCard, setShareCard] = useState(null) // {weapon, type}
   const [memorizeVerse, setMemorizeVerse] = useState(null) // {text, ref, idx}
-  const [translation, setTranslation] = useState('original') // original | kjv | web
-  const [translatedVerses, setTranslatedVerses] = useState({}) // key: weaponId_idx_translation
+  const [translation, setTranslation] = useState('original')
+  const [translatedVerses, setTranslatedVerses] = useState({})
   const [journalSaved, setJournalSaved] = useState(false)
   const [dockOpen, setDockOpen] = useState(false)
   const [tabMenuOpen, setTabMenuOpen] = useState(false)
@@ -497,18 +497,61 @@ export default function ArmedAndAnchored({ session, profile }) {
     outline: 'none', resize: 'vertical', boxSizing: 'border-box',
   }
 
+  // Translation lookup via scripture.api.bible (add VITE_BIBLE_API_KEY to Vercel env)
+  const TRANS_IDS = {
+    kjv:  'de4e12af7f28f599-02',
+    nkjv: 'de4e12af7f28f599-01',
+    esv:  '9879dbb7cfe39e4d-04',
+    niv:  '78a9f6124f344018-04',
+    csb:  '13eeebb88a8d4c40-02',
+    nasb: '40072c4a5aba4022-01',
+    amp:  '3a2b85a5fde7a7b1-01',
+  }
+  const BOOK_ABBR = {
+    genesis:'GEN',exodus:'EXO',leviticus:'LEV',numbers:'NUM',deuteronomy:'DEU',
+    joshua:'JOS',judges:'JDG',ruth:'RUT','1 samuel':'1SA','2 samuel':'2SA',
+    '1 kings':'1KI','2 kings':'2KI','1 chronicles':'1CH','2 chronicles':'2CH',
+    ezra:'EZR',nehemiah:'NEH',esther:'EST',job:'JOB',psalm:'PSA',psalms:'PSA',
+    proverbs:'PRO',ecclesiastes:'ECC','song of solomon':'SNG',isaiah:'ISA',
+    jeremiah:'JER',lamentations:'LAM',ezekiel:'EZK',daniel:'DAN',hosea:'HOS',
+    joel:'JOL',amos:'AMO',obadiah:'OBA',jonah:'JON',micah:'MIC',nahum:'NAM',
+    habakkuk:'HAB',zephaniah:'ZEP',haggai:'HAG',zechariah:'ZEC',malachi:'MAL',
+    matthew:'MAT',mark:'MRK',luke:'LUK',john:'JHN',acts:'ACT',romans:'ROM',
+    '1 corinthians':'1CO','2 corinthians':'2CO',galatians:'GAL',ephesians:'EPH',
+    philippians:'PHP',colossians:'COL','1 thessalonians':'1TH','2 thessalonians':'2TH',
+    '1 timothy':'1TI','2 timothy':'2TI',titus:'TIT',philemon:'PHM',hebrews:'HEB',
+    james:'JAS','1 peter':'1PE','2 peter':'2PE','1 john':'1JN','2 john':'2JN',
+    '3 john':'3JN',jude:'JUD',revelation:'REV',
+  }
+  const refToPassageId = (ref) => {
+    // Strip translation label e.g. "(ESV)" and normalize dashes
+    const clean = ref.replace(/\s*\([^)]+\)\s*$/, '').trim().replace(/\u2013|\u2014/g, '-')
+    // Match: "Book Chapter:Verse" or "Book Chapter:Verse-Verse"
+    const m = clean.match(/^(.+?)\s+(\d+):(\d+)(?:-(\d+))?/)
+    if (!m) return null
+    const book = BOOK_ABBR[m[1].toLowerCase()]
+    if (!book) return null
+    const ch = m[2], v1 = m[3], v2 = m[4]
+    return v2 ? `${book}.${ch}.${v1}-${book}.${ch}.${v2}` : `${book}.${ch}.${v1}`
+  }
   const fetchTranslation = async (ref, weaponId, idx, trans) => {
     const key = `${weaponId}_${idx}_${trans}`
     if (translatedVerses[key]) return
-    // Normalize ref: remove translation label, lowercase
-    const clean = ref.replace(/\s*\([^)]+\)\s*$/, '').trim()
+    const apiKey = import.meta.env.VITE_BIBLE_API_KEY
+    if (!apiKey) { setTranslatedVerses(prev => ({...prev, [key]: '__nokey__'})); return }
+    const passageId = refToPassageId(ref)
+    if (!passageId) { setTranslatedVerses(prev => ({...prev, [key]: '__err__'})); return }
+    const bibleId = TRANS_IDS[trans]
+    if (!bibleId) return
     try {
-      const res = await fetch(`https://bible-api.com/${encodeURIComponent(clean)}?translation=${trans}`)
+      const res = await fetch(
+        `https://api.scripture.api.bible/v1/bibles/${bibleId}/passages/${passageId}?content-type=text&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=false`,
+        { headers: { 'api-key': apiKey } }
+      )
       const data = await res.json()
-      if (data.text) {
-        setTranslatedVerses(prev => ({...prev, [key]: data.text.trim()}))
-      }
-    } catch {}
+      const text = data?.data?.content?.replace(/<[^>]+>/g, '')?.replace(/\s+/g, ' ')?.trim()
+      setTranslatedVerses(prev => ({...prev, [key]: text || '__err__'}))
+    } catch { setTranslatedVerses(prev => ({...prev, [key]: '__err__'})) }
   }
 
   const MemorizeModal = ({verse, onClose, get, set, C}) => {
@@ -999,30 +1042,45 @@ export default function ArmedAndAnchored({ session, profile }) {
         {tab === "scripture" && (
           <div>
             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>Key Passages</div>
-            {/* Translation selector */}
-            <div style={{display:"flex",gap:6,marginBottom:14,alignItems:"center"}}>
+            {/* Translation selector dropdown */}
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
               <span style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",flexShrink:0}}>Translation:</span>
-              {[['original','Original'],['kjv','KJV'],['web','WEB']].map(([t,label]) => (
-                <button key={t} onClick={()=>{setTranslation(t);if(t!=='original'){weapon.scriptures.forEach((s,i)=>fetchTranslation(s.ref,weapon.id,i,t))}}}
-                  style={{padding:"5px 10px",borderRadius:20,cursor:"pointer",fontSize:10,
-                    fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em",
-                    background:translation===t?C.redF:"transparent",
-                    border:`1px solid ${translation===t?C.redB:C.border}`,
-                    color:translation===t?C.redL:C.muted,transition:"all .2s"}}>
-                  {label}
-                </button>
-              ))}
+              <select value={translation} onChange={e=>{const t=e.target.value;setTranslation(t);if(t!=='original'){weapon.scriptures.forEach((s,i)=>fetchTranslation(s.ref,weapon.id,i,t))}}}
+                style={{flex:1,background:"rgba(7,14,23,0.8)",border:`1px solid ${C.border}`,
+                  borderRadius:8,color:C.cream,fontSize:13,padding:"8px 10px",
+                  fontFamily:"'EB Garamond',Georgia,serif",outline:"none",cursor:"pointer",
+                  appearance:"none",backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237C90A2'/%3E%3C/svg%3E")`,
+                  backgroundRepeat:"no-repeat",backgroundPosition:"right 10px center",paddingRight:28}}>
+                <option value="original">Original (as written)</option>
+                <option value="kjv">KJV — King James Version</option>
+                <option value="nkjv">NKJV — New King James</option>
+                <option value="esv">ESV — English Standard</option>
+                <option value="niv">NIV — New International</option>
+                <option value="csb">CSB — Christian Standard</option>
+                <option value="nasb">NASB — New American Standard</option>
+                <option value="amp">AMP — Amplified Bible</option>
+              </select>
             </div>
 
             {weapon.scriptures.map((s,i) => {
               const tvKey = `${weapon.id}_${i}_${translation}`
-              const displayText = translation==='original' ? s.text : (translatedVerses[tvKey] || s.text)
-              const isLoading = translation!=='original' && !translatedVerses[tvKey]
+              const tvVal = translatedVerses[tvKey]
+              const displayText = translation==='original' ? s.text : (tvVal && tvVal!=='__nokey__' && tvVal!=='__err__' ? tvVal : s.text)
+              const isLoading = translation!=='original' && !tvVal
+              const noKey = tvVal === '__nokey__'
+              const isErr = tvVal === '__err__' 
               return (
               <div key={i} style={{background:i===0?`linear-gradient(145deg,${accF(weapon)},rgba(255,255,255,0.01))`:C.bgCard,border:`1px solid ${i===0?accB(weapon):C.border}`,borderRadius:14,padding:"18px 20px",marginBottom:11}}>
                 <div style={{fontSize:9,color:acc(weapon),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:9}}>{s.ref}</div>
+                {noKey && (
+                  <div style={{background:"rgba(176,138,78,0.08)",border:"1px solid rgba(176,138,78,0.2)",
+                    borderRadius:10,padding:"10px 14px",marginBottom:12,fontSize:13,color:C.gold,lineHeight:1.6}}>
+                    Add <span style={{fontFamily:"monospace",background:"rgba(0,0,0,0.3)",padding:"1px 6px",borderRadius:4}}>VITE_BIBLE_API_KEY</span> to Vercel environment variables to enable translations.
+                    Get a free key at <span style={{color:C.redL}}>scripture.api.bible</span>
+                  </div>
+                )}
                 <p style={{fontSize:18,color:isLoading?C.dim:C.cream,fontStyle:"italic",lineHeight:1.9,marginBottom:14}}>
-                  {isLoading ? "Loading..." : `"${displayText}"`}
+                  {isLoading ? "Loading translation…" : isErr ? `"${s.text}"` : `"${displayText}"`}
                 </p>
                 <button onClick={()=>setMemorizeVerse({text:s.text,ref:s.ref,idx:i})} style={{
                   padding:"7px 14px",borderRadius:20,cursor:"pointer",fontSize:11,

@@ -952,6 +952,202 @@ function FinishStrong({C, get, set}) {
 }
 
 // ─── ROUTER ──────────────────────────────────────────────────────────────────
+
+// ── Weapon 16: Name of Jesus — Name Declaration Log ──────────────────────
+function NameLog({ C, get, set }) {
+  const [situation, setSituation] = useState('')
+  const [saved, setSaved] = useState(false)
+  const load = () => { try { return JSON.parse(get('tool_names')||'[]') } catch { return [] } }
+  const save = (d) => set('tool_names', JSON.stringify(d))
+  const entries = load()
+  const add = () => {
+    if (!situation.trim()) return
+    save([{situation:situation.trim(),date:new Date().toLocaleDateString()},...entries.slice(0,19)])
+    setSituation(''); setSaved(true); setTimeout(()=>setSaved(false),1500)
+  }
+  return (
+    <div>
+      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
+        Record situations where you are invoking the authority of the Name of Jesus.
+      </p>
+      <textarea rows={3} value={situation} onChange={e=>setSituation(e.target.value)}
+        placeholder="Describe the situation where you are declaring the name of Jesus..."
+        style={{width:'100%',background:'rgba(255,255,255,0.04)',border:`1px solid ${C.border}`,
+          borderRadius:10,color:C.cream,fontSize:15,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
+          outline:'none',resize:'vertical',boxSizing:'border-box',marginBottom:10}}/>
+      <SaveButton onSave={add} saved={saved} C={C} label="Log Declaration"/>
+      {entries.map((e,i) => (
+        <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
+          <p style={{fontSize:14,color:C.text,lineHeight:1.65,margin:0}}>{e.situation}</p>
+        </Entry>
+      ))}
+    </div>
+  )
+}
+
+// ── Weapon 17: Blood of Jesus — Accusation Counter ────────────────────────
+function AccusationCounter({ C, get, set }) {
+  const [accusation, setAccusation] = useState('')
+  const [saved, setSaved] = useState(false)
+  const load = () => { try { return JSON.parse(get('tool_accuse')||'[]') } catch { return [] } }
+  const save = (d) => set('tool_accuse', JSON.stringify(d))
+  const entries = load()
+  const add = () => {
+    if (!accusation.trim()) return
+    save([{accusation:accusation.trim(),date:new Date().toLocaleDateString()},...entries.slice(0,19)])
+    setAccusation(''); setSaved(true); setTimeout(()=>setSaved(false),1500)
+  }
+  return (
+    <div>
+      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
+        When the enemy accuses, write it down — then counter it with the blood of Jesus.
+      </p>
+      <textarea rows={3} value={accusation} onChange={e=>setAccusation(e.target.value)}
+        placeholder="What is the enemy accusing you of? (It was covered at Calvary.)"
+        style={{width:'100%',background:'rgba(255,255,255,0.04)',border:`1px solid ${C.border}`,
+          borderRadius:10,color:C.cream,fontSize:15,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
+          outline:'none',resize:'vertical',boxSizing:'border-box',marginBottom:10}}/>
+      <SaveButton onSave={add} saved={saved} C={C} label="Counter with the Blood"/>
+      {entries.map((e,i) => (
+        <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
+          <p style={{fontSize:12,color:C.muted,fontStyle:'italic',marginBottom:4}}>Accusation:</p>
+          <p style={{fontSize:14,color:C.text,lineHeight:1.65,marginBottom:6}}>{e.accusation}</p>
+          <p style={{fontSize:12,color:'rgba(201,72,72,0.8)',fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.06em'}}>
+            → Covered by the blood of Jesus. Case dismissed.
+          </p>
+        </Entry>
+      ))}
+    </div>
+  )
+}
+
+// ── Weapon 18: Praise — Praise Log ────────────────────────────────────────
+function PraiseLog({ C, get, set }) {
+  const [moment, setMoment] = useState('')
+  const [shift, setShift] = useState('')
+  const [saved, setSaved] = useState(false)
+  const load = () => { try { return JSON.parse(get('tool_praise')||'[]') } catch { return [] } }
+  const save = (d) => set('tool_praise', JSON.stringify(d))
+  const entries = load()
+  const add = () => {
+    if (!moment.trim()) return
+    save([{moment:moment.trim(),shift:shift.trim(),date:new Date().toLocaleDateString()},...entries.slice(0,19)])
+    setMoment(''); setShift(''); setSaved(true); setTimeout(()=>setSaved(false),1500)
+  }
+  return (
+    <div>
+      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
+        Record your praise moments and any atmospheric shift you noticed.
+      </p>
+      {[['Praise declaration or moment', moment, setMoment],
+        ['Atmospheric shift noticed (optional)', shift, setShift]].map(([label,val,setter],i) => (
+        <div key={i} style={{marginBottom:10}}>
+          <div style={{fontSize:10,color:C.muted,letterSpacing:'0.1em',textTransform:'uppercase',
+            fontFamily:"'Cinzel',Georgia,serif",marginBottom:5}}>{label}</div>
+          <textarea rows={2} value={val} onChange={e=>setter(e.target.value)} placeholder={label}
+            style={{width:'100%',background:'rgba(255,255,255,0.04)',border:`1px solid ${C.border}`,
+              borderRadius:10,color:C.cream,fontSize:15,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
+              outline:'none',resize:'vertical',boxSizing:'border-box'}}/>
+        </div>
+      ))}
+      <SaveButton onSave={add} saved={saved} C={C} label="Log Praise Moment"/>
+      {entries.map((e,i) => (
+        <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
+          <p style={{fontSize:14,color:C.text,lineHeight:1.65,marginBottom:e.shift?8:0}}>{e.moment}</p>
+          {e.shift && <p style={{fontSize:13,color:C.gold,fontStyle:'italic',margin:0}}>Shift: {e.shift}</p>}
+        </Entry>
+      ))}
+    </div>
+  )
+}
+
+// ── Weapon 19: Forgiveness — Forgiveness Inventory ────────────────────────
+function ForgivenessInventory({ C, get, set }) {
+  const load = () => { try { return JSON.parse(get('tool_forgive')||'[]') } catch { return [] } }
+  const save = (d) => set('tool_forgive', JSON.stringify(d))
+  const entries = load()
+  const [name, setName] = useState('')
+  const [offense, setOffense] = useState('')
+  const [saved, setSaved] = useState(false)
+  const add = () => {
+    if (!name.trim()) return
+    save([{name:name.trim(),offense:offense.trim(),released:false,date:new Date().toLocaleDateString()},...entries.slice(0,24)])
+    setName(''); setOffense(''); setSaved(true); setTimeout(()=>setSaved(false),1500)
+  }
+  const toggle = (i) => {
+    const updated = [...entries]; updated[i] = {...updated[i], released:!updated[i].released}
+    save(updated)
+  }
+  return (
+    <div>
+      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
+        Name who you need to forgive and what for. Mark released when you have chosen to let go.
+      </p>
+      {[['Person / Who to forgive', name, setName],['The offense (optional)', offense, setOffense]].map(([lbl,val,fn],i)=>(
+        <div key={i} style={{marginBottom:10}}>
+          <div style={{fontSize:10,color:C.muted,letterSpacing:'0.1em',textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",marginBottom:5}}>{lbl}</div>
+          <input value={val} onChange={e=>fn(e.target.value)} placeholder={lbl}
+            style={{width:'100%',background:'rgba(255,255,255,0.04)',border:`1px solid ${C.border}`,
+              borderRadius:10,color:C.cream,fontSize:15,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
+              outline:'none',boxSizing:'border-box'}}/>
+        </div>
+      ))}
+      <SaveButton onSave={add} saved={saved} C={C} label="Add to Inventory"/>
+      {entries.map((e,i) => (
+        <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:10}}>
+            <div style={{flex:1}}>
+              <p style={{fontSize:15,fontWeight:600,color:C.cream,margin:'0 0 4px'}}>{e.name}</p>
+              {e.offense && <p style={{fontSize:13,color:C.muted,fontStyle:'italic',margin:0}}>{e.offense}</p>}
+            </div>
+            <button onClick={()=>toggle(i)} style={{flexShrink:0,padding:'6px 12px',borderRadius:20,cursor:'pointer',fontSize:11,
+              fontFamily:"'Cinzel',Georgia,serif",transition:'all .2s',
+              background:e.released?'rgba(124,146,132,0.15)':C.redF,
+              border:`1px solid ${e.released?'rgba(124,146,132,0.4)':C.redB}`,
+              color:e.released?C.green:C.redL}}>
+              {e.released ? '✓ Released' : 'Release'}
+            </button>
+          </div>
+        </Entry>
+      ))}
+    </div>
+  )
+}
+
+// ── Weapons 20–23: Shared simple journal tool ─────────────────────────────
+function SimpleJournalTool({ C, get, set, promptText, key_ }) {
+  const [entry, setEntry] = useState('')
+  const [saved, setSaved] = useState(false)
+  const load = () => { try { return JSON.parse(get(key_)||'[]') } catch { return [] } }
+  const save = (d) => set(key_, JSON.stringify(d))
+  const entries = load()
+  const add = () => {
+    if (!entry.trim()) return
+    save([{text:entry.trim(),date:new Date().toLocaleDateString()},...entries.slice(0,24)])
+    setEntry(''); setSaved(true); setTimeout(()=>setSaved(false),1500)
+  }
+  return (
+    <div>
+      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>{promptText}</p>
+      <textarea rows={4} value={entry} onChange={e=>setEntry(e.target.value)}
+        placeholder="Write your reflection here..."
+        style={{width:'100%',background:'rgba(255,255,255,0.04)',border:`1px solid ${C.border}`,
+          borderRadius:10,color:C.cream,fontSize:15,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
+          outline:'none',resize:'vertical',boxSizing:'border-box',marginBottom:10}}/>
+      <SaveButton onSave={add} saved={saved} C={C} label="Save Entry"/>
+      {entries.map((e,i) => (
+        <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
+          <p style={{fontSize:14,color:C.text,lineHeight:1.65,margin:0}}>{e.text}</p>
+        </Entry>
+      ))}
+    </div>
+  )
+}
+function UnityLog({C,get,set}){return <SimpleJournalTool C={C} get={get} set={set} key_="tool_unity" promptText="Record your prayer agreements with others. Who did you agree with? What did you pray for? What happened?"/>}
+function TongueAudit({C,get,set}){return <SimpleJournalTool C={C} get={get} set={set} key_="tool_tongue" promptText="Record negative declarations you caught yourself making today, and the scriptural declaration you replaced them with."/>}
+function HumilityLog({C,get,set}){return <SimpleJournalTool C={C} get={get} set={set} key_="tool_humble" promptText="Where have you been striving in your own strength? Record the surrender — what you handed to God and when."/>}
+function RestLog({C,get,set}){return <SimpleJournalTool C={C} get={get} set={set} key_="tool_rest" promptText="Record your rest practice — moments of stillness, what surfaced, what you surrendered. What did God show you in the quiet?"/>}
+
 const TOOLS = {
   1: BattleLog,
   2: ArmorCheck,
@@ -968,6 +1164,8 @@ const TOOLS = {
   13: IntercessionList,
   14: CovenantTracker,
   15: FinishStrong,
+  16: NameLog, 17: AccusationCounter, 18: PraiseLog, 19: ForgivenessInventory,
+  20: UnityLog, 21: TongueAudit, 22: HumilityLog, 23: RestLog,
 }
 
 const TOOL_NAMES = {
@@ -976,6 +1174,9 @@ const TOOL_NAMES = {
   7:'Thought Journal', 8:'Fear Inventory', 9:'Worship Log',
   10:'Generational Map', 11:'Voice Tracker', 12:'Authority Log',
   13:'Intercession List', 14:'Covenant Tracker', 15:'Finish Strong',
+  16:'Name Declaration Log', 17:'Accusation Counter', 18:'Praise Log',
+  19:'Forgiveness Inventory', 20:'Unity & Agreement Log', 21:'Tongue Audit',
+  22:'Humility & Surrender Log', 23:'Rest & Stillness Journal',
 }
 
 export { TOOL_NAMES }

@@ -6,11 +6,12 @@ const TAGLINE = 'Stand firm. Fight from victory. — armedandanchored.vercel.app
 export default function ShareCard({ weapon, onClose, initialType = 'scripture' }) {
   const cardRef = useRef(null)
   const [cardType, setCardType] = useState(initialType)
+  const [scriptureIdx, setScriptureIdx] = useState(0)
   const [lightCard, setLightCard] = useState(false)
   const [sharing, setSharing] = useState(false)
   const [copiedCaption, setCopiedCaption] = useState(false)
 
-  const scripture = weapon.scriptures[0]
+  const scripture = weapon.scriptures[scriptureIdx] || weapon.scriptures[0]
 
   const TYPES = [
     { id: 'scripture', label: '📖 Scripture' },
@@ -142,10 +143,33 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
           <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '0 4px' }}>×</button>
         </div>
 
+        {/* Scripture selector — shown when weapon has multiple scriptures */}
+        {weapon.scriptures.length > 1 && (
+          <div style={{ marginBottom: 12 }}>
+            <div style={{ fontSize: 10, color: C.muted, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 7 }}>
+              Scripture
+            </div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              {weapon.scriptures.map((s, i) => (
+                <button key={i} onClick={() => setScriptureIdx(i)} style={{
+                  padding: '6px 10px', borderRadius: 8, cursor: 'pointer', fontSize: 10,
+                  fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.04em',
+                  background: scriptureIdx === i ? C.redF : 'rgba(255,255,255,0.04)',
+                  border: `1px solid ${scriptureIdx === i ? C.redB : C.border}`,
+                  color: scriptureIdx === i ? C.redL : C.muted, transition: 'all .2s',
+                  maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                }}>
+                  {s.ref}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Card Type Selector */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 12, flexWrap: 'wrap' }}>
           {TYPES.map(t => (
-            <button key={t.id} onClick={() => setCardType(t.id)} style={{
+            <button key={t.id} onClick={() => { setCardType(t.id); if (t.id !== 'scripture') setScriptureIdx(0); }} style={{
               flex: '1 1 auto', minWidth: 0,
               padding: '7px 4px', borderRadius: 8, cursor: 'pointer', fontSize: 10,
               fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.04em',

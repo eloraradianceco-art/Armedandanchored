@@ -494,60 +494,220 @@ export default function ArmedAndAnchored({ session, profile }) {
   }
 
   const MemorizeModal = ({verse, onClose, get, set, C}) => {
+    const [mode, setMode] = useState(null)          // null | 'recall' | 'blanks' | 'type'
     const [revealed, setRevealed] = useState(false)
+    const [typed, setTyped] = useState('')
+    const [score, setScore] = useState(null)
     const isMemorized = get(`mem_${verse.idx}`) === "true"
+
+    // Fill-in-the-blanks: blank every 3rd word
+    const words = verse.text.split(' ')
+    const blankedWords = words.map((w,i) => (i+1)%3===0 ? '___' : w)
+    const blankedText = blankedWords.join(' ')
+
+    // Score for type-it-out
+    const checkScore = () => {
+      const norm = s => s.toLowerCase().replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim()
+      const typed_w = norm(typed).split(' ')
+      const orig_w = norm(verse.text).split(' ')
+      const matched = typed_w.filter(w => orig_w.includes(w)).length
+      const pct = Math.round((matched / orig_w.length) * 100)
+      setScore(pct)
+    }
+
+    const markMemorized = () => { set(`mem_${verse.idx}`,"true"); onClose() }
+
+    const btnStyle = (active) => ({
+      flex:1,padding:"10px 8px",borderRadius:10,cursor:"pointer",fontSize:11,
+      fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.05em",textAlign:"center",
+      background:active?C.goldF:"rgba(255,255,255,0.04)",
+      border:`1px solid ${active?C.goldB:C.border}`,
+      color:active?C.gold:C.muted,transition:"all .2s",
+    })
+
     return (
-      <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:600,
-        display:"flex",alignItems:"center",justifyContent:"center",padding:24}}
-        onClick={onClose}>
+      <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.88)",zIndex:600,
+        display:"flex",alignItems:"center",justifyContent:"center",padding:16,overflowY:"auto"}}
+        onClick={()=>{if(!mode)onClose()}}>
         <div onClick={e=>e.stopPropagation()} style={{
           background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,
-          border:`1px solid ${C.goldB}`,borderRadius:20,padding:28,
-          maxWidth:400,width:"100%",boxShadow:"0 20px 60px rgba(0,0,0,0.6)",
+          border:`1px solid ${C.goldB}`,borderRadius:20,padding:24,
+          maxWidth:420,width:"100%",boxShadow:"0 20px 60px rgba(0,0,0,0.6)",
         }}>
-          <div style={{textAlign:"center"}}>
-            <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",
-              letterSpacing:"0.16em",textTransform:"uppercase",marginBottom:12}}>
-              ✦ Memorize
+          {/* Header */}
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+            <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.16em",textTransform:"uppercase"}}>
+              {mode ? '← ' : ''}✦ Memorize
             </div>
-            <div style={{fontSize:14,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",
-              letterSpacing:"0.1em",marginBottom:20,paddingBottom:16,
-              borderBottom:`1px solid rgba(176,138,78,0.2)`}}>
-              {verse.ref}
-            </div>
-            {!revealed ? (
-              <div>
-                <p style={{fontSize:14,color:C.muted,fontStyle:"italic",marginBottom:20,lineHeight:1.7}}>
-                  Try to recall this verse from memory — then tap to reveal and check yourself.
-                </p>
-                <button onClick={()=>setRevealed(true)} style={{
-                  background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,
-                  padding:"12px 28px",borderRadius:50,cursor:"pointer",fontSize:12,
-                  fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",
-                }}>Reveal Verse</button>
+            <button onClick={onClose} style={{background:"transparent",border:"none",color:C.muted,cursor:"pointer",fontSize:20,lineHeight:1}}>×</button>
+          </div>
+
+          {/* Reference */}
+          <div style={{fontSize:14,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",
+            letterSpacing:"0.1em",marginBottom:16,paddingBottom:14,
+            borderBottom:`1px solid rgba(176,138,78,0.2)`,textAlign:"center"}}>
+            {verse.ref}
+            {isMemorized && <span style={{display:"block",fontSize:11,color:C.green,marginTop:4,fontFamily:"'Cinzel',Georgia,serif"}}>✓ Memorized</span>}
+          </div>
+
+          {!mode ? (
+            // Mode picker
+            <div>
+              <p style={{fontSize:14,color:C.muted,textAlign:"center",marginBottom:16,fontStyle:"italic",lineHeight:1.6}}>
+                Choose your memorization method:
+              </p>
+              <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                {[
+                  {id:"recall",icon:"🧠",title:"Read & Recall",desc:"See the reference, recite aloud, then reveal to check"},
+                  {id:"blanks",icon:"✏️",title:"Fill the Gaps",desc:"Read the verse with every 3rd word blanked out"},
+                  {id:"type",icon:"⌨️",title:"Write it Out",desc:"Type the verse from memory and get a score"},
+                ].map(m => (
+                  <button key={m.id} onClick={()=>{setMode(m.id);setRevealed(false);setTyped('');setScore(null)}} style={{
+                    display:"flex",alignItems:"center",gap:14,
+                    padding:"14px 16px",borderRadius:12,cursor:"pointer",textAlign:"left",
+                    background:C.redF,border:`1px solid ${C.redB}`,transition:"all .2s",
+                  }}>
+                    <span style={{fontSize:22,flexShrink:0}}>{m.icon}</span>
+                    <span>
+                      <span style={{display:"block",fontSize:13,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em",marginBottom:2}}>{m.title}</span>
+                      <span style={{display:"block",fontSize:12,color:C.muted,fontStyle:"italic"}}>{m.desc}</span>
+                    </span>
+                  </button>
+                ))}
               </div>
-            ) : (
-              <div>
-                <p style={{fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.85,marginBottom:20}}>
-                  "{verse.text}"
-                </p>
-                {isMemorized ? (
-                  <div style={{fontSize:13,color:C.green,marginBottom:14,fontFamily:"'Cinzel',Georgia,serif"}}>✓ Already memorized</div>
-                ) : (
-                  <button onClick={()=>{set(`mem_${verse.idx}`,"true");onClose();}} style={{
+            </div>
+          ) : mode === 'recall' ? (
+            // Mode 1: Read & Recall
+            <div>
+              {!revealed ? (
+                <div style={{textAlign:"center"}}>
+                  <p style={{fontSize:14,color:C.muted,fontStyle:"italic",marginBottom:20,lineHeight:1.7}}>
+                    Say the verse aloud from memory, then reveal to check yourself.
+                  </p>
+                  <button onClick={()=>setRevealed(true)} style={{
+                    background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,
+                    padding:"12px 28px",borderRadius:50,cursor:"pointer",fontSize:12,
+                    fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",
+                  }}>Reveal Verse</button>
+                </div>
+              ) : (
+                <div>
+                  <p style={{fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.85,marginBottom:20,textAlign:"center"}}>
+                    "{verse.text}"
+                  </p>
+                  <button onClick={markMemorized} style={{
                     width:"100%",background:"rgba(124,146,132,0.15)",
                     border:"1px solid rgba(124,146,132,0.4)",color:C.green,
                     padding:"13px",borderRadius:12,cursor:"pointer",fontSize:13,
                     fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",marginBottom:10,
                   }}>✓ I've Got It — Mark Memorized</button>
-                )}
-                <button onClick={onClose} style={{
-                  width:"100%",background:"transparent",border:"none",
-                  color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"'EB Garamond',Georgia,serif",
-                }}>Keep Practicing</button>
+                  <button onClick={()=>setRevealed(false)} style={{
+                    width:"100%",background:"transparent",border:"none",
+                    color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"'EB Garamond',Georgia,serif",
+                  }}>Try Again</button>
+                </div>
+              )}
+            </div>
+          ) : mode === 'blanks' ? (
+            // Mode 2: Fill the Gaps
+            <div>
+              <p style={{fontSize:14,color:C.muted,fontStyle:"italic",marginBottom:14,lineHeight:1.6,textAlign:"center"}}>
+                Read aloud, filling in the blanked words from memory.
+              </p>
+              <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${C.border}`,
+                borderRadius:12,padding:"16px",marginBottom:16}}>
+                <p style={{fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:2.1,margin:0}}>
+                  {blankedWords.map((w,i) => (
+                    <span key={i} style={{
+                      color:w==='___'?C.gold:C.cream,
+                      borderBottom:w==='___'?`1px solid ${C.gold}`:undefined,
+                      padding:w==='___'?"0 4px":undefined,
+                      letterSpacing:w==='___'?"0.1em":undefined,
+                    }}>{w}{i<blankedWords.length-1?' ':''}</span>
+                  ))}
+                </p>
               </div>
-            )}
-          </div>
+              {!revealed ? (
+                <button onClick={()=>setRevealed(true)} style={{
+                  width:"100%",background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,
+                  padding:"12px",borderRadius:12,cursor:"pointer",fontSize:12,
+                  fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",marginBottom:10,
+                }}>Reveal Missing Words</button>
+              ) : (
+                <div style={{background:"rgba(124,146,132,0.08)",border:"1px solid rgba(124,146,132,0.25)",
+                  borderRadius:10,padding:"12px 14px",marginBottom:12}}>
+                  <p style={{fontSize:14,color:C.text,fontStyle:"italic",lineHeight:1.8,margin:0}}>
+                    {words.map((w,i) => (
+                      <span key={i} style={{color:(i+1)%3===0?C.green:C.text,fontWeight:(i+1)%3===0?600:400}}>
+                        {w}{i<words.length-1?' ':''}
+                      </span>
+                    ))}
+                  </p>
+                </div>
+              )}
+              <button onClick={markMemorized} style={{
+                width:"100%",background:"rgba(124,146,132,0.15)",
+                border:"1px solid rgba(124,146,132,0.4)",color:C.green,
+                padding:"12px",borderRadius:12,cursor:"pointer",fontSize:12,
+                fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",
+              }}>✓ Mark as Memorized</button>
+            </div>
+          ) : (
+            // Mode 3: Write it Out
+            <div>
+              <p style={{fontSize:14,color:C.muted,fontStyle:"italic",marginBottom:12,lineHeight:1.6,textAlign:"center"}}>
+                Type the verse from memory, then check your score.
+              </p>
+              {score === null ? (
+                <div>
+                  <textarea rows={5} value={typed} onChange={e=>setTyped(e.target.value)}
+                    placeholder="Type the verse here from memory..."
+                    style={{width:"100%",background:"rgba(255,255,255,0.04)",border:`1px solid ${C.border}`,
+                      borderRadius:10,color:C.cream,fontSize:15,padding:"12px",
+                      fontFamily:"'EB Garamond',Georgia,serif",outline:"none",
+                      resize:"none",boxSizing:"border-box",marginBottom:10,lineHeight:1.7}}/>
+                  <button onClick={checkScore} disabled={!typed.trim()} style={{
+                    width:"100%",background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,
+                    padding:"12px",borderRadius:12,cursor:"pointer",fontSize:12,
+                    fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",
+                    opacity:typed.trim()?1:0.4,
+                  }}>Check My Score</button>
+                </div>
+              ) : (
+                <div style={{textAlign:"center"}}>
+                  <div style={{fontSize:48,fontWeight:700,color:score>=80?C.green:score>=50?C.gold:C.redL,
+                    fontFamily:"'Cinzel',Georgia,serif",marginBottom:4}}>
+                    {score}%
+                  </div>
+                  <div style={{fontSize:13,color:C.muted,marginBottom:16}}>
+                    {score>=90?"Nearly perfect — keep going!":score>=70?"Great progress — almost there!":score>=50?"Good start — practice more!":"Keep at it — repetition builds memory!"}
+                  </div>
+                  <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${C.border}`,
+                    borderRadius:10,padding:"12px",marginBottom:14,textAlign:"left"}}>
+                    <div style={{fontSize:10,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>Full verse</div>
+                    <p style={{fontSize:14,color:C.text,fontStyle:"italic",lineHeight:1.8,margin:0}}>"{verse.text}"</p>
+                  </div>
+                  {score >= 70 && (
+                    <button onClick={markMemorized} style={{
+                      width:"100%",background:"rgba(124,146,132,0.15)",
+                      border:"1px solid rgba(124,146,132,0.4)",color:C.green,
+                      padding:"12px",borderRadius:12,cursor:"pointer",fontSize:12,
+                      fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",marginBottom:10,
+                    }}>✓ Mark as Memorized</button>
+                  )}
+                  <button onClick={()=>{setTyped('');setScore(null)}} style={{
+                    width:"100%",background:"transparent",border:"none",
+                    color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"'EB Garamond',Georgia,serif",
+                  }}>Try Again</button>
+                </div>
+              )}
+            </div>
+          )}
+          {mode && <button onClick={()=>{setMode(null);setRevealed(false);setScore(null);setTyped('')}} style={{
+            marginTop:14,width:"100%",background:"transparent",border:`1px solid ${C.border}`,
+            color:C.muted,cursor:"pointer",padding:"9px",borderRadius:8,fontSize:12,
+            fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em",
+          }}>← Back to Methods</button>}
         </div>
       </div>
     )
@@ -783,26 +943,21 @@ export default function ArmedAndAnchored({ session, profile }) {
             {weapon.scriptures.map((s,i) => (
               <div key={i} style={{background:i===0?`linear-gradient(145deg,${accF(weapon)},rgba(255,255,255,0.01))`:C.bgCard,border:`1px solid ${i===0?accB(weapon):C.border}`,borderRadius:14,padding:"18px 20px",marginBottom:11}}>
                 <div style={{fontSize:9,color:acc(weapon),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:9}}>{s.ref}</div>
-                <p style={{fontSize:18,color:C.cream,fontStyle:"italic",lineHeight:1.9,margin:0}}>"{s.text}"</p>
+                <p style={{fontSize:18,color:C.cream,fontStyle:"italic",lineHeight:1.9,marginBottom:14}}>"{s.text}"</p>
+                <button onClick={()=>setMemorizeVerse({text:s.text,ref:s.ref,idx:i})} style={{
+                  padding:"7px 14px",borderRadius:20,cursor:"pointer",fontSize:11,
+                  fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em",
+                  background:get(`mem_${i}`)==="true"?"rgba(124,146,132,0.15)":C.redF,
+                  border:`1px solid ${get(`mem_${i}`)==="true"?"rgba(124,146,132,0.4)":C.redB}`,
+                  color:get(`mem_${i}`)==="true"?C.green:C.redL,transition:"all .2s",
+                }}>
+                  {get(`mem_${i}`)==="true" ? "✓ Memorized" : "✦ Memorize"}
+                </button>
               </div>
             ))}
             <button onClick={()=>{setShareCard({weapon,type:'scripture'});setTabMenuOpen(false);}} style={{flex:1,marginTop:4,background:C.goldF,border:`1px solid ${C.goldB}`,color:C.gold,padding:"11px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
               🖼 Share Card
             </button>
-          {/* Memorize buttons per scripture */}
-          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:10}}>
-            {weapon.scriptures.map((s,i) => (
-              <button key={i} onClick={()=>setMemorizeVerse({text:s.text,ref:s.ref,idx:i})} style={{
-                flex:"1 1 auto",padding:"9px 12px",borderRadius:12,cursor:"pointer",fontSize:11,
-                fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em",
-                background:get(`mem_${i}`)==="true"?"rgba(124,146,132,0.15)":C.redF,
-                border:`1px solid ${get(`mem_${i}`)==="true"?"rgba(124,146,132,0.4)":C.redB}`,
-                color:get(`mem_${i}`)==="true"?C.green:C.redL,transition:"all .2s",
-              }}>
-                {get(`mem_${i}`)==="true" ? "✓ Memorized" : `✦ Memorize ${weapon.scriptures.length>1?s.ref:"Verse"}`}
-              </button>
-            ))}
-          </div>
         </div>
         )}
 

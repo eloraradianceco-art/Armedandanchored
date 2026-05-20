@@ -64,6 +64,14 @@ function Entry({C,date,children,onDelete}) {
   )
 }
 
+function SaveButton({C, onSave, saved, label='Save Entry'}) {
+  return (
+    <button onClick={onSave} style={saveBtn(C, saved)}>
+      {saved ? '✓ Saved' : label}
+    </button>
+  )
+}
+
 // ─── HELPERS ────────────────────────────────────────────────────────────────
 function useToolData(get, set, key) {
   const load = () => { try { return JSON.parse(get(key)||'[]') } catch { return [] } }

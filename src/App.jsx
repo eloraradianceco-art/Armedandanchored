@@ -42,15 +42,16 @@ function AppInner() {
   const [resetLoading, setResetLoading] = useState(false)
   const [resetError, setResetError] = useState(null)
   const [resetDone, setResetDone] = useState(false)
-  const [verifyingPayment, setVerifyingPayment] = useState(false)
 
   const params = new URLSearchParams(window.location.search)
   const stripeSessionId = params.get('session_id')
 
-  // Store stripe session_id in localStorage as fallback
-  if (stripeSessionId) {
-    localStorage.setItem('pending_stripe_session', stripeSessionId)
-  }
+  // Store Stripe session in localStorage the moment user arrives
+  useEffect(() => {
+    if (stripeSessionId) {
+      localStorage.setItem('pending_stripe_session', stripeSessionId)
+    }
+  }, [stripeSessionId])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -74,36 +75,27 @@ function AppInner() {
     return () => subscription.unsubscribe()
   }, [])
 
+  // Simple profile load — no recursive calls
   const loadProfile = async (userId) => {
-    const { data } = await supabase.from('profiles').select('*').eq('id', userId).single()
+    const { data } = await supabase
+      .from('profiles').select('*').eq('id', userId).single()
     setProfile(data)
     setLoading(false)
-
-    // If profile exists but not paid, check for pending Stripe session
-    if (data && !data.paid) {
-      const pendingSession = localStorage.getItem('pending_stripe_session')
-      if (pendingSession) {
-        setVerifyingPayment(true)
-        const paid = await handlePaymentComplete(pendingSession, userId)
-        if (paid) localStorage.removeItem('pending_stripe_session')
-        setVerifyingPayment(false)
-      }
-    } else if (data?.paid) {
-      localStorage.removeItem('pending_stripe_session')
-    }
+    // Clean up if paid
+    if (data?.paid) localStorage.removeItem('pending_stripe_session')
   }
 
-  const handlePaymentComplete = async (sessionId, userId) => {
+  // Verify payment and directly update profile state — no recursive loadProfile
+  const verifyPayment = async (sessionId, userId) => {
     try {
       const userIdParam = userId ? `&user_id=${userId}` : ''
       const res = await fetch(`/api/verify-payment?session_id=${sessionId}${userIdParam}`)
       const data = await res.json()
       if (data.paid) {
         window.history.replaceState({}, '', window.location.pathname)
-        const currentSession = (await supabase.auth.getSession()).data.session
-        if (currentSession) {
-          await loadProfile(currentSession.user.id)
-        }
+        localStorage.removeItem('pending_stripe_session')
+        // Update profile state directly — no recursive call
+        setProfile(prev => prev ? { ...prev, paid: true } : { id: userId, paid: true })
         return true
       }
     } catch (e) {
@@ -159,9 +151,6 @@ function AppInner() {
               fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.06em',marginBottom:6}}>
               Set New Password
             </div>
-            <div style={{fontSize:13,color:'#7C90A2',fontStyle:'italic'}}>
-              Choose a new password for your account
-            </div>
           </div>
           {resetDone ? (
             <div style={{background:'rgba(124,146,132,0.15)',border:'1px solid rgba(124,146,132,0.4)',
@@ -176,10 +165,6 @@ function AppInner() {
                   {resetError}
                 </div>
               )}
-              <div style={{fontSize:10,color:'#7C90A2',letterSpacing:'0.14em',
-                textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>
-                New Password
-              </div>
               <input type="password" placeholder="New password (min 6 characters)"
                 value={newPassword} onChange={e => setNewPassword(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handlePasswordReset()}
@@ -204,51 +189,45 @@ function AppInner() {
     )
   }
 
-  if (loading || verifyingPayment) return <LoadingScreen message={verifyingPayment ? 'Verifying payment...' : null}/>
+  if (loading) return <LoadingScreen/>
 
-  // Returned from Stripe — show sign up/in
+  // Returned from Stripe — show auth
   if (stripeSessionId && !session) {
-    return <Auth stripeSessionId={stripeSessionId}
-      onComplete={handleAuthComplete} onPaymentVerify={handlePaymentComplete}/>
+    return <Auth
+      stripeSessionId={stripeSessionId}
+      onComplete={handleAuthComplete}
+      onPaymentVerify={verifyPayment}
+    />
   }
 
-  // Returned from Stripe, already logged in — verify payment
+  // Returned from Stripe, already logged in — verify and show loading
   if (stripeSessionId && session && !profile?.paid) {
-    handlePaymentComplete(stripeSessionId, session.user.id)
+    verifyPayment(stripeSessionId, session.user.id)
     return <LoadingScreen message="Verifying payment..."/>
   }
 
   // Not logged in
   if (!session) {
-    if (showSignIn) {
-      return <Auth onComplete={handleAuthComplete} onBack={() => setShowSignIn(false)}/>
+    if (showSignIn) return <Auth onComplete={handleAuthComplete} onBack={() => setShowSignIn(false)}/>
+    return <Paywall onShowSignIn={() => setShowSignIn(true)}/>
+  }
+
+  // Logged in but not paid — check for pending session
+  if (!profile?.paid) {
+    const pendingSession = localStorage.getItem('pending_stripe_session')
+    if (pendingSession) {
+      verifyPayment(pendingSession, session.user.id)
+      return <LoadingScreen message="Verifying payment..."/>
     }
     return <Paywall onShowSignIn={() => setShowSignIn(true)}/>
   }
 
-  // Logged in but not paid
-  if (!profile?.paid) {
-    return (
-      <Paywall
-        onShowSignIn={() => setShowSignIn(true)}
-        showRecovery={true}
-        onRetryPayment={async () => {
-          setVerifyingPayment(true)
-          const pendingSession = localStorage.getItem('pending_stripe_session')
-          if (pendingSession && session) {
-            await handlePaymentComplete(pendingSession, session.user.id)
-          }
-          setVerifyingPayment(false)
-        }}
-      />
-    )
-  }
-
-  // New user — show onboarding
+  // Onboarding
   if (showOnboarding || (!localStorage.getItem('aa_onboarded') && profile?.paid)) {
     return <Onboarding onComplete={handleOnboardingComplete}/>
   }
 
+  // All good — render app
   return <ArmedAndAnchored session={session} profile={profile}/>
 }
 

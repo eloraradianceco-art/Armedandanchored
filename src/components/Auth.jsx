@@ -11,7 +11,7 @@ const C = {
 const INP = {
   width: '100%', background: 'rgba(255,255,255,0.04)',
   border: '1px solid rgba(176,138,78,0.2)', borderRadius: 10,
-  color: '#EDE6D6', fontSize: 16, padding: '13px 16px',
+  color: '#EDE6D6', fontSize: 16, padding: '14px 16px',
   fontFamily: "'EB Garamond',Georgia,serif", outline: 'none',
   boxSizing: 'border-box',
 }
@@ -47,7 +47,8 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
   return (
     <div style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
+      alignItems: 'center', justifyContent: 'flex-start',
+      overflowY: 'auto',
       background: `radial-gradient(ellipse at 20% 0%,rgba(158,40,40,0.18) 0%,transparent 55%),#070E17`,
       fontFamily: "'EB Garamond',Georgia,serif", color: '#C8BEAA',
       padding: '24px', textAlign: 'center',
@@ -134,10 +135,11 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
             background: loading ? 'rgba(158,40,40,0.1)' : 'linear-gradient(135deg,rgba(158,40,40,0.35),rgba(158,40,40,0.15))',
             border: '1px solid rgba(158,40,40,0.5)',
             color: loading ? C.muted : '#EDE6D6',
-            padding: '14px', borderRadius: 12,
+            padding: '16px', borderRadius: 12, minHeight: 52,
             cursor: loading ? 'default' : 'pointer',
             fontSize: 14, fontFamily: "'Cinzel',Georgia,serif",
             letterSpacing: '0.09em', transition: 'all .25s',
+            touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent',
           }}
         >
           {loading ? 'Please wait...' : mode === 'signup' ? '⚔️ Create Account & Begin' : '⚔️ Sign In'}

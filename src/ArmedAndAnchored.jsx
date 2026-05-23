@@ -360,6 +360,9 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [saving, setSaving] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [showDashboard, setShowDashboard] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
 
   const weapon = selected ? WEAPONS.find(w => w.id === selected) : null
 
@@ -399,7 +402,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   // ── GET / SET ENTRY ─────────────────────────────────────────────────────
   const get = (fieldKey) => {
-    const e = entries.find(e => e.weapon_id === selected && e.field_key === fieldKey)
+    const e = entries.find(e => String(e.weapon_id) === String(selected) && e.field_key === fieldKey)
     return e?.field_value || ''
   }
 
@@ -410,7 +413,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     if (!userId || !selected) return
     // Optimistic update — immediate
     setEntries(prev => {
-      const idx = prev.findIndex(e => e.weapon_id === selected && e.field_key === fieldKey)
+      const idx = prev.findIndex(e => String(e.weapon_id) === String(selected) && e.field_key === fieldKey)
       if (idx >= 0) {
         const updated = [...prev]
         updated[idx] = { ...updated[idx], field_value: value, updated_at: new Date().toISOString() }
@@ -508,6 +511,24 @@ export default function ArmedAndAnchored({ session, profile }) {
     color: C.cream, fontSize: 17, lineHeight: 1.9,
     padding: '14px 16px', fontFamily: "'EB Garamond',Georgia,serif",
     outline: 'none', resize: 'vertical', boxSizing: 'border-box',
+  }
+
+  // ── SEARCH ───────────────────────────────────────────────────────────────
+  const doSearch = (q) => {
+    setSearchQuery(q)
+    if (!q.trim()) { setSearchResults([]); return }
+    const term = q.toLowerCase()
+    const results = []
+    WEAPONS.forEach(w => {
+      const hits = []
+      if (w.title.toLowerCase().includes(term) || w.subtitle.toLowerCase().includes(term)) hits.push('title')
+      if (w.scriptures?.some(s => s.text.toLowerCase().includes(term) || s.ref.toLowerCase().includes(term))) hits.push('scripture')
+      if (w.declaration?.toLowerCase().includes(term)) hits.push('declaration')
+      if (w.teaching?.toLowerCase().includes(term)) hits.push('teaching')
+      if (w.tactics?.some(t => t.toLowerCase().includes(term))) hits.push('tactics')
+      if (hits.length > 0) results.push({ weapon: w, hits })
+    })
+    setSearchResults(results)
   }
 
   const MemorizeModal = ({verse, onClose, get, set, C}) => {
@@ -831,10 +852,13 @@ export default function ArmedAndAnchored({ session, profile }) {
           <button onClick={shareApp} style={{background:C.goldF,border:`1px solid ${C.goldB}`,color:shareFlash==="home"?C.green:C.gold,borderRadius:20,padding:"5px 14px",cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",transition:"all .25s"}}>
             {shareFlash==="home" ? "✓ Copied" : "🔗 Share"}
           </button>
+          <button onClick={()=>{setShowSearch(true);setSearchQuery('');setSearchResults([]);}} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:10,padding:"8px 12px",cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",transition:"all .25s"}}>
+            🔍
+          </button>
           <button onClick={()=>setShowDashboard(true)} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:10,padding:"8px 12px",cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",transition:"all .25s"}}>
             📊
           </button>
-                    <button onClick={()=>setShowSettings(true)} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:20,padding:"5px 12px",cursor:"pointer",fontSize:14,transition:"all .25s"}}>
+          <button onClick={()=>setShowSettings(true)} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:20,padding:"5px 12px",cursor:"pointer",fontSize:14,transition:"all .25s"}}>
             ⚙️
           </button>
         </div>
@@ -1081,7 +1105,16 @@ export default function ArmedAndAnchored({ session, profile }) {
             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:7}}>Battle Journal</div>
             <p style={{fontSize:13,color:C.muted,fontStyle:"italic",lineHeight:1.7,marginBottom:14}}>What is the Holy Spirit showing you through this weapon? What areas of your life does it address? What is your response?</p>
             <textarea rows={10} value={get('journal')} onChange={e=>set('journal',e.target.value)} placeholder="Write your response, reflections, and warfare notes here..." style={{width:"100%",background:"rgba(255,255,255,0.03)",border:`1px solid ${C.borderGold}`,borderRadius:14,color:C.cream,fontSize:17,lineHeight:1.9,padding:"14px 16px",fontFamily:"'EB Garamond',Georgia,serif",outline:"none",resize:"vertical",boxSizing:"border-box",minHeight:200}}/>
-            <button onClick={()=>{set('journal', get('journal')); setJournalSaved(true); setTimeout(()=>setJournalSaved(false),2000);}}
+            <button onClick={async ()=>{
+              const val = get('journal')
+              // Immediate Supabase write — bypasses debounce
+              if (userId && selected) {
+                await supabase.from('weapon_entries').upsert({
+                  user_id: userId, weapon_id: selected, field_key: 'journal',
+                  field_value: val, updated_at: new Date().toISOString()
+                }, { onConflict: 'user_id,weapon_id,field_key' })
+              }
+              setJournalSaved(true); setTimeout(()=>setJournalSaved(false),2000);}}
               style={{width:"100%",marginTop:12,
                 background:journalSaved?"rgba(124,146,132,0.15)":`linear-gradient(135deg,${C.redF},rgba(255,255,255,0.01))`,
                 border:`1px solid ${journalSaved?"rgba(124,146,132,0.4)":C.redB}`,
@@ -1104,11 +1137,22 @@ export default function ArmedAndAnchored({ session, profile }) {
         )}
       </div>
 
-      {/* Bottom-left: previous tab — hidden when dock open */}
+      {/* Bottom-left: home button OR previous tab — hidden when dock open */}
       {!dockOpen && (() => {
         const i = TABS.findIndex(t => t.id === tab)
         const prev = TABS[i - 1]
-        if (!prev) return null
+        // Show home button if on first tab; show prev tab button otherwise
+        if (!prev) return (
+          <button onClick={()=>{setSelected(null);window.scrollTo(0,0);}} title="Home" style={{
+            position:"fixed",bottom:44,left:18,
+            background:`linear-gradient(135deg,rgba(176,138,78,0.3),rgba(176,138,78,0.12))`,
+            border:`1px solid rgba(176,138,78,0.45)`,color:"#B08A4E",
+            width:44,height:44,borderRadius:50,cursor:"pointer",fontSize:18,
+            boxShadow:"0 4px 20px rgba(0,0,0,0.4)",backdropFilter:"blur(10px)",
+            zIndex:201,display:"flex",alignItems:"center",justifyContent:"center",
+            transition:"all .25s",
+          }}>🏠</button>
+        )
         return (
           <button onClick={()=>{setTab(prev.id);window.scrollTo(0,0);}} title={prev.label} style={{
             position:"fixed",bottom:44,left:18,
@@ -1159,6 +1203,56 @@ export default function ArmedAndAnchored({ session, profile }) {
         )
       })()}
       {/* Memorize Modal */}
+      {/* Search Modal */}
+      {showSearch && (
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.88)",zIndex:700,display:"flex",alignItems:"flex-start",justifyContent:"center",overflowY:"auto",padding:"16px 16px 48px"}} onClick={()=>setShowSearch(false)}>
+          <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,border:`1px solid ${C.goldB}`,borderRadius:20,padding:22,width:"100%",maxWidth:460,marginTop:20,boxShadow:"0 20px 60px rgba(0,0,0,0.7)"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+              <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.18em",textTransform:"uppercase"}}>🔍 Search Weapons</div>
+              <button onClick={()=>setShowSearch(false)} style={{background:"transparent",border:"none",color:C.muted,cursor:"pointer",fontSize:20,lineHeight:1,padding:0}}>×</button>
+            </div>
+            <input
+              autoFocus
+              value={searchQuery}
+              onChange={e=>doSearch(e.target.value)}
+              placeholder="Search weapons, scriptures, declarations..."
+              style={{width:"100%",background:"rgba(255,255,255,0.05)",border:`1px solid ${C.goldB}`,borderRadius:12,color:C.cream,fontSize:16,padding:"13px 16px",fontFamily:"'EB Garamond',Georgia,serif",outline:"none",boxSizing:"border-box",marginBottom:16}}
+            />
+            {searchQuery && (
+              <div>
+                <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.14em",textTransform:"uppercase",marginBottom:12}}>
+                  {searchResults.length} {searchResults.length===1?"weapon":"weapons"} found
+                </div>
+                {searchResults.length === 0 && (
+                  <p style={{fontSize:14,color:C.muted,fontStyle:"italic",textAlign:"center",padding:"20px 0"}}>No results. Try a different word.</p>
+                )}
+                {searchResults.map(({weapon:w,hits})=>(
+                  <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");setShowSearch(false);setDockOpen(false);window.scrollTo(0,0);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"12px 14px",borderRadius:12,marginBottom:8,cursor:"pointer",textAlign:"left",background:C.redF,border:`1px solid ${C.redB}`,transition:"all .2s"}}>
+                    <span style={{fontSize:22,flexShrink:0}}>{w.icon}</span>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:12,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.05em",marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.title}</div>
+                      <div style={{fontSize:11,color:C.muted,fontStyle:"italic",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.subtitle}</div>
+                      <div style={{display:"flex",gap:4,marginTop:4,flexWrap:"wrap"}}>
+                        {hits.map(h=>(
+                          <span key={h} style={{fontSize:9,color:C.gold,background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.25)",borderRadius:6,padding:"1px 6px",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",textTransform:"uppercase"}}>{h}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <span style={{color:C.redL,fontSize:14}}>›</span>
+                  </button>
+                ))}
+              </div>
+            )}
+            {!searchQuery && (
+              <div style={{textAlign:"center",padding:"24px 0"}}>
+                <div style={{fontSize:28,marginBottom:10}}>⚔️</div>
+                <p style={{fontSize:14,color:C.muted,fontStyle:"italic"}}>Search across all 23 weapons of the believer.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {memorizeVerse && <MemorizeModal verse={memorizeVerse} onClose={()=>setMemorizeVerse(null)} get={get} set={set} C={C} />}
 
       {/* Share Card Overlay */}

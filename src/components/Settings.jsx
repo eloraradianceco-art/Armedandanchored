@@ -46,7 +46,7 @@ export default function Settings({ profile, userId, weapons, lightMode, onToggle
     try {
       const { data } = await supabase.from('weapon_entries')
         .select('*').eq('user_id', userId)
-      const get = (wId, key) => data?.find(e => e.weapon_id === wId && e.field_key === key)?.field_value || ''
+      const get = (wId, key) => data?.find(e => String(e.weapon_id) === String(wId) && e.field_key === key)?.field_value || ''
       const lines = []
       lines.push('ARMED & ANCHORED — SPIRITUAL WARFARE JOURNAL')
       lines.push('Elora Radiance Co. | armedandanchored.vercel.app')
@@ -56,7 +56,7 @@ export default function Settings({ profile, userId, weapons, lightMode, onToggle
         for (const w of weapons) {
           const journal = get(w.id, 'journal')
           const declared = get(w.id, 'declared') === 'true'
-          const hasData = journal || declared || data?.some(e => e.weapon_id === w.id)
+          const hasData = journal || declared || data?.some(e => String(e.weapon_id) === String(w.id))
           if (!hasData) continue
           lines.push('')
           lines.push(`${w.icon} WEAPON ${w.id}: ${w.title.toUpperCase()}`)
@@ -100,6 +100,44 @@ export default function Settings({ profile, userId, weapons, lightMode, onToggle
       URL.revokeObjectURL(url)
     } catch (e) { console.error(e) }
     setExporting(false)
+  }
+
+  const handlePrintPDF = async () => {
+    if (!userId) return
+    const { data } = await supabase.from('weapon_entries').select('*').eq('user_id', userId)
+    const get = (wId, key) => data?.find(e => String(e.weapon_id) === String(wId) && e.field_key === key)?.field_value || ''
+    const printWindow = window.open('', '_blank')
+    let html = `<!DOCTYPE html><html><head><title>Armed & Anchored Journal</title>
+    <style>
+      body{font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:40px;color:#1a1209;line-height:1.7;}
+      h1{font-size:26px;color:#1a1209;text-align:center;margin-bottom:4px;}
+      .sub{text-align:center;color:#8B6A2E;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:36px;}
+      h2{font-size:18px;color:#1a1209;border-bottom:2px solid #B08A4E;padding-bottom:6px;margin-top:32px;}
+      h3{font-size:13px;color:#8B6A2E;letter-spacing:0.1em;text-transform:uppercase;margin:16px 0 6px;}
+      p{line-height:1.8;margin:0 0 12px;}
+      .mem{font-size:12px;color:#5a7a64;margin:4px 0;}
+      @media print{body{padding:20px}}</style></head><body>
+    <h1>Armed &amp; Anchored</h1>
+    <p class="sub">Spiritual Warfare Journal &mdash; Exported ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</p>`
+    if (weapons) {
+      for (const w of weapons) {
+        const journal = get(w.id, 'journal')
+        const hasMemo = w.scriptures?.some((_, i) => get(w.id, `mem_${i}`) === 'true')
+        const declared = get(w.id, 'declared') === 'true'
+        if (!journal && !hasMemo && !declared) continue
+        html += `<h2>${w.icon} ${w.title}</h2>`
+        if (declared) html += `<p class="mem">✦ Declaration deployed</p>`
+        w.scriptures?.forEach((s, i) => {
+          if (get(w.id, `mem_${i}`) === 'true') html += `<p class="mem">✓ Memorized: ${s.ref}</p>`
+        })
+        if (journal) html += `<h3>Journal Entry</h3><p>${journal.replace(/
+/g,'<br/>')}</p>`
+      }
+    }
+    html += `<hr/><p style="text-align:center;font-size:12px;color:#999">Stand firm. Fight from victory.</p></body></html>`
+    printWindow.document.write(html)
+    printWindow.document.close()
+    setTimeout(() => printWindow.print(), 500)
   }
 
   const handleSignOut = async () => {
@@ -276,6 +314,14 @@ export default function Settings({ profile, userId, weapons, lightMode, onToggle
               transition: 'all .25s',
             }}>
               {exporting ? 'Preparing Export…' : '📥 Export Journal'}
+            </button>
+            <button onClick={handlePrintPDF} style={{
+              marginTop: 8, padding: '13px', borderRadius: 12, cursor: 'pointer',
+              background: C.bgCard, border: `1px solid ${C.border}`,
+              color: C.muted, fontSize: 12,
+              fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.08em',
+            }}>
+              🖨️ Print as PDF
             </button>
           </div>
 

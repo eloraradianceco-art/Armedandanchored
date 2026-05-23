@@ -130,8 +130,7 @@ export default function Settings({ profile, userId, weapons, lightMode, onToggle
         w.scriptures?.forEach((s, i) => {
           if (get(w.id, `mem_${i}`) === 'true') html += `<p class="mem">✓ Memorized: ${s.ref}</p>`
         })
-        if (journal) html += `<h3>Journal Entry</h3><p>${journal.replace(/
-/g,'<br/>')}</p>`
+        if (journal) html += '<h3>Journal Entry</h3><p>' + journal.split('\n').join('<br/>') + '</p>'
       }
     }
     html += `<hr/><p style="text-align:center;font-size:12px;color:#999">Stand firm. Fight from victory.</p></body></html>`

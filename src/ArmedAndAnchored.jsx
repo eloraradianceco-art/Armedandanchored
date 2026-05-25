@@ -361,6 +361,11 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [showSettings, setShowSettings] = useState(false)
   const [showDashboard, setShowDashboard] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
+  const [savedWeapons, setSavedWeapons] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('aa_saved') || '[]') } catch { return [] }
+  })
+  const [showSaved, setShowSaved] = useState(false)
+  const [showWeaponJump, setShowWeaponJump] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
 
@@ -530,6 +535,15 @@ export default function ArmedAndAnchored({ session, profile }) {
     })
     setSearchResults(results)
   }
+
+  const toggleSave = (weaponId) => {
+    const next = savedWeapons.includes(weaponId)
+      ? savedWeapons.filter(id => id !== weaponId)
+      : [...savedWeapons, weaponId]
+    setSavedWeapons(next)
+    localStorage.setItem('aa_saved', JSON.stringify(next))
+  }
+  const isSaved = (weaponId) => savedWeapons.includes(weaponId)
 
   const MemorizeModal = ({verse, onClose, get, set, C}) => {
     const [mode, setMode] = useState(null)          // null | 'recall' | 'blanks' | 'type'
@@ -869,6 +883,20 @@ export default function ArmedAndAnchored({ session, profile }) {
         )}
       </div>
 
+      {/* AS1-style under-header nav */}
+      <div style={{display:"flex",justifyContent:"center",gap:3,padding:"6px 12px 10px",flexWrap:"nowrap",overflowX:"auto",borderBottom:`1px solid ${C.border}`}}>
+        {[["search","🔍 Search"],["saved","☆ Saved"],["dashboard","📊 Progress"],["settings","⚙️ Settings"]].map(([v,l])=>(
+          <button key={v} onClick={()=>{
+            if(v==="search"){setShowSearch(true);setSearchQuery('');setSearchResults([])}
+            else if(v==="saved"){setShowSaved(true)}
+            else if(v==="dashboard"){setShowDashboard(true)}
+            else if(v==="settings"){setShowSettings(true)}
+          }} style={{background:"transparent",border:"none",color:C.muted,padding:"4px 10px",borderRadius:6,cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em",whiteSpace:"nowrap",flexShrink:0,touchAction:"manipulation"}}>
+            {l}
+          </button>
+        ))}
+      </div>
+
       <div style={{padding:"18px 18px 0"}}>
         <div style={{background:`linear-gradient(135deg,rgba(158,40,40,0.1),rgba(176,138,78,0.06))`,border:`1px solid rgba(158,40,40,0.22)`,borderRadius:14,padding:"16px 20px",marginBottom:6}}>
           <p style={{fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.8,margin:"0 0 8px"}}>"Put on the whole armor of God, that you may be able to stand against the schemes of the devil."</p>
@@ -910,7 +938,8 @@ export default function ArmedAndAnchored({ session, profile }) {
             const done = declared[w.id];
             return (
               <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{background:done?`linear-gradient(145deg,rgba(158,40,40,0.12),rgba(158,40,40,0.04))`:`linear-gradient(145deg,rgba(255,255,255,0.028),rgba(255,255,255,0.01))`,border:`1px solid ${done?"rgba(158,40,40,0.35)":C.border}`,borderRadius:14,padding:"14px 16px",cursor:"pointer",textAlign:"left",transition:"all .2s",position:"relative"}}>
-                {done && <div style={{position:"absolute",top:10,right:12,fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</div>}
+                  <button onClick={(e)=>{e.stopPropagation();toggleSave(w.id);}} style={{position:"absolute",top:10,right:10,background:"transparent",border:"none",color:isSaved(w.id)?C.gold:C.dim,cursor:"pointer",fontSize:16,lineHeight:1,touchAction:"manipulation",zIndex:2}}>{isSaved(w.id)?"★":"☆"}</button>
+                {done && <div style={{position:"absolute",top:10,right:28,fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</div>}
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
                   <span style={{fontSize:18}}>{w.icon}</span>
                   <div style={{fontSize:9,color:acc(w),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{w.tag}</div>
@@ -932,9 +961,21 @@ export default function ArmedAndAnchored({ session, profile }) {
         {/* Row 1: back + title + share */}
         <div style={{padding:"10px 14px",display:"flex",alignItems:"center",gap:10}}>
           <button onClick={()=>{setSelected(null);window.scrollTo(0,0);}} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,width:32,height:32,borderRadius:8,cursor:"pointer",fontSize:16,flexShrink:0}}>‹</button>
-          <div style={{flex:1,minWidth:0}}>
+          <div style={{flex:1,minWidth:0,position:"relative"}}>
             <div style={{fontSize:9,color:acc(weapon),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{weapon.icon} {weapon.tag}</div>
-            <div style={{fontSize:13,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{weapon.title}</div>
+            <button onClick={()=>setShowWeaponJump(v=>!v)} style={{background:"transparent",border:"none",cursor:"pointer",padding:0,width:"100%",textAlign:"left",touchAction:"manipulation"}}>
+              <div style={{fontSize:13,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{weapon.title} <span style={{fontSize:10,color:C.muted}}>{showWeaponJump?"▲":"▼"}</span></div>
+            </button>
+            {showWeaponJump && (
+              <div onClick={e=>e.stopPropagation()} style={{position:"fixed",top:90,left:10,right:10,background:C.bg,border:`1px solid ${C.border}`,borderRadius:14,padding:12,maxHeight:260,overflowY:"auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,zIndex:900,boxShadow:"0 8px 32px rgba(0,0,0,0.7)"}}>
+                {WEAPONS.map(w=>(
+                  <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");setShowWeaponJump(false);window.scrollTo(0,0);}} style={{background:w.id===selected?C.redF:"transparent",border:`1px solid ${w.id===selected?C.redB:C.border}`,color:w.id===selected?C.redL:C.muted,borderRadius:10,padding:"10px 4px",cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",lineHeight:1.3,touchAction:"manipulation"}}>
+                    <div style={{fontSize:20,marginBottom:3}}>{w.icon}</div>
+                    <div style={{fontSize:8,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",padding:"0 2px"}}>{w.title.split(" ").slice(0,2).join(" ")}</div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <div style={{display:"flex",gap:5,alignItems:"center",flexShrink:0}}>
             {declared[weapon.id] && <span style={{fontSize:9,color:"#C94848",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em"}}>✦ Done</span>}
@@ -1203,6 +1244,46 @@ export default function ArmedAndAnchored({ session, profile }) {
         )
       })()}
       {/* Memorize Modal */}
+      {/* Saved Modal */}
+      {showSaved && (
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.88)",zIndex:700,display:"flex",alignItems:"flex-start",justifyContent:"center",overflowY:"auto",padding:"16px 16px 48px"}} onClick={()=>setShowSaved(false)}>
+          <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:"100%",maxWidth:460,marginTop:20}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+              <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.18em",textTransform:"uppercase"}}>★ Saved Weapons</div>
+              <button onClick={()=>setShowSaved(false)} style={{background:"transparent",border:"none",color:C.muted,cursor:"pointer",fontSize:20,lineHeight:1,padding:0}}>×</button>
+            </div>
+            {savedWeapons.length === 0 ? (
+              <div style={{textAlign:"center",padding:"32px 0"}}>
+                <div style={{fontSize:36,marginBottom:12}}>☆</div>
+                <p style={{fontSize:14,color:C.muted,fontStyle:"italic"}}>No saved weapons yet. Tap ☆ on any weapon to save it here.</p>
+              </div>
+            ) : (
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {savedWeapons.map(id => {
+                  const w = WEAPONS.find(w=>w.id===id)
+                  if (!w) return null
+                  const done = declared[w.id]
+                  return (
+                    <button key={id} onClick={()=>{setSelected(w.id);setTab("scripture");setShowSaved(false);window.scrollTo(0,0);}} style={{display:"flex",alignItems:"center",gap:12,padding:"13px 16px",borderRadius:12,cursor:"pointer",textAlign:"left",background:C.redF,border:`1px solid ${C.redB}`,transition:"all .2s",position:"relative"}}>
+                      <span style={{fontSize:22,flexShrink:0}}>{w.icon}</span>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontSize:9,color:acc(w),letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:3}}>{w.tag}</div>
+                        <div style={{fontSize:13,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.title}</div>
+                        <div style={{fontSize:11,color:C.muted,fontStyle:"italic"}}>{w.subtitle}</div>
+                      </div>
+                      <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4}}>
+                        {done && <span style={{fontSize:9,color:C.redL,fontFamily:"'Cinzel',Georgia,serif"}}>✦ Deployed</span>}
+                        <button onClick={(e)=>{e.stopPropagation();toggleSave(w.id);}} style={{background:"transparent",border:"none",color:C.gold,cursor:"pointer",fontSize:16,touchAction:"manipulation"}}>★</button>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Search Modal */}
       {showSearch && (
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.88)",zIndex:700,display:"flex",alignItems:"flex-start",justifyContent:"center",overflowY:"auto",padding:"16px 16px 48px"}} onClick={()=>setShowSearch(false)}>

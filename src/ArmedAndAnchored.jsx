@@ -974,21 +974,21 @@ export default function ArmedAndAnchored({ session, profile }) {
       {/* AS1-style compact sticky header */}
       <div style={{position:"sticky",top:0,zIndex:200,background:"rgba(7,14,23,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px"}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)"}}/>
-            <div>
-              <div style={{fontSize:15,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",lineHeight:1.1}}>Armed & Anchored</div>
-              <div style={{fontSize:9,color:C.muted,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Spiritual Warfare</div>
+          <div style={{display:"flex",alignItems:"center",gap:8,minWidth:0,flex:1}}>
+            <img src="/icon.png" alt="" style={{width:32,height:32,borderRadius:8,boxShadow:"0 2px 8px rgba(0,0,0,0.4)",flexShrink:0}}/>
+            <div style={{minWidth:0}}>
+              <div style={{fontSize:13,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.03em",lineHeight:1.1,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>Armed & Anchored</div>
+              <div style={{fontSize:8,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Spiritual Warfare</div>
             </div>
             {completedCount > 0 && (
-              <span style={{background:C.redF,border:`1px solid ${C.redB}`,borderRadius:20,padding:"2px 9px",fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>
+              <span style={{background:C.redF,border:`1px solid ${C.redB}`,borderRadius:20,padding:"2px 7px",fontSize:9,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",flexShrink:0}}>
                 ⚔️ {completedCount}/{WEAPONS.length}
               </span>
             )}
           </div>
-          <div style={{display:"flex",alignItems:"center",gap:8}}>
-            <span style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif"}}>{session?.user?.email?.split("@")[0]}</span>
-            <button onClick={()=>supabase.auth.signOut()} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"3px 10px",borderRadius:6,cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>Sign Out</button>
+          <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
+            <span style={{fontSize:9,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",maxWidth:80,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{session?.user?.email?.split("@")[0]}</span>
+            <button onClick={()=>supabase.auth.signOut()} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"3px 8px",borderRadius:6,cursor:"pointer",fontSize:9,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",whiteSpace:"nowrap"}}>Sign Out</button>
           </div>
         </div>
         {/* Under-header nav pills */}
@@ -1041,6 +1041,7 @@ export default function ArmedAndAnchored({ session, profile }) {
             </div>
           )
         })()}
+        <div style={{maxWidth:860,margin:"0 auto"}}>
         <div style={{fontSize:9,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>{WEAPONS.length} Weapons of the Believer</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr",gap:8}}>
           {WEAPONS.map(w => {
@@ -1064,6 +1065,7 @@ export default function ArmedAndAnchored({ session, profile }) {
             );
           })}
         </div>
+        </div>{/* /maxWidth wrapper */}
       </div>
     {showSearch && <SearchModal/>}
     {showSaved && <SavedModal/>}

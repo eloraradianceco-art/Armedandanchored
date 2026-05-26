@@ -850,6 +850,124 @@ export default function ArmedAndAnchored({ session, profile }) {
   )
 
 
+
+  // ── Search Modal ────────────────────────────────────────────────────────
+  const SearchModal = () => (
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:700,
+      display:'flex',alignItems:'flex-start',justifyContent:'center',
+      overflowY:'auto',padding:'16px 16px 48px'}} onClick={()=>setShowSearch(false)}>
+      <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,
+        border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:'100%',maxWidth:460,marginTop:20}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+          <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.18em',textTransform:'uppercase'}}>🔍 Search Weapons</div>
+          <button onClick={()=>setShowSearch(false)} style={{background:'transparent',border:'none',color:C.muted,cursor:'pointer',fontSize:20,lineHeight:1}}>×</button>
+        </div>
+        <input autoFocus value={searchQuery} onChange={e=>doSearch(e.target.value)}
+          placeholder="Search scriptures, teachings, tactics..."
+          style={{width:'100%',background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,
+            borderRadius:10,color:C.cream,fontSize:16,padding:'12px 14px',
+            fontFamily:"'EB Garamond',Georgia,serif",outline:'none',boxSizing:'border-box',marginBottom:14}}/>
+        {searchQuery && (
+          <div>
+            <div style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:10}}>
+              {searchResults.length} results
+            </div>
+            {searchResults.length===0 && <p style={{fontSize:14,color:C.muted,fontStyle:'italic',textAlign:'center',padding:'16px 0'}}>No results found.</p>}
+            {searchResults.map(({weapon:w,hits})=>(
+              <button key={w.id} onClick={()=>{setSelected(w.id);setTab(hits.includes('scripture')?'scripture':hits.includes('teaching')?'teaching':'tactics');setShowSearch(false);window.scrollTo(0,0);}}
+                style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'12px 14px',borderRadius:12,marginBottom:8,cursor:'pointer',textAlign:'left',background:C.redF,border:`1px solid ${C.redB}`,transition:'all .2s'}}>
+                <span style={{fontSize:20,flexShrink:0}}>{w.icon}</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:9,color:acc(w),letterSpacing:'0.12em',textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",marginBottom:2}}>{w.tag}</div>
+                  <div style={{fontSize:13,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{w.title}</div>
+                  <div style={{fontSize:10,color:C.muted,marginTop:2}}>Matches: {hits.join(', ')}</div>
+                </div>
+                <span style={{color:C.redL,fontSize:14}}>›</span>
+              </button>
+            ))}
+          </div>
+        )}
+        {!searchQuery && <div style={{textAlign:'center',padding:'24px 0'}}>
+          <div style={{fontSize:28,marginBottom:8}}>⚔️</div>
+          <p style={{fontSize:14,color:C.muted,fontStyle:'italic'}}>Search all 23 weapons by scripture, teaching, or tactics.</p>
+        </div>}
+      </div>
+    </div>
+  )
+
+  // ── Saved Modal ─────────────────────────────────────────────────────────
+  const SavedModal = () => {
+    // savedWeapons contains weapon IDs and scripture keys like "weapon_id_s0"
+    const savedWeaponEntries = savedWeapons.filter(id => !String(id).includes('_s'))
+    const savedScriptureEntries = savedWeapons.filter(id => String(id).includes('_s'))
+    return (
+      <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:700,
+        display:'flex',alignItems:'flex-start',justifyContent:'center',
+        overflowY:'auto',padding:'16px 16px 48px'}} onClick={()=>setShowSaved(false)}>
+        <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,
+          border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:'100%',maxWidth:460,marginTop:20}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+            <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.18em',textTransform:'uppercase'}}>★ Saved</div>
+            <button onClick={()=>setShowSaved(false)} style={{background:'transparent',border:'none',color:C.muted,cursor:'pointer',fontSize:20,lineHeight:1}}>×</button>
+          </div>
+          {savedWeapons.length===0 ? (
+            <div style={{textAlign:'center',padding:'32px 0'}}>
+              <div style={{fontSize:32,marginBottom:10}}>☆</div>
+              <p style={{fontSize:14,color:C.muted,fontStyle:'italic'}}>No saved items yet.<br/>Tap ☆ on any weapon or scripture to save it.</p>
+            </div>
+          ) : (
+            <div>
+              {/* Saved Scriptures */}
+              {savedScriptureEntries.length > 0 && (
+                <div style={{marginBottom:16}}>
+                  <div style={{fontSize:9,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:8}}>Scriptures</div>
+                  {savedScriptureEntries.map(key => {
+                    const [wid,,si] = key.split('_s')
+                    const w = WEAPONS.find(x=>x.id===wid) || WEAPONS.find(x=>String(x.id)===String(wid))
+                    const s = w?.scriptures?.[parseInt(si)]
+                    if (!w || !s) return null
+                    return (
+                      <button key={key} onClick={()=>{setSelected(w.id);setTab('scripture');setShowSaved(false);window.scrollTo(0,0)}}
+                        style={{width:'100%',display:'flex',alignItems:'flex-start',gap:10,padding:'12px 14px',borderRadius:12,marginBottom:8,cursor:'pointer',textAlign:'left',background:C.redF,border:`1px solid ${C.redB}`}}>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:9,color:acc(w),fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:2}}>{w.icon} {w.tag}</div>
+                          <p style={{fontSize:13,color:C.cream,fontStyle:'italic',lineHeight:1.6,marginBottom:4,overflow:'hidden',display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical'}}>"{s.text}"</p>
+                          <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif"}}>{s.ref}</div>
+                        </div>
+                        <button onClick={e=>{e.stopPropagation();toggleSave(key)}} style={{background:'transparent',border:'none',color:C.gold,cursor:'pointer',fontSize:16,flexShrink:0,touchAction:'manipulation'}}>★</button>
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+              {/* Saved Weapons */}
+              {savedWeaponEntries.length > 0 && (
+                <div>
+                  <div style={{fontSize:9,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:8}}>Weapons</div>
+                  {savedWeaponEntries.map(id=>{
+                    const w=WEAPONS.find(x=>x.id===id)||WEAPONS.find(x=>String(x.id)===String(id))
+                    if(!w) return null
+                    return (
+                      <button key={id} onClick={()=>{setSelected(w.id);setTab('scripture');setShowSaved(false);window.scrollTo(0,0)}}
+                        style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'12px 14px',borderRadius:12,marginBottom:8,cursor:'pointer',textAlign:'left',background:C.redF,border:`1px solid ${C.redB}`}}>
+                        <span style={{fontSize:20}}>{w.icon}</span>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:9,color:acc(w),fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:2}}>{w.tag}</div>
+                          <div style={{fontSize:13,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{w.title}</div>
+                        </div>
+                        <button onClick={e=>{e.stopPropagation();toggleSave(id)}} style={{background:'transparent',border:'none',color:C.gold,cursor:'pointer',fontSize:16,touchAction:'manipulation'}}>★</button>
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   if (!selected) return (
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%,rgba(158,40,40,0.15) 0%,transparent 60%),${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text}}>
 
@@ -947,6 +1065,8 @@ export default function ArmedAndAnchored({ session, profile }) {
           })}
         </div>
       </div>
+    {showSearch && <SearchModal/>}
+    {showSaved && <SavedModal/>}
     <EmojDock activeId={null}/>
     </div>
   );
@@ -954,16 +1074,36 @@ export default function ArmedAndAnchored({ session, profile }) {
   return (
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 50% 0%, ${accF(weapon).replace("0.1","0.2")} 0%, transparent 50%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90}}>
 
-      {/* Floating prev/next weapon buttons */}
+      {/* Floating prev/next study tab buttons */}
       {(() => {
-        const idx = WEAPONS.findIndex(w => w.id === selected)
-        const prev = WEAPONS[idx - 1]
-        const next = WEAPONS[idx + 1]
-        const btnStyle = {position:'fixed',bottom:32,zIndex:250,background:'rgba(7,14,23,0.88)',backdropFilter:'blur(12px)',border:`1px solid ${C.redB}`,color:C.redL,borderRadius:50,padding:'10px 14px',cursor:'pointer',fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.04em',boxShadow:'0 4px 16px rgba(0,0,0,0.4)',touchAction:'manipulation',transition:'all .2s',display:'flex',alignItems:'center',gap:6}
+        const tabIdx = TABS.findIndex(t => t.id === tab)
+        const prevTab = TABS[tabIdx - 1]
+        const nextTab = TABS[tabIdx + 1]
+        const wIdx = WEAPONS.findIndex(w => w.id === selected)
+        const prevWeapon = WEAPONS[wIdx - 1]
+        const nextWeapon = WEAPONS[wIdx + 1]
+        // At first tab, show prev weapon; at last tab, show next weapon
+        const showPrev = prevTab || prevWeapon
+        const showNext = nextTab || nextWeapon
+        const prevLabel = prevTab ? prevTab.label : prevWeapon ? '‹ ' + prevWeapon.title.split(' ').slice(0,2).join(' ') : null
+        const nextLabel = nextTab ? nextTab.label : nextWeapon ? nextWeapon.title.split(' ').slice(0,2).join(' ') + ' ›' : null
+        const btnStyle = {position:'fixed',bottom:32,zIndex:250,background:'rgba(7,14,23,0.88)',backdropFilter:'blur(12px)',border:`1px solid ${C.redB}`,color:C.redL,borderRadius:50,padding:'10px 14px',cursor:'pointer',fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.04em',boxShadow:'0 4px 16px rgba(0,0,0,0.4)',touchAction:'manipulation',transition:'all .2s',display:'flex',alignItems:'center',gap:5,maxWidth:160}
         return (
           <>
-            {prev && <button onClick={()=>{setSelected(prev.id);setTab('scripture');window.scrollTo(0,0)}} style={{...btnStyle,left:16}}>‹ <span style={{maxWidth:80,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',fontSize:10}}>{prev.title.split(' ').slice(0,2).join(' ')}</span></button>}
-            {next && <button onClick={()=>{setSelected(next.id);setTab('scripture');window.scrollTo(0,0)}} style={{...btnStyle,right:16}}><span style={{maxWidth:80,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',fontSize:10}}>{next.title.split(' ').slice(0,2).join(' ')}</span> ›</button>}
+            {showPrev && <button onClick={()=>{
+              if(prevTab) { setTab(prevTab.id); window.scrollTo(0,0) }
+              else if(prevWeapon) { setSelected(prevWeapon.id); setTab('scripture'); window.scrollTo(0,0) }
+            }} style={{...btnStyle,left:16}}>
+              <span>‹</span>
+              <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{prevTab ? prevTab.label : prevWeapon?.title.split(' ').slice(0,2).join(' ')}</span>
+            </button>}
+            {showNext && <button onClick={()=>{
+              if(nextTab) { setTab(nextTab.id); window.scrollTo(0,0) }
+              else if(nextWeapon) { setSelected(nextWeapon.id); setTab('scripture'); window.scrollTo(0,0) }
+            }} style={{...btnStyle,right:16}}>
+              <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{nextTab ? nextTab.label : nextWeapon?.title.split(' ').slice(0,2).join(' ')}</span>
+              <span>›</span>
+            </button>}
           </>
         )
       })()}
@@ -1037,7 +1177,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           <div style={{height:"100%",background:`linear-gradient(90deg,${C.red},${C.redL})`,width:`${((WEAPONS.findIndex(w=>w.id===selected)+1)/WEAPONS.length)*100}%`,transition:"width .4s ease"}}/>
         </div>
         {/* Section tabs — AS1 pill style */}
-        <div style={{display:"flex",gap:3,flexWrap:"nowrap",overflowX:"auto",marginBottom:0,paddingBottom:2}}>
+        <div style={{display:"flex",gap:3,flexWrap:"wrap",marginBottom:0,paddingBottom:2}}>
           {TABS.map(t => (
             <button key={t.id} onClick={()=>{setTab(t.id);window.scrollTo(0,0);}} style={{
               background:tab===t.id?"linear-gradient(135deg,rgba(176,138,78,0.15),rgba(176,138,78,0.06))":"transparent",
@@ -1070,8 +1210,8 @@ export default function ArmedAndAnchored({ session, profile }) {
                         <button onClick={()=>setMemorizeVerse({text:s.text,ref:s.ref,idx:i})} style={{background:get(`mem_${i}`)==="true"?"rgba(120,184,120,0.15)":C.redF,border:`1px solid ${get(`mem_${i}`)==="true"?"rgba(120,184,120,0.4)":C.redB}`,color:get(`mem_${i}`)==="true"?C.green:C.redL,padding:"2px 10px",borderRadius:12,cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif"}}>
                           {get(`mem_${i}`)==="true"?"✓ Memorized":"✦ Memorize"}
                         </button>
-                        <button onClick={()=>toggleSave(weapon.id)} style={{background:isSaved(weapon.id)?"rgba(176,138,78,0.2)":"transparent",border:`1px solid ${isSaved(weapon.id)?"rgba(176,138,78,0.4)":C.border}`,color:isSaved(weapon.id)?C.gold:C.muted,padding:"2px 10px",borderRadius:12,cursor:"pointer",fontSize:13}}>
-                          {isSaved(weapon.id)?"★":"☆"}
+                        <button onClick={()=>toggleSave(`${weapon.id}_s${i}`)} style={{background:isSaved(`${weapon.id}_s${i}`)?"rgba(176,138,78,0.2)":"transparent",border:`1px solid ${isSaved(`${weapon.id}_s${i}`)?"rgba(176,138,78,0.4)":C.border}`,color:isSaved(`${weapon.id}_s${i}`)?C.gold:C.muted,padding:"2px 10px",borderRadius:12,cursor:"pointer",fontSize:13}}>
+                          {isSaved(`${weapon.id}_s${i}`)?"★":"☆"}
                         </button>
                         <button onClick={()=>setShareCard({weapon,type:"scripture"})} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"2px 8px",borderRadius:12,cursor:"pointer",fontSize:11}}>&#8599;</button>
                       </div>
@@ -1153,6 +1293,8 @@ export default function ArmedAndAnchored({ session, profile }) {
 
       </div>
 
+      {showSearch && <SearchModal/>}
+      {showSaved && <SavedModal/>}
       {memorizeVerse && <MemorizeModal verse={memorizeVerse} onClose={()=>setMemorizeVerse(null)} get={get} set={set} C={C} />}
 
       {/* Share Card Overlay */}

@@ -849,6 +849,59 @@ export default function ArmedAndAnchored({ session, profile }) {
     />
   )
 
+
+  // ── Bottom Navigation Bar ─────────────────────────────────────────────
+  const BottomNav = ({view='home'}) => {
+    const weaponIdx = selected ? WEAPONS.findIndex(w => w.id === selected) : -1
+    const prevW = weaponIdx > 0 ? WEAPONS[weaponIdx - 1] : null
+    const nextW = weaponIdx < WEAPONS.length - 1 ? WEAPONS[weaponIdx + 1] : null
+    const navItems = [
+      ['arsenal','⚔️','Arsenal'],
+      ['search','🔍','Search'],
+      ['saved','★','Saved'],
+      ['progress','📊','Progress'],
+      ['settings','⚙️','Settings'],
+    ]
+    return (
+      <div style={{position:'fixed',bottom:0,left:0,right:0,zIndex:300,background:'rgba(7,14,23,0.97)',backdropFilter:'blur(14px)',borderTop:`1px solid ${C.border}`}}>
+        {/* Weapon prev/next strip — only in weapon view */}
+        {selected && (
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'6px 16px 0',borderBottom:`1px solid ${C.border}`}}>
+            <button onClick={()=>{if(prevW){setSelected(prevW.id);setTab('scripture');window.scrollTo(0,0)}}} disabled={!prevW}
+              style={{background:'transparent',border:'none',color:prevW?C.redL:C.dim,cursor:prevW?'pointer':'default',fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.04em',padding:'4px 8px',borderRadius:6,touchAction:'manipulation',display:'flex',alignItems:'center',gap:4}}>
+              {prevW && <><span>‹</span><span style={{maxWidth:90,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{prevW.title}</span></>}
+            </button>
+            <div style={{fontSize:9,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',textTransform:'uppercase'}}>
+              {weaponIdx + 1} / {WEAPONS.length}
+            </div>
+            <button onClick={()=>{if(nextW){setSelected(nextW.id);setTab('scripture');window.scrollTo(0,0)}}} disabled={!nextW}
+              style={{background:'transparent',border:'none',color:nextW?C.redL:C.dim,cursor:nextW?'pointer':'default',fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.04em',padding:'4px 8px',borderRadius:6,touchAction:'manipulation',display:'flex',alignItems:'center',gap:4}}>
+              {nextW && <><span style={{maxWidth:90,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{nextW.title}</span><span>›</span></>}
+            </button>
+          </div>
+        )}
+        {/* Main nav tabs */}
+        <div style={{display:'flex',justifyContent:'space-around',padding:'6px 4px 8px',paddingBottom:'max(8px,env(safe-area-inset-bottom))'}}>
+          {navItems.map(([id,icon,label]) => {
+            const isActive = (id==='arsenal' && !selected) || (id==='arsenal' && selected)
+            return (
+              <button key={id} onClick={()=>{
+                if(id==='arsenal'){setSelected(null);window.scrollTo(0,0)}
+                else if(id==='search'){setShowSearch(true);setSearchQuery('');setSearchResults([])}
+                else if(id==='saved')setShowSaved(true)
+                else if(id==='progress')setShowDashboard(true)
+                else if(id==='settings')setShowSettings(true)
+              }} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:2,background:'transparent',border:'none',color:(id==='arsenal'&&!selected)||(id!=='arsenal')?C.muted:C.muted,padding:'4px 8px',borderRadius:8,cursor:'pointer',minWidth:52,touchAction:'manipulation',transition:'all .15s'}}>
+                <span style={{fontSize:18,lineHeight:1}}>{icon}</span>
+                <span style={{fontSize:9,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.04em',color:id==='arsenal'&&!selected?C.redL:C.muted}}>{label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
   if (!selected) return (
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%,rgba(158,40,40,0.15) 0%,transparent 60%),${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text}}>
 
@@ -946,6 +999,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           })}
         </div>
       </div>
+    <BottomNav view='home'/>
     <EmojDock activeId={null}/>
     </div>
   );
@@ -1037,7 +1091,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       </div>
 
       {/* ── Tab Content ───────────────────────────────────────────────── */}
-      <div style={{maxWidth:860,margin:"0 auto",padding:"22px 18px 120px"}}>
+      <div style={{maxWidth:860,margin:"0 auto",padding:"22px 18px 150px"}}>
 
         {/* SCRIPTURE */}
         {tab==="scripture" && (

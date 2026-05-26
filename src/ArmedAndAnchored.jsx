@@ -850,51 +850,41 @@ export default function ArmedAndAnchored({ session, profile }) {
   )
 
   if (!selected) return (
-    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%, rgba(158,40,40,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.1) 0%, transparent 55%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90,animation:"fadeIn 0.4s ease"}}>
-      <div style={{borderBottom:`1px solid ${C.border}`,padding:"28px 24px 22px",textAlign:"center",background:"linear-gradient(180deg,rgba(158,40,40,0.07),transparent)"}}>
-        <div style={{fontSize:11,color:C.red,letterSpacing:"0.22em",fontFamily:"'Cinzel',Georgia,serif",textTransform:"uppercase",marginBottom:10,opacity:0.9}}>Elora Radiance Co.</div>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12,marginBottom:5}}>
-          <span style={{fontSize:24,opacity:0.6,transform:"scaleX(-1)",display:"inline-block"}}>⚔️</span>
-          <span style={{fontSize:34,fontWeight:700,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",lineHeight:1.1}}>Armed & Anchored</span>
-          <span style={{fontSize:24,opacity:0.6,display:"inline-block"}}>⚔️</span>
-        </div>
-        <div style={{fontSize:12,color:C.muted,letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:18}}>Spiritual Warfare Training Journal</div>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,flexWrap:"wrap",marginBottom:0}}>
-          <div style={{display:"inline-flex",alignItems:"center",gap:8,background:C.redF,border:`1px solid ${C.redB}`,borderRadius:20,padding:"4px 16px",fontSize:12,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>
-            ⚔️ {completedCount} / {WEAPONS.length} Weapons Deployed
-          </div>
-          <button onClick={shareApp} style={{background:C.goldF,border:`1px solid ${C.goldB}`,color:shareFlash==="home"?C.green:C.gold,borderRadius:20,padding:"5px 14px",cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",transition:"all .25s"}}>
-            {shareFlash==="home" ? "✓ Copied" : "🔗 Share"}
-          </button>
-          <button onClick={()=>{setShowSearch(true);setSearchQuery('');setSearchResults([]);}} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:10,padding:"8px 12px",cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",transition:"all .25s"}}>
-            🔍
-          </button>
-          <button onClick={()=>setShowDashboard(true)} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:10,padding:"8px 12px",cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em",transition:"all .25s"}}>
-            📊
-          </button>
-          <button onClick={()=>setShowSettings(true)} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,borderRadius:20,padding:"5px 12px",cursor:"pointer",fontSize:14,transition:"all .25s"}}>
-            ⚙️
-          </button>
-        </div>
-        {completedCount > 0 && (
-          <div style={{height:2,background:C.border,borderRadius:2,maxWidth:300,margin:"12px auto 0",overflow:"hidden"}}>
-            <div style={{height:"100%",background:`linear-gradient(90deg,${C.red},${C.redL})`,width:`${(completedCount/WEAPONS.length)*100}%`,transition:"width .5s ease"}}/>
-          </div>
-        )}
-      </div>
+    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%,rgba(158,40,40,0.15) 0%,transparent 60%),${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text}}>
 
-      {/* AS1-style under-header nav */}
-      <div style={{display:"flex",justifyContent:"center",gap:3,padding:"6px 12px 10px",flexWrap:"nowrap",overflowX:"auto",borderBottom:`1px solid ${C.border}`}}>
-        {[["search","🔍 Search"],["saved","☆ Saved"],["dashboard","📊 Progress"],["settings","⚙️ Settings"]].map(([v,l])=>(
-          <button key={v} onClick={()=>{
-            if(v==="search"){setShowSearch(true);setSearchQuery('');setSearchResults([])}
-            else if(v==="saved"){setShowSaved(true)}
-            else if(v==="dashboard"){setShowDashboard(true)}
-            else if(v==="settings"){setShowSettings(true)}
-          }} style={{background:"transparent",border:"1px solid transparent",color:C.muted,padding:"4px 8px",borderRadius:6,cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",whiteSpace:"nowrap",flexShrink:0,touchAction:"manipulation",transition:"all .2s"}}>
-            {l}
-          </button>
-        ))}
+      {/* AS1-style compact sticky header */}
+      <div style={{position:"sticky",top:0,zIndex:200,background:"rgba(7,14,23,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)"}}/>
+            <div>
+              <div style={{fontSize:15,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",lineHeight:1.1}}>Armed & Anchored</div>
+              <div style={{fontSize:9,color:C.muted,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Spiritual Warfare</div>
+            </div>
+            {completedCount > 0 && (
+              <span style={{background:C.redF,border:`1px solid ${C.redB}`,borderRadius:20,padding:"2px 9px",fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>
+                ⚔️ {completedCount}/{WEAPONS.length}
+              </span>
+            )}
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:8}}>
+            <span style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif"}}>{session?.user?.email?.split("@")[0]}</span>
+            <button onClick={()=>supabase.auth.signOut()} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"3px 10px",borderRadius:6,cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>Sign Out</button>
+          </div>
+        </div>
+        {/* Under-header nav pills */}
+        <div style={{display:"flex",justifyContent:"center",gap:2,padding:"5px 12px 8px",flexWrap:"nowrap",overflowX:"auto"}}>
+          {[["search","🔍 Search"],["saved","☆ Saved"],["dashboard","📊 Progress"],["settings","⚙️ Settings"]].map(([v,l])=>(
+            <button key={v} onClick={()=>{
+              if(v==="search"){setShowSearch(true);setSearchQuery('');setSearchResults([])}
+              else if(v==="saved"){setShowSaved(true)}
+              else if(v==="dashboard"){setShowDashboard(true)}
+              else if(v==="settings"){setShowSettings(true)}
+            }} style={{background:"transparent",border:"1px solid transparent",color:C.muted,padding:"4px 8px",borderRadius:6,cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",whiteSpace:"nowrap",flexShrink:0,touchAction:"manipulation",transition:"all .2s"}}>
+              {l}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div style={{padding:"18px 18px 0"}}>
@@ -937,16 +927,21 @@ export default function ArmedAndAnchored({ session, profile }) {
           {WEAPONS.map(w => {
             const done = declared[w.id];
             return (
-              <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{background:done?`linear-gradient(145deg,rgba(158,40,40,0.12),rgba(158,40,40,0.04))`:`linear-gradient(145deg,rgba(255,255,255,0.028),rgba(255,255,255,0.01))`,border:`1px solid ${done?"rgba(158,40,40,0.35)":C.border}`,borderRadius:14,padding:"14px 16px",cursor:"pointer",textAlign:"left",transition:"all .2s",position:"relative"}}>
-                  <button onClick={(e)=>{e.stopPropagation();toggleSave(w.id);}} style={{position:"absolute",top:10,right:10,background:"transparent",border:"none",color:isSaved(w.id)?C.gold:C.dim,cursor:"pointer",fontSize:16,lineHeight:1,touchAction:"manipulation",zIndex:2}}>{isSaved(w.id)?"★":"☆"}</button>
-                {done && <div style={{position:"absolute",top:10,right:28,fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</div>}
-                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
-                  <span style={{fontSize:18}}>{w.icon}</span>
-                  <div style={{fontSize:9,color:acc(w),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{w.tag}</div>
+              <div key={w.id} style={{background:done?"linear-gradient(145deg,rgba(158,40,40,0.1),rgba(158,40,40,0.03))":"linear-gradient(145deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))",border:`1px solid ${done?"rgba(158,40,40,0.3)":C.border}`,borderRadius:14,marginBottom:10,position:"relative",overflow:"hidden"}}>
+                <button onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 16px",cursor:"pointer",textAlign:"left",background:"transparent",border:"none"}}>
+                  <span style={{fontSize:22,flexShrink:0}}>{w.icon}</span>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:9,color:acc(w),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:3}}>{w.tag}</div>
+                    <div style={{fontSize:15,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.title}</div>
+                    <div style={{fontSize:12,color:C.muted,fontStyle:"italic",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.subtitle}</div>
+                  </div>
+                  <span style={{color:C.muted,fontSize:14,flexShrink:0}}>›</span>
+                </button>
+                <div style={{position:"absolute",right:36,top:"50%",transform:"translateY(-50%)",display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3}}>
+                  {done && <span style={{fontSize:9,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</span>}
                 </div>
-                <div style={{fontSize:14,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",lineHeight:1.25,marginBottom:4}}>{w.title}</div>
-                <div style={{fontSize:11,color:C.muted,fontStyle:"italic",lineHeight:1.35}}>{w.subtitle}</div>
-              </button>
+                <button onClick={(e)=>{e.stopPropagation();toggleSave(w.id);}} style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"transparent",border:"none",color:isSaved(w.id)?C.gold:C.dim,cursor:"pointer",fontSize:16,lineHeight:1,touchAction:"manipulation",padding:4}}>{isSaved(w.id)?"★":"☆"}</button>
+              </div>
             );
           })}
         </div>
@@ -957,69 +952,191 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   return (
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 50% 0%, ${accF(weapon).replace("0.1","0.2")} 0%, transparent 50%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90}}>
-      <div style={{position:"sticky",top:0,zIndex:100,background:"rgba(7,14,23,0.94)",backdropFilter:"blur(14px)",borderBottom:`1px solid ${C.border}`}}>
-        {/* Row 1: back + title + share */}
-        <div style={{padding:"10px 14px",display:"flex",alignItems:"center",gap:10}}>
-          <button onClick={()=>{setSelected(null);window.scrollTo(0,0);}} style={{background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,width:32,height:32,borderRadius:8,cursor:"pointer",fontSize:16,flexShrink:0}}>‹</button>
-          <div style={{flex:1,minWidth:0,position:"relative"}}>
-            <div style={{fontSize:9,color:acc(weapon),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{weapon.icon} {weapon.tag}</div>
-            <button onClick={()=>setShowWeaponJump(v=>!v)} style={{background:"transparent",border:"none",cursor:"pointer",padding:0,width:"100%",textAlign:"left",touchAction:"manipulation"}}>
-              <div style={{fontSize:13,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{weapon.title} <span style={{fontSize:10,color:C.muted}}>{showWeaponJump?"▲":"▼"}</span></div>
+      {/* AS1-style compact sticky header */}
+      <div style={{position:"sticky",top:0,zIndex:200,background:"rgba(7,14,23,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)"}}/>
+            <div>
+              <div style={{fontSize:15,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",lineHeight:1.1}}>Armed & Anchored</div>
+              <div style={{fontSize:9,color:C.muted,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Spiritual Warfare</div>
+            </div>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:8}}>
+            {declared[weapon.id] && <span style={{fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</span>}
+            <button onClick={()=>setShareCard({weapon,type:tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"})} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:"#B08A4E",borderRadius:8,padding:"5px 9px",cursor:"pointer",fontSize:12}}>🖼</button>
+            <button onClick={()=>supabase.auth.signOut()} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"3px 10px",borderRadius:6,cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>Sign Out</button>
+          </div>
+        </div>
+        {/* Under-header nav pills */}
+        <div style={{display:"flex",justifyContent:"center",gap:2,padding:"3px 12px 6px",flexWrap:"nowrap",overflowX:"auto"}}>
+          {[["back","← Arsenal"],["search","🔍 Search"],["saved","☆ Saved"],["settings","⚙️ Settings"]].map(([v,l])=>(
+            <button key={v} onClick={()=>{
+              if(v==="back"){setSelected(null);window.scrollTo(0,0);}
+              else if(v==="search"){setShowSearch(true);setSearchQuery('');setSearchResults([])}
+              else if(v==="saved"){setShowSaved(true)}
+              else if(v==="settings"){setShowSettings(true)}
+            }} style={{background:"transparent",border:"1px solid transparent",color:C.muted,padding:"4px 8px",borderRadius:6,cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",whiteSpace:"nowrap",flexShrink:0,touchAction:"manipulation",transition:"all .2s"}}>
+              {l}
             </button>
-            {showWeaponJump && (
-              <div onClick={e=>e.stopPropagation()} style={{position:"fixed",top:90,left:10,right:10,background:C.bg,border:`1px solid ${C.border}`,borderRadius:14,padding:12,maxHeight:260,overflowY:"auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,zIndex:900,boxShadow:"0 8px 32px rgba(0,0,0,0.7)"}}>
-                {WEAPONS.map(w=>(
-                  <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");setShowWeaponJump(false);window.scrollTo(0,0);}} style={{background:w.id===selected?C.redF:"transparent",border:`1px solid ${w.id===selected?C.redB:C.border}`,color:w.id===selected?C.redL:C.muted,borderRadius:10,padding:"10px 4px",cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",lineHeight:1.3,touchAction:"manipulation"}}>
-                    <div style={{fontSize:20,marginBottom:3}}>{w.icon}</div>
-                    <div style={{fontSize:8,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",padding:"0 2px"}}>{w.title.split(" ").slice(0,2).join(" ")}</div>
-                  </button>
-                ))}
+          ))}
+        </div>
+      </div>
+
+      {/* Weapon nav — AS1 week nav style */}
+      <div style={{maxWidth:860,margin:"0 auto",padding:"18px 18px 0"}}>
+        {(() => {
+          const idx = WEAPONS.findIndex(w => w.id === selected)
+          const prev = WEAPONS[idx-1]
+          const next = WEAPONS[idx+1]
+          const navBtn = {background:C.bgCard,border:`1px solid ${C.border}`,color:C.muted,width:34,height:34,borderRadius:8,cursor:"pointer",fontSize:16,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",touchAction:"manipulation"}
+          return (
+            <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:6}}>
+              <button onClick={()=>{if(prev){setSelected(prev.id);setTab("scripture");window.scrollTo(0,0);}}} disabled={!prev} style={{...navBtn,opacity:prev?1:0.3}}>‹</button>
+              <div style={{flex:1,textAlign:"center"}}>
+                <div style={{fontSize:10,color:acc(weapon),letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:3}}>{weapon.icon} Weapon {idx+1} of {WEAPONS.length}</div>
+                <button onClick={()=>setShowWeaponJump(v=>!v)} style={{background:"transparent",border:"none",cursor:"pointer",padding:0,touchAction:"manipulation"}}>
+                  <h2 style={{fontSize:22,fontWeight:700,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.03em",lineHeight:1.1,margin:0}}>{weapon.title} <span style={{fontSize:12,color:C.muted}}>{showWeaponJump?"▲":"▼"}</span></h2>
+                </button>
+                <p style={{fontSize:13,color:C.muted,fontStyle:"italic",marginTop:2}}>{weapon.subtitle}</p>
+              </div>
+              <button onClick={()=>{if(next){setSelected(next.id);setTab("scripture");window.scrollTo(0,0);}}} disabled={!next} style={{...navBtn,opacity:next?1:0.3}}>›</button>
+            </div>
+          )
+        })()}
+        {/* Weapon jump dropdown */}
+        {showWeaponJump && (
+          <div onClick={()=>setShowWeaponJump(false)} style={{position:"fixed",inset:0,zIndex:800}} >
+            <div onClick={e=>e.stopPropagation()} style={{position:"fixed",top:140,left:10,right:10,background:C.bg,border:`1px solid ${C.border}`,borderRadius:16,padding:14,maxHeight:280,overflowY:"auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,zIndex:900,boxShadow:"0 8px 32px rgba(0,0,0,0.7)"}}>
+              {WEAPONS.map(w=>(
+                <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");setShowWeaponJump(false);window.scrollTo(0,0);}} style={{background:w.id===selected?C.redF:"transparent",border:`1px solid ${w.id===selected?C.redB:C.border}`,color:w.id===selected?C.redL:C.muted,borderRadius:10,padding:"10px 4px",cursor:"pointer",fontSize:9,fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",lineHeight:1.3,touchAction:"manipulation"}}>
+                  <div style={{fontSize:20,marginBottom:3}}>{w.icon}</div>
+                  <div style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",padding:"0 2px"}}>{w.title.split(" ").slice(0,2).join(" ")}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {/* Progress bar */}
+        <div style={{height:3,background:C.border,borderRadius:3,margin:"10px 0 16px",overflow:"hidden"}}>
+          <div style={{height:"100%",background:`linear-gradient(90deg,${C.red},${C.redL})`,width:`${((WEAPONS.findIndex(w=>w.id===selected)+1)/WEAPONS.length)*100}%`,transition:"width .4s ease"}}/>
+        </div>
+        {/* Section tabs — AS1 pill style */}
+        <div style={{display:"flex",gap:3,flexWrap:"nowrap",overflowX:"auto",marginBottom:0,paddingBottom:2}}>
+          {TABS.map(t => (
+            <button key={t.id} onClick={()=>{setTab(t.id);window.scrollTo(0,0);}} style={{
+              background:tab===t.id?"linear-gradient(135deg,rgba(176,138,78,0.15),rgba(176,138,78,0.06))":"transparent",
+              border:`1px solid ${tab===t.id?"rgba(176,138,78,0.35)":C.border}`,
+              color:tab===t.id?C.gold:C.muted,
+              padding:"6px 10px",borderRadius:8,cursor:"pointer",fontSize:11,
+              fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",
+              transition:"all .18s",whiteSpace:"nowrap",flexShrink:0,touchAction:"manipulation"
+            }}>{t.label}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Tab Content ───────────────────────────────────────────────── */}
+      <div style={{maxWidth:860,margin:"0 auto",padding:"22px 18px 120px"}}>
+
+        {/* SCRIPTURE */}
+        {tab==="scripture" && (
+          <div>
+            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Key Scriptures — {weapon.tag}</div>
+            {weapon.scriptures.map((s,i) => (
+              <div key={i} style={{background:i===0?"linear-gradient(145deg,rgba(158,40,40,0.14),rgba(158,40,40,0.05))":"linear-gradient(145deg,rgba(158,40,40,0.07),rgba(158,40,40,0.02))",border:`1px solid ${C.redB}`,borderRadius:16,padding:"22px 24px",marginBottom:14,boxShadow:"0 8px 24px rgba(0,0,0,0.12)"}}>
+                <div style={{display:"flex",gap:10}}>
+                  <span style={{color:C.gold,fontSize:32,lineHeight:1,opacity:.3,flexShrink:0,fontFamily:"Georgia,serif"}}>&#8220;</span>
+                  <div style={{flex:1}}>
+                    <p style={{fontSize:19,lineHeight:1.95,color:C.cream,fontStyle:"italic",marginBottom:12,letterSpacing:"0.01em"}}>{s.text}</p>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
+                      <span style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",fontWeight:500,letterSpacing:"0.08em",textTransform:"uppercase"}}>{s.ref}</span>
+                      <div style={{display:"flex",gap:6}}>
+                        <button onClick={()=>setMemorizeVerse({text:s.text,ref:s.ref,idx:i})} style={{background:get(`mem_${i}`)==="true"?"rgba(120,184,120,0.15)":C.redF,border:`1px solid ${get(`mem_${i}`)==="true"?"rgba(120,184,120,0.4)":C.redB}`,color:get(`mem_${i}`)==="true"?C.green:C.redL,padding:"2px 10px",borderRadius:12,cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif"}}>
+                          {get(`mem_${i}`)==="true"?"✓ Memorized":"✦ Memorize"}
+                        </button>
+                        <button onClick={()=>toggleSave(weapon.id)} style={{background:isSaved(weapon.id)?"rgba(176,138,78,0.2)":"transparent",border:`1px solid ${isSaved(weapon.id)?"rgba(176,138,78,0.4)":C.border}`,color:isSaved(weapon.id)?C.gold:C.muted,padding:"2px 10px",borderRadius:12,cursor:"pointer",fontSize:13}}>
+                          {isSaved(weapon.id)?"★":"☆"}
+                        </button>
+                        <button onClick={()=>setShareCard({weapon,type:"scripture"})} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"2px 8px",borderRadius:12,cursor:"pointer",fontSize:11}}>&#8599;</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* TEACHING */}
+        {tab==="teaching" && (
+          <div>
+            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Teaching — {weapon.title}</div>
+            <div style={{background:"linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))",border:`1px solid ${C.borderGold}`,borderRadius:16,padding:"22px 24px",boxShadow:"0 8px 24px rgba(0,0,0,0.1)"}}>
+              <p style={{fontSize:17,color:C.text,lineHeight:1.95,whiteSpace:"pre-line",margin:0}}>{weapon.teaching}</p>
+            </div>
+          </div>
+        )}
+
+        {/* TACTICS */}
+        {tab==="tactics" && (
+          <div>
+            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Enemy Tactics — {weapon.title}</div>
+            {weapon.tactics?.map((t,i) => (
+              <div key={i} style={{background:`linear-gradient(145deg,rgba(158,40,40,0.08),rgba(158,40,40,0.02))`,border:`1px solid ${C.redB}`,borderRadius:14,padding:"16px 20px",marginBottom:10}}>
+                <div style={{display:"flex",gap:12,alignItems:"flex-start"}}>
+                  <span style={{color:C.redL,fontSize:18,flexShrink:0,marginTop:2}}>⚠</span>
+                  <p style={{fontSize:16,color:C.text,lineHeight:1.8,margin:0}}>{t}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* DECLARE */}
+        {tab==="declare" && (
+          <div>
+            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Declaration — Deploy This Weapon</div>
+            {weapon.declaration && (
+              <div style={{background:"linear-gradient(145deg,rgba(176,138,78,0.14),rgba(176,138,78,0.05))",border:"1px solid rgba(176,138,78,0.3)",borderRadius:16,padding:"22px 24px",marginBottom:18,boxShadow:"0 8px 24px rgba(0,0,0,0.12)"}}>
+                <div style={{display:"flex",gap:10}}>
+                  <span style={{color:C.gold,fontSize:32,lineHeight:1,opacity:.3,flexShrink:0,fontFamily:"Georgia,serif"}}>&#8220;</span>
+                  <p style={{fontSize:19,lineHeight:1.95,color:C.cream,fontStyle:"italic",margin:0,letterSpacing:"0.01em"}}>{weapon.declaration}</p>
+                </div>
               </div>
             )}
+            <button onClick={async()=>{
+              await supabase.from('weapon_entries').upsert({user_id:userId,weapon_id:weapon.id,field_key:'declared',field_value:'true',updated_at:new Date().toISOString()},{onConflict:'user_id,weapon_id,field_key'});
+              setEntries(prev=>{const idx=prev.findIndex(e=>String(e.weapon_id)===String(weapon.id)&&e.field_key==='declared');if(idx>=0){const u=[...prev];u[idx]={...u[idx],field_value:'true'};return u;}return[...prev,{user_id:userId,weapon_id:weapon.id,field_key:'declared',field_value:'true'}];});
+            }} style={{width:"100%",background:declared[weapon.id]?"rgba(120,184,120,0.15)":`linear-gradient(135deg,${C.redF},rgba(255,255,255,0.01))`,border:`1px solid ${declared[weapon.id]?"rgba(120,184,120,0.4)":C.redB}`,color:declared[weapon.id]?C.green:C.redL,padding:"16px",borderRadius:14,cursor:"pointer",fontSize:13,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",transition:"all .25s"}}>
+              {declared[weapon.id]?"✦ Declaration Deployed":"⚔ Deploy This Declaration"}
+            </button>
           </div>
-          <div style={{display:"flex",gap:5,alignItems:"center",flexShrink:0}}>
-            {declared[weapon.id] && <span style={{fontSize:9,color:"#C94848",fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.07em"}}>✦ Done</span>}
-            <button onClick={()=>{setShareCard({weapon,type:tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"});setTabMenuOpen(false);}} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:"#B08A4E",borderRadius:8,padding:"5px 9px",cursor:"pointer",fontSize:12}}>🖼</button>
+        )}
+
+        {/* JOURNAL */}
+        {tab==="journal" && (
+          <div>
+            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:10}}>Journal — {weapon.title}</div>
+            <p style={{fontSize:13,color:C.muted,fontStyle:"italic",lineHeight:1.7,marginBottom:14}}>Write your response, reflections, and warfare notes here.</p>
+            <textarea rows={10} value={get('journal')} onChange={e=>set('journal',e.target.value)} placeholder="Write your reflection here..."
+              style={{width:"100%",background:"rgba(255,255,255,0.03)",border:`1px solid ${C.borderGold}`,borderRadius:14,color:C.cream,fontSize:17,lineHeight:1.9,padding:"16px 18px",fontFamily:"'EB Garamond',Georgia,serif",outline:"none",resize:"vertical",boxSizing:"border-box",minHeight:220}}/>
+            <button onClick={async()=>{
+                const val=get('journal');
+                if(userId&&selected){await supabase.from('weapon_entries').upsert({user_id:userId,weapon_id:selected,field_key:'journal',field_value:val,updated_at:new Date().toISOString()},{onConflict:'user_id,weapon_id,field_key'});}
+                setJournalSaved(true);setTimeout(()=>setJournalSaved(false),2000);}}
+              style={{width:"100%",marginTop:12,background:journalSaved?"rgba(120,184,120,0.12)":`linear-gradient(135deg,${C.redF},rgba(255,255,255,0.01))`,border:`1px solid ${journalSaved?"rgba(120,184,120,0.4)":C.redB}`,color:journalSaved?C.green:C.redL,padding:"13px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",transition:"all .25s"}}>
+              {journalSaved?"✓ Saved":"Save Journal Entry"}
+            </button>
           </div>
-        </div>
-        {/* Row 2: current tab label + hamburger */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",
-          borderTop:`1px solid ${C.border}`,padding:"0 14px"}}>
-          <span style={{fontSize:12,color:acc(weapon),fontFamily:"'Cinzel',Georgia,serif",
-            letterSpacing:"0.06em",padding:"8px 0"}}>
-            {TABS.find(t=>t.id===tab)?.label}
-          </span>
-          <button onClick={()=>setTabMenuOpen(o=>!o)} style={{
-            background:"transparent",border:"none",color:C.muted,
-            cursor:"pointer",padding:"8px 0 8px 16px",fontSize:16,lineHeight:1,
-            display:"flex",alignItems:"center",gap:6,
-          }}>
-            <span style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",
-              letterSpacing:"0.06em"}}>{tabMenuOpen?"Close":"Sections"}</span>
-            <span style={{display:"flex",flexDirection:"column",gap:3}}>
-              <span style={{display:"block",width:16,height:1.5,background:tabMenuOpen?C.redL:C.muted,borderRadius:1,transition:"all .2s"}}/>
-              <span style={{display:"block",width:12,height:1.5,background:tabMenuOpen?C.redL:C.muted,borderRadius:1,transition:"all .2s"}}/>
-              <span style={{display:"block",width:16,height:1.5,background:tabMenuOpen?C.redL:C.muted,borderRadius:1,transition:"all .2s"}}/>
-            </span>
-          </button>
-        </div>
-        {/* Dropdown tab menu */}
-      </div>
+        )}
 
-      {/* AS1-style horizontal section pills */}
-      <div style={{display:"flex",gap:3,padding:"8px 14px 10px",flexWrap:"nowrap",overflowX:"auto",borderBottom:`1px solid ${C.border}`}}>
-        {TABS.filter(t => !profile?.paid ? t.free : true).map(t => (
-          <button key={t.id} onClick={()=>{setTab(t.id);window.scrollTo(0,0);}} style={{
-            background:tab===t.id?"linear-gradient(135deg,rgba(176,138,78,0.15),rgba(176,138,78,0.06))":"transparent",
-            border:`1px solid ${tab===t.id?"rgba(176,138,78,0.35)":C.border}`,
-            color:tab===t.id?C.gold:C.muted,
-            padding:"6px 10px",borderRadius:8,cursor:"pointer",fontSize:11,
-            fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",
-            transition:"all .18s",whiteSpace:"nowrap",flexShrink:0,touchAction:"manipulation"
-          }}>{t.label}</button>
-        ))}
-      </div>
+        {/* TOOL */}
+        {tab==="tool" && (
+          <WeaponTool weapon={weapon} get={get} set={set} C={C}/>
+        )}
 
+      </div>
 
       {memorizeVerse && <MemorizeModal verse={memorizeVerse} onClose={()=>setMemorizeVerse(null)} get={get} set={set} C={C} />}
 

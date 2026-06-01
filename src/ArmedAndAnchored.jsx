@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from './supabaseClient'
+import Onboarding from './Onboarding.jsx'
 import ShareCard from './components/ShareCard'
 import Dashboard from './components/Dashboard'
 import Settings from './components/Settings'
 import WeaponTool from './components/WeaponTool'
+import Onboarding from './Onboarding'
 
 // C palette defined dynamically inside component (light/dark mode);
 
@@ -541,12 +543,18 @@ function MemorizeModal({verse, onClose, get, set, C}) {
   }
 
 export default function ArmedAndAnchored({ session, profile }) {
+  const [onboarded, setOnboarded] = useState(() => {
+    try { return !!localStorage.getItem('aa_onboarded') } catch { return false }
+  })
   const [lightMode, setLightMode] = useState(() => {
     try { return localStorage.getItem('aa_lightmode') === 'true' } catch { return false }
   })
   const userId = session?.user?.id
 
   // ── STATE ──────────────────────────────────────────────────────────────
+  const [showOnboarding, setShowOnboarding] = useState(
+    () => !localStorage.getItem('aa_onboarded')
+  )
   const [entries, setEntries] = useState([])
   // Dynamic palette — switches with lightMode
   const C = lightMode ? {
@@ -828,6 +836,28 @@ export default function ArmedAndAnchored({ session, profile }) {
     s.textContent = '@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }'
     document.head.appendChild(s)
   }
+
+  // Onboarding
+  if (showOnboarding) return (
+    <Onboarding
+      onComplete={() => {
+        localStorage.setItem('aa_onboarded', 'true')
+        setShowOnboarding(false)
+      }}
+      C={C}
+    />
+  )
+
+  // Onboarding
+  if (!onboarded) return (
+    <Onboarding
+      C={C}
+      onComplete={() => {
+        try { localStorage.setItem('aa_onboarded', 'true') } catch {}
+        setOnboarded(true)
+      }}
+    />
+  )
 
   // Dashboard overlay
   if (showDashboard) return (

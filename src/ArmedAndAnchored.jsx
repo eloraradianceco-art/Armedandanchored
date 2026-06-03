@@ -5,7 +5,6 @@ import ShareCard from './components/ShareCard'
 import Dashboard from './components/Dashboard'
 import Settings from './components/Settings'
 import WeaponTool from './components/WeaponTool'
-import Onboarding from './Onboarding'
 
 // C palette defined dynamically inside component (light/dark mode);
 

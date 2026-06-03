@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from './supabaseClient'
-import Onboarding from './Onboarding.jsx'
+import Onboarding from './components/Onboarding.jsx'
 import ShareCard from './components/ShareCard'
 import Dashboard from './components/Dashboard'
 import Settings from './components/Settings'

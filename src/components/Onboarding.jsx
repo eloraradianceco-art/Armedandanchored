@@ -1,197 +1,154 @@
 import { useState } from 'react'
 
-const C = {
-  bg: '#070E17', red: '#9E2828', redL: '#C94848', redF: 'rgba(158,40,40,0.14)',
-  redB: 'rgba(158,40,40,0.32)', gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)',
-  goldB: 'rgba(176,138,78,0.28)', cream: '#EDE6D6', text: '#C8BEAA',
-  muted: '#7C90A2', dim: '#4E6070', border: 'rgba(255,255,255,0.06)',
-}
-
 const SLIDES = [
   {
     icon: '⚔️',
-    title: 'Welcome to the War Room',
-    subtitle: 'Armed & Anchored is a spiritual warfare training journal built on Scripture, rooted in the finished work of Christ.',
-    detail: 'You don\'t fight for victory. You fight from it.',
-    color: C.redL,
+    tag: 'WELCOME',
+    title: 'Welcome to\nArmed & Anchored',
+    body: 'Your personal war room. Built on Scripture. Designed for the believer who is serious about the fight.',
+    detail: null,
   },
   {
-    icon: '🛡️',
-    title: '23 Weapons of the Believer',
-    subtitle: 'From the Full Armor of God to the Name of Jesus, the Blood of the Lamb, Praise, Forgiveness, Humility, and Rest in God.',
-    detail: 'Tap any weapon from the bottom dock to jump straight to it.',
-    color: C.gold,
+    icon: '🗡',
+    tag: 'THE ARSENAL',
+    title: '23 Weapons of\nthe Believer',
+    body: 'Every weapon is a biblical truth or discipline — the Name of Jesus, the Blood, the Armor of God, Fasting, Declarations, and more.',
+    detail: 'Each weapon has six sections: Scripture, Teaching, Enemy Tactics, Declaration, Journal, and a hands-on Tool.',
   },
   {
-    icon: '📜',
-    title: 'Deep Warfare Teaching',
-    subtitle: 'Every weapon comes with Scripture, in-depth teaching, and a breakdown of exactly how the enemy attacks in that area.',
-    detail: 'Know his methods. Forewarned is forearmed.',
-    color: C.redL,
+    icon: '⚠',
+    tag: 'ENEMY TACTICS',
+    title: 'Know How\nHe Attacks',
+    body: 'For every weapon, you\'ll see exactly how the enemy attacks in that area — so you recognize it before it lands.',
+    detail: 'The enemy has a method. Knowing it changes how you fight.',
   },
   {
-    icon: '⚔️',
-    title: 'Declare & Deploy',
-    subtitle: 'Each weapon has a spoken declaration and a warfare prayer. Speak them aloud — the spoken word has spiritual weight.',
-    detail: '"They overcame him by the blood of the Lamb and by the word of their testimony." — Rev 12:11',
-    color: C.gold,
-    italic: true,
+    icon: '🔥',
+    tag: 'DECLARATIONS',
+    title: 'Declare It\nOut Loud',
+    body: 'Every weapon includes a Scripture-based declaration. Speak it aloud — Revelation 12:11 says we overcome by the blood of the Lamb and the word of our testimony.',
+    detail: 'The enemy hates declarations. Use them daily.',
   },
   {
     icon: '✍️',
-    title: 'Your Battle Journal',
-    subtitle: 'Write your responses, reflections, and warfare notes on every weapon. Saved to your account — access on any device.',
-    detail: 'Your entries are private and persistent across phone, tablet, and desktop.',
-    color: C.redL,
+    tag: 'JOURNAL',
+    title: 'Record\nYour Fight',
+    body: 'Write your reflections, prayer responses, and battle notes for every weapon. Private. Saved to your account. Accessible from any device.',
+    detail: null,
   },
   {
     icon: '🧠',
-    title: 'Memorize the Word',
-    subtitle: 'Every scripture has a built-in memorization tool with three methods — Read & Recall, Fill the Gaps, and Write it Out.',
-    detail: 'The sword of the Spirit is the Word of God. The sharper it is in memory, the deadlier it is in battle.',
-    color: C.redL,
+    tag: 'MEMORIZE',
+    title: 'Hide the Word\nin Your Heart',
+    body: 'Every key scripture has a memorization tool with three training modes: Read & Recall, Fill the Gaps, and Write it Out.',
+    detail: 'A weapon you\'ve memorized is one you can deploy anywhere, anytime — no screen required.',
   },
   {
-    icon: '🛠️',
-    title: 'Train with Every Weapon',
-    subtitle: 'Each weapon has an interactive training tool — battle logs, stronghold breakers, fear inventories, and more.',
-    detail: 'Track your progress across all 23 weapons from your personal dashboard.',
-    color: C.gold,
-  },
-  {
-    icon: '🌿',
-    title: 'You\'re Armed. You\'re Anchored.',
-    subtitle: 'The battle is real. The enemy has a method. But the victory belongs to Christ — and you are seated in it.',
+    icon: '⚔️',
+    tag: 'BEGIN',
+    title: 'You\'re Armed.\nNow Fight.',
+    body: 'Start with the weapon that addresses your current battle. Deploy a declaration. Journal what God shows you. Come back tomorrow.',
     detail: null,
     isLast: true,
-    color: C.redL,
   },
 ]
 
-export default function Onboarding({ onComplete }) {
+export default function Onboarding({ onComplete, C }) {
   const [slide, setSlide] = useState(0)
-  const [fadingOut, setFadingOut] = useState(false)
   const current = SLIDES[slide]
   const isLast = slide === SLIDES.length - 1
+
+  const next = () => isLast ? onComplete() : setSlide(s => s + 1)
+
+  // Fallback colors if C not passed
+  const bg    = C?.bg    || '#070E17'
+  const goldB = C?.goldB || 'rgba(176,138,78,0.28)'
+  const goldF = C?.goldF || 'rgba(176,138,78,0.11)'
+  const gold  = C?.gold  || '#B08A4E'
+  const cream = C?.cream || '#EDE6D6'
+  const text  = C?.text  || '#C8BEAA'
+  const muted = C?.muted || '#7C90A2'
+  const redF  = C?.redF  || 'rgba(158,40,40,0.14)'
+  const redB  = C?.redB  || 'rgba(158,40,40,0.32)'
+  const border= C?.border|| 'rgba(255,255,255,0.06)'
 
   return (
     <div style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
-      background: `radial-gradient(ellipse at 20% 0%,rgba(158,40,40,0.18) 0%,transparent 55%),
-                   radial-gradient(ellipse at 80% 100%,rgba(176,138,78,0.08) 0%,transparent 50%),${C.bg}`,
-      fontFamily: "'EB Garamond',Georgia,serif", color: C.text,
-      padding: '32px 24px', textAlign: 'center',
-      opacity: fadingOut ? 0 : 1,
-      transition: 'opacity 0.4s ease',
+      background: `radial-gradient(ellipse at 50% 0%, rgba(158,40,40,0.18) 0%, transparent 55%), ${bg}`,
+      fontFamily: "'EB Garamond',Georgia,serif", padding: '24px 20px',
     }}>
-      <div style={{ maxWidth: 440, width: '100%' }}>
+      <div style={{
+        maxWidth: 420, width: '100%',
+        background: 'rgba(7,14,23,0.98)', borderRadius: 24,
+        border: `1px solid ${redB}`, padding: '48px 32px 36px',
+        boxShadow: '0 12px 40px rgba(0,0,0,0.6)', textAlign: 'center',
+      }}>
+        {/* Icon */}
+        <div style={{ fontSize: 54, marginBottom: 10, lineHeight: 1 }}>{current.icon}</div>
 
-        {/* Progress dots */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 40 }}>
+        {/* Tag */}
+        <div style={{
+          fontFamily: "'Cinzel',Georgia,serif", fontSize: 9,
+          color: gold, letterSpacing: '0.22em', textTransform: 'uppercase',
+          marginBottom: 14,
+        }}>{current.tag}</div>
+
+        {/* Title */}
+        <h2 style={{
+          fontSize: 24, fontWeight: 700, color: cream,
+          fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.04em',
+          lineHeight: 1.2, marginBottom: 18, whiteSpace: 'pre-line',
+        }}>{current.title}</h2>
+
+        {/* Body */}
+        <p style={{ fontSize: 17, color: text, lineHeight: 1.85, marginBottom: current.detail ? 16 : 32 }}>
+          {current.body}
+        </p>
+
+        {/* Detail callout */}
+        {current.detail && (
+          <p style={{
+            fontSize: 14, color: muted, lineHeight: 1.75, marginBottom: 32,
+            background: redF, border: `1px solid ${redB}`,
+            borderRadius: 10, padding: '12px 16px',
+          }}>{current.detail}</p>
+        )}
+
+        {/* Dot indicators */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 28 }}>
           {SLIDES.map((_, i) => (
             <div key={i} style={{
               width: i === slide ? 20 : 6, height: 6, borderRadius: 3,
-              background: i === slide ? C.redL : 'rgba(255,255,255,0.12)',
+              background: i === slide ? gold : border,
               transition: 'all .3s ease',
             }} />
           ))}
         </div>
 
-        {/* Icon */}
-        <div style={{ fontSize: 52, marginBottom: 24 }}>{current.icon}</div>
-
-        {/* Title */}
-        <h2 style={{
-          fontSize: 24, fontWeight: 700, color: C.cream,
-          fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.03em',
-          lineHeight: 1.2, marginBottom: 16,
+        {/* Continue button */}
+        <button onClick={next} style={{
+          width: '100%', padding: '16px', borderRadius: 14, cursor: 'pointer',
+          background: isLast
+            ? 'linear-gradient(135deg,rgba(158,40,40,0.5),rgba(158,40,40,0.25))'
+            : `linear-gradient(135deg,${goldF},rgba(176,138,78,0.06))`,
+          border: `1px solid ${isLast ? redB : goldB}`,
+          color: cream, fontSize: 14,
+          fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.09em',
+          marginBottom: 12,
+          transition: 'all .25s',
         }}>
-          {current.title}
-        </h2>
+          {isLast ? '⚔️ Enter the Arsenal' : 'Continue →'}
+        </button>
 
-        {/* Subtitle */}
-        <p style={{
-          fontSize: 17, color: C.text, lineHeight: 1.85,
-          marginBottom: current.detail ? 20 : 40,
-        }}>
-          {current.subtitle}
-        </p>
-
-        {/* Detail callout */}
-        {current.detail && (
-          <div style={{
-            background: 'linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))',
-            border: `1px solid ${current.color === C.gold ? C.goldB : C.redB}`,
-            borderRadius: 12, padding: '14px 18px', marginBottom: 40,
-          }}>
-            <p style={{
-              fontSize: 15, color: current.color === C.gold ? C.gold : C.redL,
-              lineHeight: 1.75, fontStyle: current.italic ? 'italic' : 'normal',
-            }}>
-              {current.detail}
-            </p>
-          </div>
-        )}
-
-        {/* CTA */}
-        {isLast ? (
-          <button
-            onClick={() => {
-            setFadingOut(true)
-            setTimeout(() => onComplete(), 400)
-          }}
-            style={{
-              width: '100%', background: 'linear-gradient(135deg,rgba(158,40,40,0.4),rgba(158,40,40,0.18))',
-              border: '1px solid rgba(158,40,40,0.55)', color: C.cream,
-              padding: '18px', borderRadius: 14, cursor: 'pointer',
-              fontSize: 16, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.1em',
-              marginBottom: 16,
-            }}
-          >
-            ⚔️ Begin Training
-          </button>
-        ) : (
-          <div style={{ display: 'flex', gap: 10 }}>
-            {slide > 0 && (
-              <button
-                onClick={() => setSlide(s => s - 1)}
-                style={{
-                  flex: 1, background: 'transparent', border: `1px solid ${C.border}`,
-                  color: C.muted, padding: '14px', borderRadius: 12,
-                  cursor: 'pointer', fontSize: 14, fontFamily: "'Cinzel',Georgia,serif",
-                }}
-              >
-                ‹ Back
-              </button>
-            )}
-            <button
-              onClick={() => setSlide(s => s + 1)}
-              style={{
-                flex: 2, background: 'linear-gradient(135deg,rgba(158,40,40,0.3),rgba(158,40,40,0.12))',
-                border: '1px solid rgba(158,40,40,0.45)', color: C.cream,
-                padding: '14px', borderRadius: 12, cursor: 'pointer',
-                fontSize: 14, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.07em',
-              }}
-            >
-              Next ›
-            </button>
-          </div>
-        )}
-
-        {/* Skip on early slides */}
+        {/* Skip */}
         {!isLast && (
-          <button
-            onClick={() => {
-            setFadingOut(true)
-            setTimeout(() => onComplete(), 400)
-          }}
-            style={{
-              background: 'none', border: 'none', color: C.dim,
-              cursor: 'pointer', fontSize: 12, marginTop: 16,
-              fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.08em',
-            }}
-          >
+          <button onClick={onComplete} style={{
+            background: 'transparent', border: 'none',
+            color: muted, cursor: 'pointer', fontSize: 13,
+            fontFamily: "'EB Garamond',Georgia,serif",
+          }}>
             Skip intro
           </button>
         )}

@@ -193,7 +193,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
             {[
               ['⚔️', (weapons||[]).filter(w=>w.deployed).length, 'Weapons Deployed', weapons?.length||23],
               ['📖', (weapons||[]).filter(w=>w.memorized).length, 'Verses Memorized', null],
-              ['📝', (entries||[]).filter(e=>(e.value||'').trim()).length, 'Journal Entries', null],
+              ['📝', (entries||[]).filter(e=>e.field_key==='journal'&&(e.field_value||'').trim()).length, 'Journal Entries', null],
             ].map(([icon, val, label, total], i, arr) => (
               <div key={label} style={{ padding: '14px 18px', borderBottom: i < arr.length-1 ? `1px solid ${C.border}` : 'none',
                 display: 'flex', alignItems: 'center', gap: 14 }}>

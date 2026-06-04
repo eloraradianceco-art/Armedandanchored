@@ -875,7 +875,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       profile={profile}
       userId={userId}
       weapons={WEAPONS}
-      entries={Object.values(journal)}
+      entries={entries}
       lightMode={lightMode}
       onToggleLightMode={toggleLightMode}
       onClose={() => setShowSettings(false)}

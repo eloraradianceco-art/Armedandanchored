@@ -873,6 +873,9 @@ export default function ArmedAndAnchored({ session, profile }) {
   if (showSettings) return (
     <Settings
       profile={profile}
+      userId={userId}
+      weapons={WEAPONS}
+      entries={Object.values(journal)}
       lightMode={lightMode}
       onToggleLightMode={toggleLightMode}
       onClose={() => setShowSettings(false)}

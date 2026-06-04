@@ -3,7 +3,7 @@ import { supabase } from '../supabaseClient'
 
 const STRIPE_LINK = 'https://buy.stripe.com/dRm6oGezOalM1ef1Vp57W07'
 
-export default function Settings({ profile, userId, weapons, lightMode, onToggleLightMode, onClose }) {
+export default function Settings({ profile, userId, weapons, entries, lightMode, onToggleLightMode, onClose }) {
   const [copiedReferral, setCopiedReferral] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [exporting, setExporting] = useState(false)
@@ -184,7 +184,35 @@ export default function Settings({ profile, userId, weapons, lightMode, onToggle
 
         <div style={{ padding: '8px 20px' }}>
 
-          {/* Account */}
+          {/* Progress */}
+          <div style={{ marginTop: 24, marginBottom: 8 }}>
+            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase',
+              fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Progress</div>
+          </div>
+          <div style={{ background: C.redF, border: `1px solid ${C.redB}`, borderRadius: 14, overflow: 'hidden' }}>
+            {[
+              ['⚔️', (weapons||[]).filter(w=>w.deployed).length, 'Weapons Deployed', weapons?.length||23],
+              ['📖', (weapons||[]).filter(w=>w.memorized).length, 'Verses Memorized', null],
+              ['📝', (entries||[]).filter(e=>(e.value||'').trim()).length, 'Journal Entries', null],
+            ].map(([icon, val, label, total], i, arr) => (
+              <div key={label} style={{ padding: '14px 18px', borderBottom: i < arr.length-1 ? `1px solid ${C.border}` : 'none',
+                display: 'flex', alignItems: 'center', gap: 14 }}>
+                <span style={{ fontSize: 20 }}>{icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, color: C.cream, fontFamily: "'Cinzel',Georgia,serif",
+                    letterSpacing: '0.04em' }}>{label}</div>
+                  {total && <div style={{ height: 3, background: C.border, borderRadius: 2, marginTop: 5, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', background: `linear-gradient(90deg,${C.red},${C.redL})`,
+                      width: `${Math.round((val/total)*100)}%`, transition: 'width .4s' }}/>
+                  </div>}
+                </div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: C.red,
+                  fontFamily: "'Cinzel',Georgia,serif" }}>{val}{total ? `/${total}` : ''}</div>
+              </div>
+            ))}
+          </div>
+
+      {/* Account */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>
             <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Account</div>
           </div>

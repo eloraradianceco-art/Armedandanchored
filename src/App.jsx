@@ -77,12 +77,16 @@ function AppInner() {
 
   // Simple profile load — no recursive calls
   const loadProfile = async (userId) => {
-    const { data } = await supabase
-      .from('profiles').select('*').eq('id', userId).single()
-    setProfile(data)
-    setLoading(false)
-    // Clean up if paid
-    if (data?.paid) localStorage.removeItem('pending_stripe_session')
+    try {
+      const { data } = await supabase
+        .from('profiles').select('*').eq('id', userId).maybeSingle()
+      setProfile(data || null)
+      if (data?.paid) localStorage.removeItem('pending_stripe_session')
+    } catch (e) {
+      console.error('loadProfile error:', e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   // Verify payment and directly update profile state — no recursive loadProfile
@@ -105,12 +109,18 @@ function AppInner() {
   }
 
   const handleAuthComplete = async (isNewUser) => {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (session) {
-      await loadProfile(session.user.id)
-      if (isNewUser) setShowOnboarding(true)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        await loadProfile(session.user.id)
+        if (isNewUser) setShowOnboarding(true)
+      }
+    } catch (e) {
+      console.error('handleAuthComplete error:', e)
+      setLoading(false)
+    } finally {
+      setShowSignIn(false)
     }
-    setShowSignIn(false)
   }
 
   const handlePasswordReset = async () => {

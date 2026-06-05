@@ -97,6 +97,9 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
     if (!cardRef.current || sharing) return
     setSharing(true)
     try {
+      // Wait for fonts + 2 RAFs so the first share captures aligned layout
+      try { await document.fonts.ready } catch {}
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         pixelRatio: 2,
@@ -258,7 +261,7 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
             </div>
           ) : (
             <p style={{
-              fontSize: 18, color: th.body, lineHeight: 1.85, marginBottom: 12,
+              fontSize: (content.main||'').length > 200 ? 16 : 18, color: th.body, lineHeight: 1.85, marginBottom: 12,
               fontStyle: 'italic', letterSpacing: '0.01em',
             }}>
               {content.main}

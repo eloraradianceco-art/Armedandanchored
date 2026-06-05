@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
 
-const STRIPE_LINK = 'https://buy.stripe.com/dRm6oGezOalM1ef1Vp57W07'
+const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
 
 export default function Settings({ profile, userId, weapons, entries, lightMode, onToggleLightMode, onClose }) {
   const [copiedReferral, setCopiedReferral] = useState(false)

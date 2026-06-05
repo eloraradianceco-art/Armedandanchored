@@ -5,7 +5,7 @@ const C = {
   muted: '#7C90A2', dim: '#4E6070', border: 'rgba(255,255,255,0.06)',
 }
 
-const STRIPE_LINK = 'https://buy.stripe.com/dRm6oGezOalM1ef1Vp57W07'
+const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
 
 const FEATURES = [
   { icon: '⚔️', text: '23 Weapons of Spiritual Warfare — deep teaching, tactics, prayer, and declaration on each' },

@@ -550,6 +550,24 @@ export default function ArmedAndAnchored({ session, profile }) {
   })
   const userId = session?.user?.id
 
+  // ── Cross-device sync: hydrate state from profile when it loads ───────
+  useEffect(() => {
+    if (!profile) return
+    if (Array.isArray(profile.saved) && profile.saved.length > 0) {
+      setSavedWeapons(profile.saved)
+      try { localStorage.setItem('aa_saved', JSON.stringify(profile.saved)) } catch {}
+    }
+    if (typeof profile.light_mode === 'boolean') {
+      setLightMode(profile.light_mode)
+      try { localStorage.setItem('aa_lightmode', String(profile.light_mode)) } catch {}
+    }
+    if (profile.onboarded) {
+      try { localStorage.setItem('aa_onboarded', 'true') } catch {}
+      setOnboarded(true)
+      setShowOnboarding(false)
+    }
+  }, [profile])
+
   // ── STATE ──────────────────────────────────────────────────────────────
   const [showOnboarding, setShowOnboarding] = useState(
     () => !localStorage.getItem('aa_onboarded')
@@ -729,6 +747,10 @@ export default function ArmedAndAnchored({ session, profile }) {
     const next = !lightMode
     setLightMode(next)
     try { localStorage.setItem('aa_lightmode', String(next)) } catch {}
+    if (userId) {
+      supabase.from('profiles').update({ light_mode: next }).eq('id', userId)
+        .then(({ error }) => { if (error) console.warn('lightmode sync:', error.message) })
+    }
   }
 
   const daysComplete = (id) => entries.filter(e => e.weapon_id === id && e.field_key.startsWith('tr_') && (e.field_value || '').trim()).length
@@ -769,7 +791,11 @@ export default function ArmedAndAnchored({ session, profile }) {
       ? savedWeapons.filter(id => id !== weaponId)
       : [...savedWeapons, weaponId]
     setSavedWeapons(next)
-    localStorage.setItem('aa_saved', JSON.stringify(next))
+    try { localStorage.setItem('aa_saved', JSON.stringify(next)) } catch {}
+    if (userId) {
+      supabase.from('profiles').update({ saved: next }).eq('id', userId)
+        .then(({ error }) => { if (error) console.warn('saved sync:', error.message) })
+    }
   }
   const isSaved = (weaponId) => savedWeapons.includes(weaponId)
 
@@ -840,8 +866,9 @@ export default function ArmedAndAnchored({ session, profile }) {
   if (showOnboarding) return (
     <Onboarding
       onComplete={() => {
-        localStorage.setItem('aa_onboarded', 'true')
+        try { localStorage.setItem('aa_onboarded', 'true') } catch {}
         setShowOnboarding(false)
+        if (userId) supabase.from('profiles').update({ onboarded: true }).eq('id', userId)
       }}
       C={C}
     />
@@ -854,6 +881,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       onComplete={() => {
         try { localStorage.setItem('aa_onboarded', 'true') } catch {}
         setOnboarded(true)
+        if (userId) supabase.from('profiles').update({ onboarded: true }).eq('id', userId)
       }}
     />
   )

@@ -247,7 +247,7 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
         {mode === 'signin' && !isNewUser && (
           <div style={{ marginTop: 16, fontSize: 13, color: C.dim, textAlign: 'center' }}>
             Don't have an account?{' '}
-            <button onClick={() => { window.location.href = 'https://buy.stripe.com/dRm6oGezOalM1ef1Vp57W07' }}
+            <button onClick={() => { window.location.href = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a' }}
               style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer',
                 fontSize: 13, textDecoration: 'underline', fontFamily: 'inherit', padding: 0,
                 touchAction: 'manipulation' }}>

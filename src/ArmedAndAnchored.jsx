@@ -1248,6 +1248,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 50% 0%, ${accF(weapon).replace("0.1","0.2")} 0%, transparent 50%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90}}>
 
       {/* Floating prev/next study tab buttons */}
+      {/* Floating prev/next + share FAB — FAB stacks above next pill, shares its horizontal center */}
       {(() => {
         const tabIdx = TABS.findIndex(t => t.id === tab)
         const prevTab = TABS[tabIdx - 1]
@@ -1255,28 +1256,48 @@ export default function ArmedAndAnchored({ session, profile }) {
         const wIdx = WEAPONS.findIndex(w => w.id === selected)
         const prevWeapon = WEAPONS[wIdx - 1]
         const nextWeapon = WEAPONS[wIdx + 1]
-        // At first tab, show prev weapon; at last tab, show next weapon
         const showPrev = prevTab || prevWeapon
         const showNext = nextTab || nextWeapon
-        const prevLabel = prevTab ? prevTab.label : prevWeapon ? '‹ ' + prevWeapon.title.split(' ').slice(0,2).join(' ') : null
-        const nextLabel = nextTab ? nextTab.label : nextWeapon ? nextWeapon.title.split(' ').slice(0,2).join(' ') + ' ›' : null
-        const btnStyle = {position:'fixed',bottom:32,zIndex:250,background:'rgba(7,14,23,0.88)',backdropFilter:'blur(12px)',border:`1px solid ${C.redB}`,color:C.redL,borderRadius:50,padding:'10px 14px',cursor:'pointer',fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.04em',boxShadow:'0 4px 16px rgba(0,0,0,0.4)',touchAction:'manipulation',transition:'all .2s',display:'flex',alignItems:'center',gap:5,maxWidth:160}
+        const pillStatic = {background:'rgba(7,14,23,0.88)',backdropFilter:'blur(12px)',border:`1px solid ${C.redB}`,color:C.redL,borderRadius:50,padding:'10px 14px',cursor:'pointer',fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.04em',boxShadow:'0 4px 16px rgba(139,26,26,0.18)',touchAction:'manipulation',transition:'all .2s',display:'flex',alignItems:'center',gap:5,maxWidth:160}
+        const pillFixed = (extra) => ({...pillStatic, position:'fixed', bottom:32, zIndex:250, ...extra})
+        const fabBtn = (
+          <button
+            onClick={()=>setShareCard({weapon, type: tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"})}
+            aria-label="Share this weapon"
+            style={{
+              width:48, height:48, borderRadius:'50%',
+              background:`linear-gradient(135deg, ${C.red}, ${C.gold})`,
+              border:'none', color:'#fff', fontSize:20, cursor:'pointer',
+              boxShadow:'0 6px 18px rgba(139,26,26,0.4), 0 2px 6px rgba(0,0,0,0.3)',
+              display:'flex', alignItems:'center', justifyContent:'center',
+              touchAction:'manipulation', transition:'transform .15s ease',
+              flexShrink:0,
+            }}
+            onMouseDown={e=>e.currentTarget.style.transform='scale(0.92)'}
+            onMouseUp={e=>e.currentTarget.style.transform='scale(1)'}
+            onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
+          >↗</button>
+        )
         return (
           <>
             {showPrev && <button onClick={()=>{
               if(prevTab) { setTab(prevTab.id); window.scrollTo(0,0) }
               else if(prevWeapon) { setSelected(prevWeapon.id); setTab('scripture'); window.scrollTo(0,0) }
-            }} style={{...btnStyle,left:16}}>
+            }} style={pillFixed({left:16})}>
               <span>‹</span>
               <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{prevTab ? prevTab.label : prevWeapon?.title.split(' ').slice(0,2).join(' ')}</span>
             </button>}
-            {showNext && <button onClick={()=>{
-              if(nextTab) { setTab(nextTab.id); window.scrollTo(0,0) }
-              else if(nextWeapon) { setSelected(nextWeapon.id); setTab('scripture'); window.scrollTo(0,0) }
-            }} style={{...btnStyle,right:16}}>
-              <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{nextTab ? nextTab.label : nextWeapon?.title.split(' ').slice(0,2).join(' ')}</span>
-              <span>›</span>
-            </button>}
+            {/* Right-side column: FAB on top, next pill below, both centered horizontally */}
+            <div style={{position:'fixed',bottom:32,right:16,zIndex:250,display:'flex',flexDirection:'column',alignItems:'center',gap:12}}>
+              {fabBtn}
+              {showNext && <button onClick={()=>{
+                if(nextTab) { setTab(nextTab.id); window.scrollTo(0,0) }
+                else if(nextWeapon) { setSelected(nextWeapon.id); setTab('scripture'); window.scrollTo(0,0) }
+              }} style={pillStatic}>
+                <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{nextTab ? nextTab.label : nextWeapon?.title.split(' ').slice(0,2).join(' ')}</span>
+                <span>›</span>
+              </button>}
+            </div>
           </>
         )
       })()}

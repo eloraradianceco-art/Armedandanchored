@@ -1126,7 +1126,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%,rgba(158,40,40,0.15) 0%,transparent 60%),${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text}}>
 
       {/* AS1-style compact sticky header */}
-      <div style={{position:"sticky",top:0,zIndex:200,background:"rgba(7,14,23,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`}}>
+      <div style={{position:"sticky",top:0,zIndex:200,background:lightMode?"rgba(242,237,227,0.97)":"rgba(7,14,23,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px"}}>
           <div style={{display:"flex",alignItems:"center",gap:8,minWidth:0,flex:1}}>
             <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)",flexShrink:0}}/>
@@ -1264,7 +1264,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         )
       })()}
       {/* AS1-style compact sticky header */}
-      <div style={{position:"sticky",top:0,zIndex:200,background:"rgba(7,14,23,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`}}>
+      <div style={{position:"sticky",top:0,zIndex:200,background:lightMode?"rgba(242,237,227,0.97)":"rgba(7,14,23,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)"}}/>

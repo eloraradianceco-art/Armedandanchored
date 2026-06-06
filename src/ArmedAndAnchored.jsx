@@ -312,6 +312,7 @@ const WEAPONS = [
 const TABS = [
   {id:"scripture",label:"📖 Scripture"},
   {id:"teaching",label:"📜 Teaching"},
+  {id:"lexicon",label:"📚 Lexicon"},
   {id:"tactics",label:"🎯 Enemy Tactics"},
   {id:"declare",label:"⚔️ Declare"},
   {id:"journal",label:"✍️ Journal"},
@@ -1293,6 +1294,27 @@ export default function ArmedAndAnchored({ session, profile }) {
             <div style={{background:"linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))",border:`1px solid ${C.borderGold}`,borderRadius:16,padding:"22px 24px",boxShadow:"0 8px 24px rgba(0,0,0,0.1)"}}>
               <p style={{fontSize:17,color:C.text,lineHeight:1.95,whiteSpace:"pre-line",margin:0}}>{weapon.teaching}</p>
             </div>
+          </div>
+        )}
+
+        {/* LEXICON */}
+        {tab==="lexicon" && (
+          <div>
+            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Lexicon — {weapon.title}</div>
+            <p style={{fontSize:13,color:C.muted,fontStyle:"italic",marginBottom:14,lineHeight:1.7}}>Key Greek &amp; Hebrew words from this weapon&apos;s Scripture. Original meaning behind the English.</p>
+            {(weapon.lexicon || []).map((entry, i) => (
+              <div key={i} style={{background:"linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))",border:`1px solid ${C.borderGold}`,borderRadius:16,padding:"22px 24px 20px",marginBottom:14}}>
+                <div style={{fontSize:18,fontFamily:"'Cinzel',Georgia,serif",color:C.cream,letterSpacing:"0.04em",marginBottom:6}}>{entry.word}</div>
+                <div style={{fontSize:15,color:C.gold,fontFamily:"'EB Garamond',Georgia,serif",fontStyle:"italic",marginBottom:2}}>{entry.original}</div>
+                <div style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>{entry.language}</div>
+                <div style={{height:1,background:"rgba(176,138,78,0.2)",marginBottom:12}} />
+                <p style={{fontSize:15,color:C.text,lineHeight:1.85,marginBottom:12,fontFamily:"'EB Garamond',Georgia,serif"}}>{entry.meaning}</p>
+                {entry.note && <p style={{fontSize:13,color:C.muted,lineHeight:1.85,fontStyle:"italic",fontFamily:"'EB Garamond',Georgia,serif"}}>{entry.note}</p>}
+              </div>
+            ))}
+            {(!weapon.lexicon || weapon.lexicon.length === 0) && (
+              <p style={{fontSize:14,color:C.muted,fontStyle:"italic",textAlign:"center",padding:"24px 0"}}>Lexicon entries coming soon for this weapon.</p>
+            )}
           </div>
         )}
 

@@ -13,7 +13,7 @@ const SLIDES = [
     tag: 'THE ARSENAL',
     title: '23 Weapons of\nthe Believer',
     body: 'Every weapon is a biblical truth or discipline — the Name of Jesus, the Blood, the Armor of God, Fasting, Declarations, and more.',
-    detail: 'Each weapon has six sections: Scripture, Teaching, Enemy Tactics, Declaration, Journal, and a hands-on Tool.',
+    detail: 'Each weapon has seven sections: Scripture, Teaching, Enemy Tactics, Declaration, Word Study, Journal, and a hands-on Tool.',
   },
   {
     icon: '⚠',
@@ -28,6 +28,13 @@ const SLIDES = [
     title: 'Declare It\nOut Loud',
     body: 'Every weapon includes a Scripture-based declaration. Speak it aloud — Revelation 12:11 says we overcome by the blood of the Lamb and the word of our testimony.',
     detail: 'The enemy hates declarations. Use them daily.',
+  },
+  {
+    icon: '📚',
+    tag: 'WORD STUDY',
+    title: 'Wield the\nOriginal Languages',
+    body: 'Every weapon opens into a Word Study — the Greek and Hebrew words behind the scripture, with their original force and meaning.',
+    detail: 'Tap any word to hear the original pronunciation. The sword cuts deeper when you know the language it was forged in.',
   },
   {
     icon: '✍️',

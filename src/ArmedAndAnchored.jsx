@@ -1416,18 +1416,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                 <div style={{fontSize:18,fontFamily:"'Cinzel',Georgia,serif",color:C.cream,letterSpacing:"0.04em",marginBottom:6}}>{entry.word}</div>
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:2}}>
                   <div style={{fontSize:15,color:C.gold,fontFamily:"'EB Garamond',Georgia,serif",fontStyle:"italic",flex:1}}>{entry.original}</div>
-                  <button onClick={() => {
-                    if (!window.speechSynthesis) return;
-                    const m = entry.original.match(/\(([^)]+)\)/);
-                    const text = m ? m[1] : entry.original;
-                    window.speechSynthesis.cancel();
-                    const u = new SpeechSynthesisUtterance(text);
-                    u.rate = 0.82; u.pitch = 1.0;
-                    const voices = window.speechSynthesis.getVoices();
-                    if (entry.language === "Greek") { const v = voices.find(x => x.lang.startsWith("el")); if (v) u.voice = v; }
-                    else if (entry.language === "Hebrew" || entry.language === "Aramaic") { const v = voices.find(x => x.lang.startsWith("he")); if (v) u.voice = v; }
-                    window.speechSynthesis.speak(u);
-                  }} aria-label="Hear pronunciation" style={{background:"transparent",border:`1px solid ${C.borderGold}`,color:C.gold,width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,padding:0,touchAction:"manipulation"}}>🔊</button>
+                  <button onClick={() => speak(entry)} aria-label="Hear pronunciation" style={{background:speaking?"rgba(176,138,78,0.35)":"rgba(176,138,78,0.12)",border:`1px solid ${C.borderGold}`,color:C.gold,width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,padding:0,touchAction:"manipulation"}}>{speaking?"▶":"🔊"}</button>
                 </div>
                 <div style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>{entry.language}</div>
                 <div style={{height:1,background:"rgba(176,138,78,0.2)",marginBottom:12}} />

@@ -707,6 +707,23 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [showWeaponJump, setShowWeaponJump] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
+  const [speaking, setSpeaking] = useState(false)
+  const speak = entry => {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    let text = entry.transliteration || "";
+    if (!text && entry.original) {
+      const m = entry.original.match(/\(([^)]+)\)/);
+      text = m ? m[1].trim() : entry.original;
+    }
+    if (!text) return;
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.rate = 0.72;
+    utt.onstart = () => setSpeaking(true);
+    utt.onend = () => setSpeaking(false);
+    utt.onerror = () => setSpeaking(false);
+    window.speechSynthesis.speak(utt);
+  };
 
   const weapon = selected ? WEAPONS.find(w => w.id === selected) : null
 

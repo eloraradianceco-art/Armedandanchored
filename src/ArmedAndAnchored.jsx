@@ -1395,7 +1395,7 @@ export default function ArmedAndAnchored({ session, profile }) {
             <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Lexicon — {weapon.title}</div>
             <p style={{fontSize:13,color:C.muted,fontStyle:"italic",marginBottom:14,lineHeight:1.7}}>Key Greek &amp; Hebrew words from this weapon&apos;s Scripture. Original meaning behind the English.</p>
             {(weapon.lexicon || []).map((entry, i) => (
-              <div key={i} style={{background:"linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))",border:`1px solid ${C.borderGold}`,borderRadius:16,padding:"22px 24px 20px",marginBottom:14}}>
+              <div key={i} style={{background:C.bgCard,border:`1px solid ${C.borderGold}`,borderRadius:16,padding:"22px 24px 20px",marginBottom:14}}>
                 <div style={{fontSize:18,fontFamily:"'Cinzel',Georgia,serif",color:C.cream,letterSpacing:"0.04em",marginBottom:6}}>{entry.word}</div>
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:2}}>
                   <div style={{fontSize:15,color:C.gold,fontFamily:"'EB Garamond',Georgia,serif",fontStyle:"italic",flex:1}}>{entry.original}</div>

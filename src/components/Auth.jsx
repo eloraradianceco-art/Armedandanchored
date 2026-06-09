@@ -30,6 +30,7 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
   const [mode, setMode] = useState(initialMode || (isNewUser ? 'signup' : 'signin'))
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPw, setShowPw] = useState(false)
   const [newPassword, setNewPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -199,11 +200,14 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
             {mode !== 'forgot' && (
               <>
                 {label('Password')}
-                <input type="password"
-                  placeholder={mode === 'signup' ? 'Create a password (min 6 chars)' : 'Your password'}
-                  value={password} onChange={e => setPassword(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-                  style={{ ...INP, marginBottom: 20 }}/>
+                <div style={{position:'relative', marginBottom:20}}>
+                  <input type={showPw?'text':'password'}
+                    placeholder={mode === 'signup' ? 'Create a password (min 6 chars)' : 'Your password'}
+                    value={password} onChange={e => setPassword(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+                    style={{ ...INP, marginBottom: 0, paddingRight: 64 }}/>
+                  <button type="button" onClick={()=>setShowPw(s=>!s)} aria-label={showPw?'Hide password':'Show password'} style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', background:'transparent', border:'none', color:C.gold, fontSize:10, fontFamily:"'Cinzel',Georgia,serif", letterSpacing:'0.1em', textTransform:'uppercase', cursor:'pointer', padding:'8px 10px', touchAction:'manipulation' }}>{showPw?'Hide':'Show'}</button>
+                </div>
               </>
             )}
 

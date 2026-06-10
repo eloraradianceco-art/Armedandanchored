@@ -291,11 +291,14 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
           </div>
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '12px 16px', marginBottom: 0 }}>
             <p style={{ fontSize: 13, color: C.muted, fontStyle: 'italic', lineHeight: 1.7, marginBottom: 14 }}>
-              The Anchored Steps devotional series — daily Scripture, reflection, and prayer for those walking steadily with God.
+              The rest of the Elora Radiance ecosystem — Scripture-based tools for the whole Christian life.
             </p>
             {[
-              { label: 'Anchored Steps · Year 1', desc: 'The original daily devotional', url: 'https://anchored-steps.vercel.app/', icon: '⚓' },
-              { label: 'Anchored Steps · Year 2', desc: 'Continuing the journey', url: 'https://anchored-steps-year2.vercel.app/', icon: '⚓' },
+              { label: 'Anchored Steps · Year 1', desc: 'Daily devotional · Year 1', url: 'https://anchored-steps.vercel.app/', icon: '⚓' },
+              { label: 'Anchored Steps · Year 2', desc: 'Daily devotional · Year 2', url: 'https://anchored-steps-year2.vercel.app/', icon: '⚓' },
+              { label: 'The Red Letters', desc: 'The words of Jesus — free', url: 'https://redletters.vercel.app/', icon: '✦' },
+              { label: 'Anchored Verse', desc: 'Scripture for every emotion — free', url: 'https://anchoredverse.vercel.app/', icon: '📖' },
+              { label: 'The Living Planner', desc: 'Faith-centered life planner', url: 'https://the-living-planner.vercel.app/', icon: '📓' },
             ].map(app => (
               <a key={app.url} href={app.url} target="_blank" rel="noopener noreferrer" style={{
                 display: 'flex', alignItems: 'center', gap: 14,

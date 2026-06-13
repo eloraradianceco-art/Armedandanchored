@@ -108,7 +108,6 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
     if (!userId) return
     const { data } = await supabase.from('weapon_entries').select('*').eq('user_id', userId)
     const get = (wId, key) => data?.find(e => String(e.weapon_id) === String(wId) && e.field_key === key)?.field_value || ''
-    const printWindow = window.open('', '_blank')
     let html = `<!DOCTYPE html><html><head><title>Armed & Anchored Journal</title>
     <style>
       body{font-family:Georgia,serif;max-width:700px;margin:0 auto;padding:40px;color:#1a1209;line-height:1.7;}
@@ -136,9 +135,19 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
       }
     }
     html += `<hr/><p style="text-align:center;font-size:12px;color:#999">Stand firm. Fight from victory.</p></body></html>`
-    printWindow.document.write(html)
-    printWindow.document.close()
-    setTimeout(() => printWindow.print(), 500)
+    // Print via a hidden iframe so we never navigate away or trap the user (critical in standalone PWA mode)
+    const frame = document.createElement('iframe')
+    frame.setAttribute('aria-hidden', 'true')
+    frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0'
+    document.body.appendChild(frame)
+    const cleanup = () => setTimeout(() => { try { frame.remove() } catch (e) {} }, 1500)
+    const fdoc = frame.contentWindow.document
+    fdoc.open(); fdoc.write(html); fdoc.close()
+    frame.contentWindow.onafterprint = cleanup
+    setTimeout(() => {
+      try { frame.contentWindow.focus(); frame.contentWindow.print() } catch (e) { console.error(e) }
+      cleanup()
+    }, 400)
   }
 
   const handleSignOut = async () => {

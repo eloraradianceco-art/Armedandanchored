@@ -3,12 +3,37 @@ import { useState, useEffect } from 'react'
 const REVIEWS_URL = 'https://cvtukqamaqrhjtdvmslb.supabase.co'
 const REVIEWS_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2dHVrcWFtYXFyaGp0ZHZtc2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDU1MjQsImV4cCI6MjA5MTQyMTUyNH0.gSksF5jV-UpuaUL7x7vhHHOB6Z7Qq0iehtbc2PoSAxw'
 
+// Module-level so it doesn't remount each render. Uses <button> for reliable taps on iOS.
+function StarRow({ value = 0, size = 16, interactive = false, onPick, C }) {
+  const [hover, setHover] = useState(0)
+  return (
+    <span style={{ display: 'inline-flex', whiteSpace: 'nowrap', lineHeight: 1 }}>
+      {[1, 2, 3, 4, 5].map(n => {
+        const active = (interactive ? (hover || value) : value) >= n
+        const glyph = active ? '\u2605' : '\u2606'
+        if (!interactive) {
+          return <span key={n} style={{ fontSize: size, color: active ? C.gold : C.dim, padding: '0 1px' }}>{glyph}</span>
+        }
+        return (
+          <button key={n} type="button"
+            onClick={() => onPick && onPick(n)}
+            onMouseEnter={() => setHover(n)}
+            onMouseLeave={() => setHover(0)}
+            aria-label={n + (n === 1 ? ' star' : ' stars')}
+            style={{ background: 'none', border: 'none', margin: 0, padding: '4px 5px', cursor: 'pointer', fontSize: size, lineHeight: 1, color: active ? C.gold : C.dim, WebkitTapHighlightColor: 'transparent', touchAction: 'manipulation' }}>
+            {glyph}
+          </button>
+        )
+      })}
+    </span>
+  )
+}
+
 export default function Reviews({ app, appName, eyebrow, userEmail, C, lightMode, onClose }) {
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [rating, setRating] = useState(0)
-  const [hover, setHover] = useState(0)
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [name, setName] = useState(() => (userEmail && userEmail.includes('@')) ? userEmail.split('@')[0] : '')
@@ -57,26 +82,10 @@ export default function Reviews({ app, appName, eyebrow, userEmail, C, lightMode
     }).catch(() => { setError('Something went wrong. Please try again.'); setSubmitting(false) })
   }
 
-  const Stars = ({ value, size = 16, interactive = false }) => (
-    <span style={{ whiteSpace: 'nowrap', lineHeight: 1 }}>
-      {[1, 2, 3, 4, 5].map(n => {
-        const active = (interactive ? (hover || rating) : value) >= n
-        return (
-          <span key={n}
-            onClick={interactive ? () => setRating(n) : undefined}
-            onMouseEnter={interactive ? () => setHover(n) : undefined}
-            onMouseLeave={interactive ? () => setHover(0) : undefined}
-            style={{ fontSize: size, color: active ? C.gold : C.dim, cursor: interactive ? 'pointer' : 'default', padding: interactive ? '0 4px' : '0 1px' }}>
-            {active ? '\u2605' : '\u2606'}
-          </span>
-        )
-      })}
-    </span>
-  )
-
   const card = { background: C.bgCard, border: '1px solid ' + C.border, borderRadius: 14 }
   const cin = "'Cinzel',Georgia,serif"
   const gar = "'EB Garamond',Georgia,serif"
+  const inputStyle = { width: '100%', padding: '12px 14px', borderRadius: 9, border: '1px solid ' + C.border, background: lightMode ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.04)', color: C.cream, fontFamily: gar, fontSize: 15, outline: 'none', marginBottom: 10 }
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 500, background: lightMode ? '#F2EDE3' : '#070E17', fontFamily: gar, overflowY: 'auto', animation: 'fadeIn 0.25s ease' }}>
@@ -98,7 +107,7 @@ export default function Reviews({ app, appName, eyebrow, userEmail, C, lightMode
             {count > 0 ? (
               <>
                 <div style={{ fontSize: 40, fontWeight: 700, color: C.cream, fontFamily: cin, lineHeight: 1 }}>{avg.toFixed(1)}</div>
-                <div style={{ margin: '8px 0 4px' }}><Stars value={Math.round(avg)} size={18} /></div>
+                <div style={{ margin: '8px 0 4px' }}><StarRow value={Math.round(avg)} size={18} C={C} /></div>
                 <div style={{ fontSize: 13, color: C.muted }}>{count} review{count === 1 ? '' : 's'}</div>
               </>
             ) : (
@@ -106,14 +115,14 @@ export default function Reviews({ app, appName, eyebrow, userEmail, C, lightMode
             )}
           </div>
 
-          {/* Your review / Write button */}
+          {/* Your review / Write button / Form */}
           {mine ? (
             <div style={{ ...card, padding: '16px 18px', marginBottom: 18, borderColor: C.goldB }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                 <span style={{ fontSize: 10, color: C.gold, letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: cin }}>Your Review</span>
                 <span style={{ fontSize: 10, color: C.muted, letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: cin }}>Pending approval \u23f3</span>
               </div>
-              <Stars value={mine.rating} size={15} />
+              <StarRow value={mine.rating} size={15} C={C} />
               {mine.title && <div style={{ fontSize: 16, color: C.cream, fontFamily: cin, marginTop: 8 }}>{mine.title}</div>}
               <div style={{ fontSize: 15, color: C.text, marginTop: 6, lineHeight: 1.6 }}>{mine.body}</div>
             </div>
@@ -123,15 +132,12 @@ export default function Reviews({ app, appName, eyebrow, userEmail, C, lightMode
             </button>
           ) : (
             <div style={{ ...card, padding: '20px', marginBottom: 18 }}>
-              <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: cin, marginBottom: 10 }}>Your Rating</div>
-              <div style={{ marginBottom: 18 }}><Stars interactive size={30} /></div>
+              <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: cin, marginBottom: 8 }}>Your Rating</div>
+              <div style={{ marginBottom: 18, marginLeft: -5 }}><StarRow value={rating} interactive size={32} onPick={setRating} C={C} /></div>
 
-              <input value={title} onChange={e => setTitle(e.target.value)} maxLength={120} placeholder="Title (optional)"
-                style={{ width: '100%', padding: '12px 14px', borderRadius: 9, border: '1px solid ' + C.border, background: lightMode ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.04)', color: C.cream, fontFamily: gar, fontSize: 15, outline: 'none', marginBottom: 10 }} />
-              <textarea value={body} onChange={e => setBody(e.target.value)} maxLength={2000} placeholder="What stood out to you?" rows={4}
-                style={{ width: '100%', padding: '12px 14px', borderRadius: 9, border: '1px solid ' + C.border, background: lightMode ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.04)', color: C.cream, fontFamily: gar, fontSize: 15, outline: 'none', marginBottom: 10, resize: 'vertical' }} />
-              <input value={name} onChange={e => setName(e.target.value)} maxLength={80} placeholder="Display name"
-                style={{ width: '100%', padding: '12px 14px', borderRadius: 9, border: '1px solid ' + C.border, background: lightMode ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.04)', color: C.cream, fontFamily: gar, fontSize: 15, outline: 'none', marginBottom: 4 }} />
+              <input value={title} onChange={e => setTitle(e.target.value)} maxLength={120} placeholder="Title (optional)" style={inputStyle} />
+              <textarea value={body} onChange={e => setBody(e.target.value)} maxLength={2000} placeholder="What stood out to you?" rows={4} style={{ ...inputStyle, resize: 'vertical' }} />
+              <input value={name} onChange={e => setName(e.target.value)} maxLength={80} placeholder="Display name" style={{ ...inputStyle, marginBottom: 4 }} />
               <div style={{ fontSize: 11, color: C.dim, marginBottom: 14 }}>Shown publicly with your review. Your email is never shown.</div>
 
               {error && <div style={{ fontSize: 13, color: C.redL, marginBottom: 12 }}>{error}</div>}
@@ -153,7 +159,7 @@ export default function Reviews({ app, appName, eyebrow, userEmail, C, lightMode
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {reviews.map(r => (
                   <div key={r.id} style={{ ...card, padding: '16px 18px' }}>
-                    <Stars value={r.rating} size={14} />
+                    <StarRow value={r.rating} size={14} C={C} />
                     {r.title && <div style={{ fontSize: 16, color: C.cream, fontFamily: cin, marginTop: 8 }}>{r.title}</div>}
                     <div style={{ fontSize: 15, color: C.text, marginTop: 6, lineHeight: 1.6 }}>{r.body}</div>
                     <div style={{ fontSize: 12, color: C.muted, marginTop: 10 }}>{r.author_name || 'Anonymous'} &middot; {fmtDate(r.created_at)}</div>

@@ -339,9 +339,11 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
             <Row icon="⚔️" label="Armed & Anchored">
               <span style={{ fontSize: 11, color: C.dim }}>v1.0</span>
             </Row>
+            <a href="https://eloraradiance.com" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
             <Row icon="🌿" label="Elora Radiance Co." border={false}>
-              <span style={{ fontSize: 11, color: C.dim }}>eloraradiance.com</span>
+              <span style={{ fontSize: 11, color: C.gold }}>eloraradiance.com &rarr;</span>
             </Row>
+            </a>
           </div>
 
           {/* Export Journal */}

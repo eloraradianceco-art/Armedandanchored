@@ -102,7 +102,7 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
       await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
-        pixelRatio: 2,
+        pixelRatio: 3,
         backgroundColor: lightCard ? '#F5F0E8' : '#070E17',
       })
       const res = await fetch(dataUrl)
@@ -221,15 +221,15 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
 
           {/* Header — icon + app name (matches AS1/AS2 pattern) */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid ' + th.divider }}>
-            <img src="/icon.png" alt="" style={{ width: 34, height: 34, borderRadius: 8 }}/>
+            <img src="/icon.png" alt="" style={{ width: 42, height: 42, borderRadius: 8 }}/>
             <div>
-              <div style={{ fontSize: 12, color: th.brand, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.06em' }}>Armed &amp; Anchored</div>
-              <div style={{ fontSize: 10, color: th.weapon }}>{weapon.icon} {weapon.title}</div>
+              <div style={{ fontSize: 15, color: th.brand, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.06em' }}>Armed &amp; Anchored</div>
+              <div style={{ fontSize: 12, color: th.weapon }}>{weapon.icon} {weapon.title}</div>
             </div>
           </div>
 
           {/* Content Label */}
-          <div style={{ fontSize: 10, color: th.label, letterSpacing: '0.18em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 12 }}>
+          <div style={{ fontSize: 12, color: th.label, letterSpacing: '0.18em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 12 }}>
             {content.label}
           </div>
 
@@ -238,10 +238,10 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
             <div style={{ textAlign: 'left', marginBottom: 14 }}>
               {content.main.map((item, i) => (
                 <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: 16, fontWeight: 700, color: th.numColor, fontFamily: "'Cinzel',Georgia,serif", flexShrink: 0, minWidth: 22 }}>
+                  <span style={{ fontSize: 18, fontWeight: 700, color: th.numColor, fontFamily: "'Cinzel',Georgia,serif", flexShrink: 0, minWidth: 22 }}>
                     {i + 1}.
                   </span>
-                  <span style={{ fontSize: 16, color: th.body, lineHeight: 1.65 }}>
+                  <span style={{ fontSize: 18, color: th.body, lineHeight: 1.65 }}>
                     {item}
                   </span>
                 </div>
@@ -249,7 +249,7 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
             </div>
           ) : (
             <p style={{
-              fontSize: (content.main||'').length > 200 ? 16 : 18, color: th.body, lineHeight: 1.85, marginBottom: 12,
+              fontSize: (content.main||'').length > 200 ? 20 : 23, color: th.body, lineHeight: 1.85, marginBottom: 12,
               fontStyle: 'italic', letterSpacing: '0.01em',
             }}>
               {content.main}
@@ -260,7 +260,7 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
           {content.sub && (
             <>
               <div style={{ height: 1, background: th.divider, opacity: 0.5, margin: '10px 40px' }} />
-              <div style={{ fontSize: 12, color: th.ref, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 }}>
+              <div style={{ fontSize: 13, color: th.ref, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 }}>
                 {content.sub}
               </div>
             </>
@@ -271,7 +271,7 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
           <div style={{ fontSize: 13, color: th.footer, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.05em', marginBottom: 3 }}>
             ⚔&nbsp; Armed &amp; Anchored &nbsp;⚔
           </div>
-          <div style={{ fontSize: 10, color: th.tagline, letterSpacing: '0.05em' }}>
+          <div style={{ fontSize: 11, color: th.tagline, letterSpacing: '0.05em' }}>
             {TAGLINE}
           </div>
         </div>

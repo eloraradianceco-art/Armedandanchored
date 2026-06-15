@@ -557,7 +557,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
               ) : (
                 <div style={{background:"rgba(124,146,132,0.08)",border:"1px solid rgba(124,146,132,0.25)",
                   borderRadius:10,padding:"12px 14px",marginBottom:12}}>
-                  <p style={{fontSize:14,color:C.text,fontStyle:"italic",lineHeight:1.8,margin:0}}>
+                  <p style={{fontSize:16,color:C.text,fontStyle:"italic",lineHeight:1.8,margin:0}}>
                     {words.map((w,i) => (
                       <span key={i} style={{color:(i+1)%3===0?C.green:C.text,fontWeight:(i+1)%3===0?600:400}}>
                         {w}{i<words.length-1?' ':''}
@@ -606,7 +606,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
                   <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${C.border}`,
                     borderRadius:10,padding:"12px",marginBottom:14,textAlign:"left"}}>
                     <div style={{fontSize:10,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>Full verse</div>
-                    <p style={{fontSize:14,color:C.text,fontStyle:"italic",lineHeight:1.8,margin:0}}>"{verse.text}"</p>
+                    <p style={{fontSize:16,color:C.text,fontStyle:"italic",lineHeight:1.8,margin:0}}>"{verse.text}"</p>
                   </div>
                   {score >= 70 && (
                     <button onClick={markMemorized} style={{
@@ -1441,7 +1441,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                 </div>
                 <div style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>{entry.language}</div>
                 <div style={{height:1,background:"rgba(176,138,78,0.2)",marginBottom:12}} />
-                <p style={{fontSize:15,color:C.text,lineHeight:1.85,marginBottom:12,fontFamily:"'EB Garamond',Georgia,serif"}}>{entry.meaning}</p>
+                <p style={{fontSize:17,color:C.text,lineHeight:1.85,marginBottom:12,fontFamily:"'EB Garamond',Georgia,serif"}}>{entry.meaning}</p>
                 {entry.note && <p style={{fontSize:13,color:C.muted,lineHeight:1.85,fontStyle:"italic",fontFamily:"'EB Garamond',Georgia,serif"}}>{entry.note}</p>}
               </div>
             ))}
@@ -1459,7 +1459,7 @@ export default function ArmedAndAnchored({ session, profile }) {
               <div key={i} style={{background:`linear-gradient(145deg,rgba(158,40,40,0.08),rgba(158,40,40,0.02))`,border:`1px solid ${C.redB}`,borderRadius:14,padding:"16px 20px",marginBottom:10}}>
                 <div style={{display:"flex",gap:12,alignItems:"flex-start"}}>
                   <span style={{color:C.redL,fontSize:18,flexShrink:0,marginTop:2}}>⚠</span>
-                  <p style={{fontSize:16,color:C.text,lineHeight:1.8,margin:0}}>{t}</p>
+                  <p style={{fontSize:18,color:C.text,lineHeight:1.8,margin:0}}>{t}</p>
                 </div>
               </div>
             ))}

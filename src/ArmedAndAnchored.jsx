@@ -832,7 +832,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   const shareApp = async () => {
     const url = window.location.href
-    const text = 'Armed & Anchored — Spiritual Warfare Training Journal. 15 weapons. Scripture, teaching, enemy tactics, declarations, and prayer for every battle.'
+    const text = 'Armed & Anchored — Spiritual Warfare Training Journal. 23 weapons. Scripture, teaching, enemy tactics, declarations, and prayer for every battle.'
     if (navigator.share) {
       try { await navigator.share({ title: 'Armed & Anchored', text, url }) } catch {}
     } else {
@@ -936,7 +936,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         <div style={{padding:"6px 16px 20px"}}>
           <div style={{fontSize:8,color:C.dim,letterSpacing:"0.12em",textTransform:"uppercase",
             fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",marginBottom:8}}>
-            15 Weapons
+            23 Weapons
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,maxWidth:300,margin:"0 auto"}}>
             {WEAPONS.map(w => {

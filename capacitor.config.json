@@ -1,0 +1,19 @@
+{
+  "appId": "com.eloraradiance.armedandanchored",
+  "appName": "Armed & Anchored",
+  "webDir": "dist",
+  "backgroundColor": "#070E17",
+  "ios": {
+    "backgroundColor": "#070E17"
+  },
+  "android": {
+    "backgroundColor": "#070E17"
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "overlaysWebView": true,
+      "backgroundColor": "#00000000"
+    }
+  }
+}

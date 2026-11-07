@@ -6,6 +6,7 @@ const C = {
 }
 
 const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
+import { isNative } from '../native'
 
 const FEATURES = [
   { icon: '⚔️', text: '23 Weapons of Spiritual Warfare — deep teaching, tactics, prayer, and declaration on each' },
@@ -61,6 +62,25 @@ export default function Paywall({ onShowSignIn }) {
           </div>
         </div>
 
+        {isNative ? (
+          <>
+            <button
+              onClick={onShowSignIn}
+              style={{
+                width: '100%', background: 'linear-gradient(135deg,rgba(158,40,40,0.4),rgba(158,40,40,0.18))',
+                border: '1px solid rgba(158,40,40,0.55)', color: C.cream,
+                padding: '16px 28px', borderRadius: 14, fontSize: 16,
+                fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.09em',
+                marginBottom: 12, cursor: 'pointer',
+              }}
+            >
+              ⚔️ Sign In
+            </button>
+            <p style={{ fontSize: 13, color: C.dim, lineHeight: 1.7 }}>
+              Lifetime access will be available to purchase right here in the app soon.
+            </p>
+          </>
+        ) : (<>
         <button
           onClick={() => { window.location.href = STRIPE_LINK }}
           style={{
@@ -76,8 +96,9 @@ export default function Paywall({ onShowSignIn }) {
         <p style={{ fontSize: 12, color: C.dim, lineHeight: 1.7 }}>
           One-time payment &nbsp;•&nbsp; Instant access &nbsp;•&nbsp; All 23 weapons unlocked forever
         </p>
+        </>)}
 
-        <div style={{ marginTop: 24, fontSize: 13, color: C.dim }}>
+        {!isNative && <div style={{ marginTop: 24, fontSize: 13, color: C.dim }}>
           Already purchased?{' '}
           <button
             onClick={onShowSignIn}
@@ -85,7 +106,7 @@ export default function Paywall({ onShowSignIn }) {
           >
             Sign in
           </button>
-        </div>
+        </div>}
       </div>
     </div>
   )

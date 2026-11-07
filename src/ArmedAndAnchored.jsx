@@ -5,6 +5,7 @@ import ShareCard from './components/ShareCard'
 import Dashboard from './components/Dashboard'
 import Settings from './components/Settings'
 import WeaponTool from './components/WeaponTool'
+import { isNative, WEB_ORIGIN, nativeShareText, syncStatusBar } from './native'
 
 // C palette defined dynamically inside component (light/dark mode);
 
@@ -641,6 +642,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [lightMode, setLightMode] = useState(() => {
     try { return localStorage.getItem('aa_lightmode') === 'true' } catch { return false }
   })
+  useEffect(() => { syncStatusBar(lightMode) }, [lightMode])
   const userId = session?.user?.id
 
   // ── Cross-device sync: hydrate state from profile when it loads ───────
@@ -819,6 +821,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   const goWk = (id) => { setSelected(id); setTab('scripture'); setDay(-1); window.scrollTo(0,0) }
 
   const shareText = async (text) => {
+    if (isNative) { await nativeShareText({ title: 'Armed & Anchored', text }); return }
     if (navigator.share) {
       try { await navigator.share({ title: 'Armed & Anchored', text }) } catch {}
     } else {
@@ -831,8 +834,9 @@ export default function ArmedAndAnchored({ session, profile }) {
   }
 
   const shareApp = async () => {
-    const url = window.location.href
+    const url = isNative ? WEB_ORIGIN : window.location.href
     const text = 'Armed & Anchored — Spiritual Warfare Training Journal. 15 weapons. Scripture, teaching, enemy tactics, declarations, and prayer for every battle.'
+    if (isNative) { await nativeShareText({ title: 'Armed & Anchored', text, url }); return }
     if (navigator.share) {
       try { await navigator.share({ title: 'Armed & Anchored', text, url }) } catch {}
     } else {
@@ -842,6 +846,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   const shareWeapon = async (w) => {
     const text = `Armed & Anchored — ${w.icon} ${w.title}\n\n"${w.scriptures[0].text}"\n— ${w.scriptures[0].ref}\n\nDeclaration: ${w.declaration}`
+    if (isNative) { await nativeShareText({ title: `Armed & Anchored: ${w.title}`, text }); return }
     if (navigator.share) {
       try { await navigator.share({ title: `Armed & Anchored: ${w.title}`, text }) } catch {}
     } else {

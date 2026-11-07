@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { toPng } from 'html-to-image'
+import { isNative, nativeShareImage } from '../native'
 
 const TAGLINE = 'Stand firm. Fight from victory. — armedandanchored.vercel.app'
 
@@ -105,6 +106,11 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
         pixelRatio: 3,
         backgroundColor: lightCard ? '#F5F0E8' : '#070E17',
       })
+      if (isNative) {
+        await nativeShareImage(dataUrl, 'armed-anchored.png', 'Armed & Anchored')
+        setSharing(false)
+        return
+      }
       const res = await fetch(dataUrl)
       const blob = await res.blob()
       const file = new File([blob], 'armed-anchored.png', { type: 'image/png' })

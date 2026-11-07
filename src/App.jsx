@@ -1,5 +1,6 @@
 import { useState, useEffect, Component } from 'react'
 import { supabase } from './supabaseClient'
+import { apiUrl } from './native'
 import Paywall from './components/Paywall'
 import Auth from './components/Auth'
 import Onboarding from './components/Onboarding'
@@ -93,7 +94,7 @@ function AppInner() {
   const verifyPayment = async (sessionId, userId) => {
     try {
       const userIdParam = userId ? `&user_id=${userId}` : ''
-      const res = await fetch(`/api/verify-payment?session_id=${sessionId}${userIdParam}`)
+      const res = await fetch(apiUrl(`/api/verify-payment?session_id=${sessionId}${userIdParam}`))
       const data = await res.json()
       if (data.paid) {
         window.history.replaceState({}, '', window.location.pathname)

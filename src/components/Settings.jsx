@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
 import Reviews from './Reviews'
+import { isNative, nativeShareText, nativeShareFile } from '../native'
 
 const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
+// Inside the phone app, point people to the website instead of a checkout page.
+const REFERRAL_LINK = isNative ? 'https://eloraradiance.com' : STRIPE_LINK
 
 export default function Settings({ profile, userId, weapons, entries, lightMode, onToggleLightMode, onClose }) {
   const [copiedReferral, setCopiedReferral] = useState(false)
@@ -22,9 +25,10 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
     gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)', goldB: 'rgba(176,138,78,0.28)',
   }
 
-  const referralText = `I've been using Armed & Anchored — a spiritual warfare training journal with 15 weapons of Scripture, teaching, declarations, and prayer. Worth every penny.\n\nGet it here: ${STRIPE_LINK}`
+  const referralText = `I've been using Armed & Anchored — a spiritual warfare training journal with 15 weapons of Scripture, teaching, declarations, and prayer. Worth every penny.\n\nGet it here: ${REFERRAL_LINK}`
 
   const handleCopyReferral = async () => {
+    if (isNative) { await nativeShareText({ title: 'Armed & Anchored', text: referralText }); return }
     if (navigator.share) {
       try {
         await navigator.share({
@@ -93,6 +97,12 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
       lines.push('')
       lines.push('='.repeat(50))
       lines.push('Stand firm. Fight from victory.')
+      const fileName = `armed-anchored-journal-${new Date().toISOString().split('T')[0]}.txt`
+      if (isNative) {
+        await nativeShareFile(lines.join('\n'), fileName, 'My Battle Journal')
+        setExporting(false)
+        return
+      }
       const blob = new Blob([lines.join('\n')], { type: 'text/plain' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -135,6 +145,11 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
       }
     }
     html += `<hr/><p style="text-align:center;font-size:12px;color:#999">Stand firm. Fight from victory.</p></body></html>`
+    // In the phone app, hand the journal to the share sheet (Save to Files, Print, Mail…)
+    if (isNative) {
+      await nativeShareFile(html, 'armed-and-anchored-journal.html', 'My Battle Journal')
+      return
+    }
     // Print via a hidden iframe so we never navigate away or trap the user (critical in standalone PWA mode)
     const frame = document.createElement('iframe')
     frame.setAttribute('aria-hidden', 'true')

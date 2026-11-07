@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
+import { isNative } from '../native'
 
 const C = {
   bg: '#070E17', red: '#9E2828', redL: '#C94848', redF: 'rgba(158,40,40,0.14)',
@@ -248,7 +249,7 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
         )}
 
         {/* New user sign-in link */}
-        {mode === 'signin' && !isNewUser && (
+        {mode === 'signin' && !isNewUser && !isNative && (
           <div style={{ marginTop: 16, fontSize: 13, color: '#8597A8', textAlign: 'center' }}>
             Don't have an account?{' '}
             <button onClick={() => { window.location.href = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a' }}

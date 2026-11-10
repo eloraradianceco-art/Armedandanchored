@@ -411,31 +411,27 @@ export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare
     <div className={theme}>
       <style>{CSS}</style>
       <div className="dr-panel">
-        <button className="dr-sos" onClick={openAttack}>
-          <span className="dr-sos-ic"><Shield /></span>
-          <span><span className="dr-sos-t">Under attack?</span><span className="dr-sos-s">Get the right weapon in about a minute</span></span>
-        </button>
-
         <div className="dr-today">
           <div className="dr-today-row">
-            <span className="dr-label">Today{"’"}s drill · 5 min</span>
+            <span className="dr-label">Today{"\u2019"}s drill {"\u00B7"} 5 min</span>
             <span className="dr-streak"><Flame />{streak > 0 ? <span><b>{streak}</b>-day streak</span> : <span>Start a streak</span>}</span>
           </div>
           {doneToday && !pick ? (<>
             <div className="dr-wrow"><span className="dr-wic">{doneToday.icon}</span><span><span className="dr-wt">{doneToday.title}</span><span className="dr-ws">Drilled today. Stay ready.</span></span><span className="dr-ok"><Check /></span></div>
-            <div className="dr-actions">
-              <button className="dr-btn dr-ghost" onClick={openPick}>Drill another weapon</button>
-            </div>
+            <div className="dr-actions"><button className="dr-link dr-quiet" onClick={openPick}>Drill another weapon</button></div>
           </>) : (<>
             <div className="dr-wrow"><span className="dr-wic">{w.icon}</span><span><span className="dr-wt">{w.title}</span><span className="dr-ws">{w.subtitle}</span></span></div>
             <div className="dr-actions">
               <button className="dr-btn dr-primary" onClick={() => startDrill(w)}>Start drill</button>
-              <button className="dr-btn dr-ghost" onClick={openPick}>Choose another</button>
+              <button className="dr-link dr-quiet" onClick={openPick}>Change</button>
             </div>
           </>)}
-          <div className="dr-arsenal" aria-hidden="true">{weapons.map(x => <span key={x.id} className={drilledSet.has(x.id) ? "is-done" : ""} />)}</div>
-          <p className="dr-meta">{drilledSet.size} of {weapons.length} weapons drilled</p>
         </div>
+
+        <button className="dr-sos" onClick={openAttack}>
+          <span className="dr-sos-ic"><Shield /></span>
+          <span><span className="dr-sos-t">Under attack?</span><span className="dr-sos-s">The right weapon in a minute</span></span>
+        </button>
       </div>
       {overlay}
       {toast && createPortal(<div className={theme}><div className="dr-toast" role="status">{toast}</div></div>, document.body)}
@@ -454,29 +450,40 @@ const CSS = `
 .dr-root button{font-family:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
 .dr-root :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
 
-.dr-panel{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
-.dr-sos{display:grid;grid-template-columns:48px 1fr;gap:14px;align-items:center;width:100%;text-align:left;border:1.5px solid rgba(201,72,72,.55);background:linear-gradient(135deg,rgba(158,40,40,.42),rgba(158,40,40,.16));border-radius:16px;padding:14px 16px;cursor:pointer;min-height:72px}
-.dr-sos-ic{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:rgba(158,40,40,.35);color:var(--onRed)}
-.dr-sos-ic svg{width:30px;height:30px}
-.dr-sos-t{display:block;font-family:Cinzel,Georgia,serif;font-weight:600;font-size:18px;letter-spacing:.04em;color:var(--ink)}
-.dr-sos-s{display:block;font-size:16px;color:var(--body);opacity:.9}
-.dr-light .dr-sos{background:linear-gradient(135deg,rgba(158,40,40,.16),rgba(158,40,40,.06))}
+.dr-panel{display:grid;grid-template-columns:1fr;gap:10px}
+.dr-sos{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;width:100%;text-align:left;border:1.5px solid rgba(201,72,72,.5);background:linear-gradient(135deg,rgba(158,40,40,.34),rgba(158,40,40,.12));border-radius:16px;padding:10px 14px;cursor:pointer;min-height:60px}
+.dr-sos-ic{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(158,40,40,.35);color:var(--onRed)}
+.dr-sos-ic svg{width:24px;height:24px}
+.dr-sos-t{display:block;font-family:Cinzel,Georgia,serif;font-weight:600;font-size:17px;letter-spacing:.04em;color:var(--ink)}
+.dr-sos-s{display:block;font-size:15px;color:var(--body);opacity:.85}
+.dr-light .dr-sos{background:linear-gradient(135deg,rgba(158,40,40,.14),rgba(158,40,40,.05))}
 .dr-light .dr-sos-ic{color:var(--red);background:rgba(158,40,40,.14)}
+@media (min-width:640px){
+  .dr-panel{grid-template-columns:1.75fr 1fr;align-items:stretch}
+  .dr-sos{grid-template-columns:1fr;justify-items:center;align-content:center;text-align:center;gap:10px;padding:18px}
+}
 
-.dr-today{border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.01));border-radius:16px;padding:16px 16px 14px}
+.dr-today{border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.012));border-radius:16px;padding:16px}
 .dr-light .dr-today{background:var(--panel)}
 .dr-today-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
 .dr-label{font-family:Cinzel,Georgia,serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
 .dr-streak{display:inline-flex;align-items:center;gap:5px;font-size:15px;color:var(--muted)}
 .dr-streak svg{width:14px;height:14px;color:var(--redL)}
 .dr-streak b,.dr-dsub b{color:var(--ink);font-weight:600}
-.dr-wrow{display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center;margin-bottom:14px}
-.dr-wic{font-size:30px;line-height:1;text-align:center}
+.dr-wrow{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;margin-bottom:14px}
+.dr-wic{font-size:28px;line-height:1;text-align:center}
 .dr-wt{display:block;font-family:Cinzel,Georgia,serif;font-weight:600;font-size:17px;color:var(--ink);line-height:1.25}
 .dr-ws{display:block;font-size:16px;color:var(--muted);font-style:italic;line-height:1.35;margin-top:2px}
 .dr-ok{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--sageSoft);color:var(--sage)}
-.dr-actions{display:flex;gap:8px;margin-bottom:14px}
-.dr-actions .dr-btn{flex:1}
+.dr-actions{display:flex;gap:6px;align-items:center}
+.dr-actions .dr-primary{flex:1}
+.dr-quiet{font-size:16px;text-decoration:none!important;padding:12px 10px;white-space:nowrap}
+.dr-arsenal{display:flex;gap:3px;width:100%}
+.dr-arsenal span{flex:1;height:8px;border-radius:2px;background:var(--line)}
+.dr-arsenal span.is-done{background:var(--redL)}
+.dr-meta{font-size:15px;color:var(--muted);margin-top:8px!important}
+
+.dr-btn{flex:1}
 .dr-arsenal{display:flex;gap:3px;width:100%}
 .dr-arsenal span{flex:1;height:8px;border-radius:2px;background:var(--line)}
 .dr-arsenal span.is-done{background:var(--redL)}

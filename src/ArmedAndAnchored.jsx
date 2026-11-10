@@ -1188,68 +1188,49 @@ export default function ArmedAndAnchored({ session, profile }) {
         </div>
       </div>
 
-      <div style={{padding:"18px 18px 0",maxWidth:860,margin:"0 auto"}}>
+      <div style={{maxWidth:720,margin:"0 auto",padding:"18px 16px 120px"}}>
         <Drill weapons={WEAPONS} entries={entries} getFor={getFor} setFor={setFor} onDeclare={markDeclared}
           onOpenWeapon={id=>{setSelected(id);setTab('scripture');window.scrollTo(0,0)}} lightMode={lightMode}/>
-        <div style={{background:`linear-gradient(135deg,rgba(158,40,40,0.1),rgba(176,138,78,0.06))`,border:`1px solid rgba(158,40,40,0.22)`,borderRadius:14,padding:"16px 20px",marginBottom:6}}>
-          <p style={{fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.8,margin:"0 0 8px"}}>"Put on the whole armor of God, that you may be able to stand against the schemes of the devil."</p>
-          <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",textTransform:"uppercase"}}>Ephesians 6:11 (ESV)</div>
-        </div>
-      </div>
 
-      <div style={{padding:"14px 18px 20px"}}>
-        {/* Daily Verse */}
+        {/* Verse of the day: one quiet line */}
         {(() => {
           const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0).getTime()) / 86400000)
           const all = WEAPONS.flatMap(w => w.scriptures.map(s => ({...s, weapon:w})))
           const daily = all[dayOfYear % all.length]
           return (
-            <div style={{background:"linear-gradient(145deg,rgba(176,138,78,0.1),rgba(176,138,78,0.04))",
-              border:"1px solid rgba(176,138,78,0.25)",borderRadius:14,padding:"16px 18px",marginBottom:20}}>
-              <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",
-                fontFamily:"'Cinzel',Georgia,serif",marginBottom:8}}>✦ Verse of the Day</div>
-              <p style={{fontSize:16,color:C.cream,fontStyle:"italic",lineHeight:1.85,margin:"0 0 10px"}}>
-                "{daily.text.length > 160 ? daily.text.substring(0,157)+'...' : daily.text}"
-              </p>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <span style={{fontSize:12,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em"}}>
-                  {daily.ref}
-                </span>
-                <button onClick={()=>{setSelected(daily.weapon.id);setTab("scripture");window.scrollTo(0,0);}}
-                  style={{background:"transparent",border:"1px solid rgba(176,138,78,0.3)",
-                    color:C.gold,padding:"5px 12px",borderRadius:20,cursor:"pointer",fontSize:11,
-                    fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>
-                  {daily.weapon.icon} Open
-                </button>
-              </div>
-            </div>
+            <button onClick={()=>{setSelected(daily.weapon.id);setTab("scripture");window.scrollTo(0,0);}}
+              style={{display:"block",width:"100%",textAlign:"left",fontFamily:"'EB Garamond',Georgia,serif",background:"transparent",border:"none",borderTop:`1px solid ${C.border}`,borderBottom:`1px solid ${C.border}`,padding:"14px 2px",margin:"18px 0 0",cursor:"pointer"}}>
+              <span style={{display:"block",fontSize:10,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>Verse of the day {"\u00B7"} {daily.ref.replace(/\s*\([^)]*\)\s*$/,"")}</span>
+              <span style={{display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden",fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.6}}>"{daily.text}"</span>
+            </button>
           )
         })()}
-        <div style={{maxWidth:860,margin:"0 auto"}}>
-        <div style={{fontSize:9,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>{WEAPONS.length} Weapons of the Believer</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr",gap:8}}>
+
+        {/* Arsenal */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",margin:"24px 2px 10px"}}>
+          <span style={{fontSize:10,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Your arsenal</span>
+          <span style={{fontSize:13,color:C.muted}}>{completedCount} of {WEAPONS.length} deployed</span>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))",gap:8}}>
           {WEAPONS.map(w => {
             const done = declared[w.id];
+            const saved = isSaved(w.id);
             return (
-              <div key={w.id} style={{background:done?"linear-gradient(145deg,rgba(158,40,40,0.1),rgba(158,40,40,0.03))":"linear-gradient(145deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))",border:`1px solid ${done?"rgba(158,40,40,0.3)":C.border}`,borderRadius:14,marginBottom:10,position:"relative",overflow:"hidden"}}>
-                <button onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 16px",cursor:"pointer",textAlign:"left",background:"transparent",border:"none"}}>
-                  <span style={{fontSize:22,flexShrink:0}}>{w.icon}</span>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:9,color:acc(w),letterSpacing:"0.14em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:3}}>{w.tag}</div>
-                    <div style={{fontSize:15,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.title}</div>
-                    <div style={{fontSize:12,color:C.muted,fontStyle:"italic",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{w.subtitle}</div>
-                  </div>
-                  <span style={{color:C.muted,fontSize:14,flexShrink:0}}>›</span>
+              <div key={w.id} style={{position:"relative"}}>
+                <button onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}}
+                  style={{width:"100%",height:"100%",minHeight:96,display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,padding:"12px 12px 11px",cursor:"pointer",textAlign:"left",
+                    background:done?"linear-gradient(145deg,rgba(158,40,40,0.13),rgba(158,40,40,0.04))":C.bgCard,
+                    border:`1px solid ${done?"rgba(158,40,40,0.32)":C.border}`,borderRadius:12}}>
+                  <span style={{fontSize:21,lineHeight:1}}>{w.icon}</span>
+                  <span style={{fontSize:13.5,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,lineHeight:1.3,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden",paddingRight:14}}>{w.title}</span>
+                  <span style={{marginTop:"auto",fontSize:9,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",color:done?C.redL:acc(w),opacity:done?1:0.75}}>{done?"\u2726 Deployed":w.tag}</span>
                 </button>
-                <div style={{position:"absolute",right:36,top:"50%",transform:"translateY(-50%)",display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3}}>
-                  {done && <span style={{fontSize:9,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</span>}
-                </div>
-                <button onClick={(e)=>{e.stopPropagation();toggleSave(w.id);}} style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"transparent",border:"none",color:isSaved(w.id)?C.gold:C.dim,cursor:"pointer",fontSize:16,lineHeight:1,touchAction:"manipulation",padding:4}}>{isSaved(w.id)?"★":"☆"}</button>
+                <button onClick={(e)=>{e.stopPropagation();toggleSave(w.id);}} aria-label={saved?"Remove from saved":"Save weapon"}
+                  style={{position:"absolute",right:4,top:4,background:"transparent",border:"none",color:saved?C.gold:C.dim,cursor:"pointer",fontSize:15,lineHeight:1,touchAction:"manipulation",padding:8}}>{saved?"\u2605":"\u2606"}</button>
               </div>
             );
           })}
         </div>
-        </div>{/* /maxWidth wrapper */}
       </div>
     {showSearch && <SearchModal/>}
     {showSaved && <SavedModal/>}

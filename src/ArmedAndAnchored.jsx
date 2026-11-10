@@ -1224,7 +1224,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
       {/* AS1-style compact sticky header */}
       <div style={{position:"sticky",top:0,zIndex:200,background:lightMode?"rgba(242,237,227,0.97)":"rgba(7,14,23,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",maxWidth:1100,margin:"0 auto"}}>
           <div style={{display:"flex",alignItems:"center",gap:8,minWidth:0,flex:1}}>
             <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)",flexShrink:0}}/>
             <div style={{minWidth:0}}>
@@ -1238,7 +1238,7 @@ export default function ArmedAndAnchored({ session, profile }) {
             )}
           </div>
           <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
-            <span style={{fontSize:9,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",maxWidth:80,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{session?.user?.email?.split("@")[0]}</span>
+            <span style={{fontSize:9,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",maxWidth:"clamp(80px,22vw,240px)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{session?.user?.email?.split("@")[0]}</span>
             
           </div>
         </div>
@@ -1257,7 +1257,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         </div>
       </div>
 
-      <div style={{maxWidth:720,margin:"0 auto",padding:"18px 16px 120px"}}>
+      <div style={{maxWidth:1100,margin:"0 auto",padding:"18px 16px 120px"}}>
         <Drill weapons={WEAPONS} entries={entries} getFor={getFor} setFor={setFor} onDeclare={markDeclared}
           onOpenWeapon={id=>{setSelected(id);setTab('scripture');window.scrollTo(0,0)}} lightMode={lightMode}/>
 
@@ -1270,7 +1270,7 @@ export default function ArmedAndAnchored({ session, profile }) {
             <button onClick={()=>{setSelected(daily.weapon.id);setTab("scripture");window.scrollTo(0,0);}}
               style={{display:"block",width:"100%",textAlign:"left",fontFamily:"'EB Garamond',Georgia,serif",background:"transparent",border:"none",borderTop:`1px solid ${C.border}`,borderBottom:`1px solid ${C.border}`,padding:"14px 2px",margin:"18px 0 0",cursor:"pointer"}}>
               <span style={{display:"block",fontSize:10,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>Verse of the day {"\u00B7"} {daily.ref.replace(/\s*\([^)]*\)\s*$/,"")}</span>
-              <span style={{display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden",fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.6}}>"{daily.text}"</span>
+              <span style={{display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden",maxWidth:720,fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.6}}>"{daily.text}"</span>
             </button>
           )
         })()}

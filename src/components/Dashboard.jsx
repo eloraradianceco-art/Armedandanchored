@@ -83,7 +83,7 @@ export default function Dashboard({ userId, weapons, onClose, onSelectWeapon, C 
       {/* Header */}
       <div style={{ position: 'sticky', top: 0, background: 'rgba(7,14,23,0.96)',
         backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.border}`,
-        padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 }}>
+        padding: 'calc(14px + env(safe-area-inset-top, 0px)) 20px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 }}>
         <div>
           <div style={{ fontSize: 9, color: C.redL, letterSpacing: '0.16em', textTransform: 'uppercase',
             fontFamily: "'Cinzel',Georgia,serif", marginBottom: 2 }}>Your Warfare</div>

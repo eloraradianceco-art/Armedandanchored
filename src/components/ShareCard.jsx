@@ -136,7 +136,7 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
     <div style={{
       position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 600,
       display: 'flex', flexDirection: 'column', overflowY: 'auto',
-      padding: '16px 16px 32px',
+      padding: 'calc(16px + env(safe-area-inset-top, 0px)) 16px calc(32px + env(safe-area-inset-bottom, 0px))',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
         maxWidth: 440, width: '100%', margin: '0 auto',

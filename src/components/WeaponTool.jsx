@@ -1157,6 +1157,52 @@ function HumilityLog({C,get,set}){return <SimpleJournalTool C={C} get={get} set=
 function RestLog({C,get,set}){return <SimpleJournalTool C={C} get={get} set={set} key_="tool_rest" promptText="Record your rest practice — moments of stillness, what surfaced, what you surrendered. What did God show you in the quiet?"/>}
 
 
+// ── Weapons 24–26: two-field logs ─────────────────────────────────────────
+function TwoFieldLog({ C, get, set, key_, promptText, labelA, labelB, phA, phB, headA, headB }) {
+  const [load, save] = useToolData(get, set, key_)
+  const [a, setA] = useState('')
+  const [b, setB] = useState('')
+  const [saved, setSaved] = useState(false)
+  const entries = load()
+  const add = () => {
+    if (!a.trim() || !b.trim()) return
+    save([{ date: dateStr(), a: a.trim(), b: b.trim() }, ...entries.slice(0, 49)])
+    setA(''); setB(''); setSaved(true); setTimeout(() => setSaved(false), 1500)
+  }
+  return (
+    <div>
+      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>{promptText}</p>
+      <label style={lbl(C)}>{labelA}</label>
+      <textarea style={ta(C)} rows={2} value={a} onChange={e=>setA(e.target.value)} placeholder={phA}/>
+      <div style={{height:10}}/>
+      <label style={lbl(C)}>{labelB}</label>
+      <textarea style={ta(C)} rows={2} value={b} onChange={e=>setB(e.target.value)} placeholder={phB}/>
+      <div style={{height:10}}/>
+      <SaveButton onSave={add} saved={saved} C={C} label="Save Entry"/>
+      {entries.map((e, i) => (
+        <Entry key={i} C={C} date={e.date} onDelete={() => save(entries.filter((_, j) => j !== i))}>
+          <div style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:3}}>{headA}</div>
+          <p style={{fontSize:14,color:C.text,lineHeight:1.6,margin:'0 0 8px'}}>{e.a}</p>
+          <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:3}}>{headB}</div>
+          <p style={{fontSize:14,color:C.cream,lineHeight:1.6,margin:0,fontStyle:'italic'}}>{e.b}</p>
+        </Entry>
+      ))}
+    </div>
+  )
+}
+function SwordDrill({C,get,set}){return <TwoFieldLog C={C} get={get} set={set} key_="tool_sword"
+  promptText="Write the lie or temptation you are facing, then the verse that answers it. Build your own 'It is written' arsenal."
+  labelA="The lie or temptation" phA="What is the enemy saying?" headA="The attack"
+  labelB="It is written" phB="The verse that answers it, with its reference" headB="It is written"/>}
+function TestimonyVault({C,get,set}){return <TwoFieldLog C={C} get={get} set={set} key_="tool_testimony"
+  promptText="Record what God has done — answered prayer, rescue, provision, healing, breakthrough — and what it shows you about Him."
+  labelA="What God did" phA="Your lion, your bear: what happened?" headA="What God did"
+  labelB="What it shows about Him" phB="Faithful, near, able to deliver..." headB="What it proves"/>}
+function AnchorLog({C,get,set}){return <TwoFieldLog C={C} get={get} set={set} key_="tool_anchor"
+  promptText="Write a promise of God you are holding onto, and where you have seen His faithfulness, even something small."
+  labelA="The promise I'm holding" phA="A promise from Scripture, with its reference" headA="The promise"
+  labelB="Where I saw His faithfulness" phB="What God did, today or before" headB="His faithfulness"/>}
+
 const TOOL_INFO = {
   1: {
     howTo: "Log spiritual battles you are actively facing or have faced. For each entry, choose a category and write what you observed — the attack, the context, or what you discerned. Review your log over time to spot enemy patterns in your life.",
@@ -1250,6 +1296,18 @@ const TOOL_INFO = {
     howTo: "Record your rest practice — times you sat in silence, surrendered anxiety, or chose stillness before God. Note what surfaced and what you released. Over time this builds a practice of warfare through trust.",
     tip: "Silence before God is not emptiness — it is posture. Come expectant, not blank.",
   },
+  24: {
+    howTo: "When a lie or temptation hits, write it down, then find the verse that answers it and record it with its reference. Review the list and say each verse out loud. Over time you build a ready arsenal of 'It is written' answers for the attacks you face most.",
+    tip: "Pick verses that answer the lie directly. A specific blade beats a general truth.",
+  },
+  25: {
+    howTo: "Record what God has done: answered prayers, rescues, provision, healing and breakthroughs. Note what each one shows about who He is. When the next battle comes, read back through your vault the way David remembered the lion and the bear.",
+    tip: "Write it down the day it happens. The enemy's first move after a victory is to make you forget it.",
+  },
+  26: {
+    howTo: "Write down a promise of God you are holding onto. Each time you see His faithfulness, even in something small, add it. On heavy days, read back through your anchors before you do anything else.",
+    tip: "Hope is a choice before it is a feeling. Call to mind, then hold fast.",
+  },
 }
 
 const TOOLS = {
@@ -1270,6 +1328,7 @@ const TOOLS = {
   15: FinishStrong,
   16: NameLog, 17: AccusationCounter, 18: PraiseLog, 19: ForgivenessInventory,
   20: UnityLog, 21: TongueAudit, 22: HumilityLog, 23: RestLog,
+  24: SwordDrill, 25: TestimonyVault, 26: AnchorLog,
 }
 
 const TOOL_NAMES = {
@@ -1281,6 +1340,7 @@ const TOOL_NAMES = {
   16:'Name Declaration Log', 17:'Accusation Counter', 18:'Praise Log',
   19:'Forgiveness Inventory', 20:'Unity & Agreement Log', 21:'Tongue Audit',
   22:'Humility & Surrender Log', 23:'Rest & Stillness Journal',
+  24:'Sword Drill', 25:'Testimony Vault', 26:'Anchor Log',
 }
 
 export { TOOL_NAMES }

@@ -400,6 +400,75 @@ const WEAPONS = [
     challenge:"Spend 15 minutes today in complete silence before God — no requests, no worship music, no agenda. Just be still. If your mind races, write what surfaces on paper and then set it aside. Practice returning to stillness.",
     fastingNote:"Rest-fasting — fasting combined with extended silence and stillness rather than intense intercession — is one of the most underused forms of spiritual warfare. Many believers have found that what months of striving couldn't accomplish, a day of resting before God in fasting produced.",
   },
+  {
+    id:24, icon:"🗡️", tag:"THE WORD", title:"The Sword of the Spirit", subtitle:"The Weapon Jesus Used in the Wilderness", color:"gold",
+    scriptures:[
+      {ref:"Ephesians 6:17 (NIV)",text:"Take the helmet of salvation and the sword of the Spirit, which is the word of God."},
+      {ref:"Hebrews 4:12 (ESV)",text:"For the word of God is living and active, sharper than any two-edged sword, piercing to the division of soul and of spirit, of joints and of marrow, and discerning the thoughts and intentions of the heart."},
+      {ref:"Matthew 4:4 (ESV)",text:"But he answered, 'It is written, \"Man shall not live by bread alone, but by every word that comes from the mouth of God.\"'"},
+    ],
+    lexicon:[
+      {word:"sword",original:"μάχαιρα (machaira)",language:"Greek",meaning:"A short sword or long dagger used in close combat.",note:"Paul does not name the large sword (rhomphaia) here but the machaira, the Roman soldier's short blade for hand-to-hand fighting. The Word is not a weapon for a distance. It belongs in your hand, at close range, in the moment the attack comes."},
+      {word:"word",original:"ῥῆμα (rhēma)",language:"Greek",meaning:"A spoken word; an utterance.",note:"Ephesians 6:17 uses rhēma, not logos. The sword is Scripture spoken: the specific word brought against the specific attack. Jesus did not answer the tempter with general truth but with three exact verses from Deuteronomy, spoken aloud."},
+    ],
+    teaching:"Of every piece of armor Paul lists in Ephesians 6, only one is made for striking back: the sword of the Spirit, which is the word of God. The belt, the breastplate, the shield and the helmet protect you. The sword is how you push the enemy back.\n\nJesus showed exactly how it works. Forty days into a fast, hungry and alone, He was tempted three times, and three times He answered with Scripture: 'It is written.' He did not argue, explain or negotiate. He did not reach for a feeling or His own reasoning. He spoke the exact word of God that met the exact lie in front of Him, and the tempter left.\n\nThat is the pattern for every believer. A sword you do not carry cannot defend you, and a verse you have never learned will not rise up in the moment of attack. This is why memorizing Scripture is not a religious exercise. It is weapons training. The enemy's lies are specific, so your answer must be specific. 'God loves me' is true. 'There is therefore now no condemnation for those who are in Christ Jesus' is a blade.\n\nPick up the sword daily. Read it, memorize it, and speak it out loud when the attack comes.",
+    tactics:[
+      "Keeping believers biblically unarmed — a sword left in the sheath protects no one",
+      "Twisting Scripture out of context, as he did with Psalm 91 in the wilderness",
+      "Replacing the Word with feelings, so believers fight lies with emotion instead of truth",
+      "Crowding out daily time in Scripture with busyness, noise and endless input",
+    ],
+    declaration:"I take up the sword of the Spirit, which is the word of God. When the enemy lies, I will not argue with feelings. I will answer with what is written. The Word is living and active in me. It is my answer to every temptation, my response to every accusation and my weapon in every battle. It is written, and it is settled.",
+    prayer:"Lord Jesus, You answered the enemy with the Word, and You have put that same sword in my hand. Forgive me for the times I left it in the sheath. Give me a hunger for Your Word and help me store it in my heart. When the attack comes, bring the right verse to my mind and the courage to speak it. Make me skilled with the sword of the Spirit. Amen.",
+    challenge:"Name the lie you hear most often. Find one verse that answers it directly, put it on a card or your lock screen, and say it out loud every time that lie shows up this week.",
+    fastingNote:"Jesus wielded the sword at the end of a forty-day fast. Pairing a fast with deliberate Scripture memorization trains the reflex to answer hunger and temptation with 'It is written.'",
+  },
+  {
+    id:25, icon:"🪨", tag:"TESTIMONY", title:"The Word of Your Testimony", subtitle:"What God Has Done Is Ammunition", color:"crimson",
+    scriptures:[
+      {ref:"Revelation 12:11 (ESV)",text:"And they have conquered him by the blood of the Lamb and by the word of their testimony, for they loved not their lives even unto death."},
+      {ref:"1 Samuel 17:37 (ESV)",text:"And David said, 'The LORD who delivered me from the paw of the lion and from the paw of the bear will deliver me from the hand of this Philistine.' And Saul said to David, 'Go, and the LORD be with you!'"},
+      {ref:"Mark 5:19 (ESV)",text:"And he did not permit him but said to him, 'Go home to your friends and tell them how much the Lord has done for you, and how he has had mercy on you.'"},
+    ],
+    lexicon:[
+      {word:"testimony",original:"μαρτυρία (martyria)",language:"Greek",meaning:"Witness; testimony given by someone who has seen or experienced it.",note:"From martys, a witness, the word that later gave us 'martyr.' Revelation 12:11 joins the two: they bore witness and loved not their lives even unto death. A testimony is not a speech. It is evidence entered on the record by someone who was there."},
+      {word:"conquered",original:"νικάω (nikaō)",language:"Greek",meaning:"To conquer, overcome, prevail; to win the victory.",note:"The root of nikē, victory. Revelation repeatedly promises reward 'to the one who conquers.' In 12:11 the believers conquer the accuser not by their own strength but by two things: the blood of the Lamb and their own spoken witness."},
+    ],
+    teaching:"Revelation 12:11 names two weapons that defeated the accuser: the blood of the Lamb and the word of their testimony. The blood is what Jesus did. The testimony is the believer saying out loud what that blood has done in their life. Heaven puts them side by side.\n\nDavid understood this before he ever faced Goliath. When Saul told him he was only a boy, David did not list his skills. He told his story: the LORD delivered me from the lion and the bear. His past deliverance was his evidence for the next battle. Testimony looks back in order to stand firm now.\n\nThe enemy works hard to make you forget. He shrinks yesterday's answered prayers, rewrites your story as luck or coincidence, and keeps you too ashamed of where you came from to talk about how you got out. A silent testimony is a disarmed weapon.\n\nWhen Jesus set the man from the Gerasenes free, He gave him one assignment: go home and tell how much the Lord has done for you. Your story of rescue is not just a memory. It is ammunition, for your own faith in the next fight and for someone else who needs to know God still delivers.",
+    tactics:[
+      "Making believers forget — shrinking past deliverances until they seem small or accidental",
+      "Rewriting answered prayer as luck, timing or coincidence",
+      "Using shame about the past to keep believers silent about how God brought them out",
+      "Convincing believers their story is too ordinary to matter to anyone",
+    ],
+    declaration:"I will not forget what the Lord has done. He delivered me before and He will deliver me again. I overcome by the blood of the Lamb and by the word of my testimony. My story is evidence of His faithfulness, and I will speak it. What God has done for me is a weapon in my mouth.",
+    prayer:"Father, thank You for every rescue, every answered prayer and every mercy I have walked through. Forgive me for the times I forgot, or called Your hand luck. Bring back to my memory what You have done. Give me courage to tell my story without shame, and let my testimony strengthen my faith and someone else's today. Amen.",
+    challenge:"Write down three times God came through for you: your lion and your bear. Then tell one of them to someone this week, out loud, in plain words.",
+    fastingNote:"A fast is a good time to remember. Use the time you would spend eating to write down what God has done. Recalling past deliverance is one of the surest ways worn-down faith is rebuilt.",
+  },
+  {
+    id:26, icon:"⚓", tag:"HOPE", title:"The Anchor of Hope", subtitle:"Held Fast When Everything Shakes", color:"gold",
+    scriptures:[
+      {ref:"Hebrews 6:19–20 (ESV)",text:"We have this as a sure and steadfast anchor of the soul, a hope that enters into the inner place behind the curtain, where Jesus has gone as a forerunner on our behalf, having become a high priest forever after the order of Melchizedek."},
+      {ref:"Romans 15:13 (ESV)",text:"May the God of hope fill you with all joy and peace in believing, so that by the power of the Holy Spirit you may abound in hope."},
+      {ref:"Lamentations 3:21–23 (ESV)",text:"But this I call to mind, and therefore I have hope: The steadfast love of the LORD never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness."},
+    ],
+    lexicon:[
+      {word:"hope",original:"ἐλπίς (elpis)",language:"Greek",meaning:"Confident expectation of good; hope grounded in a promise.",note:"Biblical elpis is not wishful thinking ('I hope it works out'). It is settled expectation based on who God is and what He has promised. Hebrews 6 grounds it in God's promise and His oath, so that we 'have strong encouragement to hold fast to the hope set before us' (6:18)."},
+      {word:"anchor",original:"ἄγκυρα (ankyra)",language:"Greek",meaning:"An anchor; what holds a ship in place.",note:"The only figurative use of ankyra in the New Testament. An anchor does not stop the storm; it keeps the ship from being driven onto the rocks. And this anchor is not dropped down into the sea. It is fixed upward, 'behind the curtain,' where Jesus already stands for us."},
+    ],
+    teaching:"Despair is one of the enemy's most effective weapons because it does not need to defeat you. It only needs to convince you that nothing will change. A believer without hope stops praying, stops fighting and starts drifting.\n\nHebrews answers with an anchor. An anchor does not stop the storm. It holds the ship in place while the storm passes, so the waves cannot drive it onto the rocks. And this anchor is not fixed in your circumstances, your feelings or your own strength. It is fixed 'behind the curtain,' in the presence of God, where Jesus has already gone ahead of you. Your hope is held by Someone who is already on the other side.\n\nLamentations was written in the ruins of Jerusalem. Nothing around the writer had changed. But he made a decision: 'But this I call to mind, and therefore I have hope.' Hope began with what he chose to remember about God: His steadfast love, His mercies, new every morning.\n\nThat is how you fight hopelessness. You do not wait to feel hopeful. You call to mind who God is, you hold fast to what He has promised, and you let the God of hope fill you until you abound in it.",
+    tactics:[
+      "Despair — convincing believers that nothing will ever change, so there is no point praying or fighting",
+      "Anchoring hope to circumstances, so it sinks every time circumstances do",
+      "Using delay and unanswered prayer to suggest God has forgotten or changed His mind",
+      "Settling believers into quiet resignation that looks like acceptance but is really surrender",
+    ],
+    declaration:"My hope is not in my circumstances. It is anchored in Jesus, who has gone before me. His steadfast love never ceases and His mercies are new this morning. I will not drift and I will not sink. I call to mind who God is, and therefore I have hope.",
+    prayer:"God of hope, fill me with all joy and peace as I trust You. Where despair has crept in, anchor my soul again in Jesus. Remind me that Your mercies are new this morning and Your faithfulness has not changed. Hold me steady in this storm until it passes, and let me abound in hope by the power of Your Spirit. Amen.",
+    challenge:"Write down the situation that feels most hopeless right now. Under it, write one promise of God that speaks to it. Read both out loud each morning this week and finish with Lamentations 3:22–23.",
+    fastingNote:"In seasons of heaviness, a short fast paired with reading God's promises aloud can break the pull of despair, turning your attention from what is missing to who God is.",
+  },
 ];
 
 const TABS = [
@@ -843,7 +912,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   const shareApp = async () => {
     const url = window.location.href
-    const text = 'Armed & Anchored — Spiritual Warfare Training Journal. 23 weapons. Scripture, teaching, enemy tactics, declarations, and prayer for every battle.'
+    const text = 'Armed & Anchored — Spiritual Warfare Training Journal. 26 weapons. Scripture, teaching, enemy tactics, declarations, and prayer for every battle.'
     if (navigator.share) {
       try { await navigator.share({ title: 'Armed & Anchored', text, url }) } catch {}
     } else {
@@ -947,7 +1016,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         <div style={{padding:"6px 16px 20px"}}>
           <div style={{fontSize:8,color:C.dim,letterSpacing:"0.12em",textTransform:"uppercase",
             fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",marginBottom:8}}>
-            23 Weapons
+            {WEAPONS.length} Weapons
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,maxWidth:300,margin:"0 auto"}}>
             {WEAPONS.map(w => {
@@ -1071,7 +1140,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         )}
         {!searchQuery && <div style={{textAlign:'center',padding:'24px 0'}}>
           <div style={{fontSize:28,marginBottom:8}}>⚔️</div>
-          <p style={{fontSize:14,color:C.muted,fontStyle:'italic'}}>Search all 23 weapons by scripture, teaching, or tactics.</p>
+          <p style={{fontSize:14,color:C.muted,fontStyle:'italic'}}>Search all {WEAPONS.length} weapons by scripture, teaching, or tactics.</p>
         </div>}
       </div>
     </div>

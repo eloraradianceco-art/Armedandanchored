@@ -22,7 +22,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
     gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)', goldB: 'rgba(176,138,78,0.28)',
   }
 
-  const referralText = `I've been using Armed & Anchored — a spiritual warfare training journal with 23 weapons of Scripture, teaching, declarations, and prayer. Worth every penny.\n\nGet it here: ${STRIPE_LINK}`
+  const referralText = `I've been using Armed & Anchored — a spiritual warfare training journal with 26 weapons of Scripture, teaching, declarations, and prayer. Worth every penny.\n\nGet it here: ${STRIPE_LINK}`
 
   const handleCopyReferral = async () => {
     if (navigator.share) {

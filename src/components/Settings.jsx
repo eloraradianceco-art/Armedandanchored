@@ -46,7 +46,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
     if (!userId || exporting) return
     setExporting(true)
     try {
-      const { data } = await supabase.from('weapon_entries')
+      const { data } = await supabase.from('aa_weapon_entries')
         .select('*').eq('user_id', userId)
       const get = (wId, key) => data?.find(e => String(e.weapon_id) === String(wId) && e.field_key === key)?.field_value || ''
       const lines = []
@@ -106,7 +106,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
 
   const handlePrintPDF = async () => {
     if (!userId) return
-    const { data } = await supabase.from('weapon_entries').select('*').eq('user_id', userId)
+    const { data } = await supabase.from('aa_weapon_entries').select('*').eq('user_id', userId)
     const get = (wId, key) => data?.find(e => String(e.weapon_id) === String(wId) && e.field_key === key)?.field_value || ''
     let html = `<!DOCTYPE html><html><head><title>Armed & Anchored Journal</title>
     <style>

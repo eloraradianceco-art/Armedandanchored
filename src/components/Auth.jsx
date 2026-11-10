@@ -25,8 +25,7 @@ const BTN = {
   WebkitTapHighlightColor: 'transparent', border: 'none',
 }
 
-export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onBack, initialMode }) {
-  const isNewUser = !!stripeSessionId
+export default function Auth({ isNewUser = false, onComplete, onBack, initialMode }) {
   const [mode, setMode] = useState(initialMode || (isNewUser ? 'signup' : 'signin'))
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -56,13 +55,20 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
     setLoading(true)
 
     if (mode === 'signup') {
-      const { data, error } = await supabase.auth.signUp({ email, password })
+      const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { app: 'aa' } } })
+      if (error && /already (registered|exists)/i.test(error.message)) {
+        // One account works across Elora Radiance apps: sign in with it instead
+        const res = await supabase.auth.signInWithPassword({ email, password })
+        if (res.error) {
+          setError('This email already has an Elora Radiance account (from Anchored Steps). Enter that password, or use Forgot Password below.')
+          setLoading(false); return
+        }
+        onComplete?.(isNewUser)
+        setLoading(false); return
+      }
       if (error) { setError(error.message); setLoading(false); return }
       if (!data?.session) {
         setConfirmSent(true); setLoading(false); return
-      }
-      if (stripeSessionId && onPaymentVerify) {
-        await onPaymentVerify(stripeSessionId, data.session.user.id)
       }
       onComplete?.(true)
     } else {
@@ -76,10 +82,6 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
             : error.message
         )
         setLoading(false); return
-      }
-      // If signed in and has stripeSessionId, verify payment now
-      if (stripeSessionId && onPaymentVerify && data?.session) {
-        await onPaymentVerify(stripeSessionId, data.session.user.id)
       }
       onComplete?.(false)
     }
@@ -119,6 +121,11 @@ export default function Auth({ stripeSessionId, onComplete, onPaymentVerify, onB
              mode === 'forgot' ? 'Reset your password' :
              'Welcome back, warrior'}
           </div>
+          {mode !== 'forgot' && (
+            <div style={{ fontSize: 13, color: '#7C90A2', lineHeight: 1.6, marginTop: 10 }}>
+              One account for all Elora Radiance apps. Use Anchored Steps? Sign in with that same email and password.
+            </div>
+          )}
         </div>
 
         {/* Tab switcher — only for signin/signup */}

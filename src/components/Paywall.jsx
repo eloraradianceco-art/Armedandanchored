@@ -17,7 +17,15 @@ const FEATURES = [
   { icon: '🔗', text: 'Premium share cards — scripture, declaration, and prayer cards for social media' },
 ]
 
-export default function Paywall({ onShowSignIn }) {
+// Signed-in buyers carry their account to Stripe so the purchase unlocks it directly.
+function buyLink(session) {
+  if (!session?.user) return STRIPE_LINK
+  const q = new URLSearchParams({ client_reference_id: session.user.id })
+  if (session.user.email) q.set('prefilled_email', session.user.email)
+  return STRIPE_LINK + '?' + q.toString()
+}
+
+export default function Paywall({ onShowSignIn, session, pending, onCheckAgain, onSignOut }) {
   return (
     <div style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column',
@@ -62,7 +70,7 @@ export default function Paywall({ onShowSignIn }) {
         </div>
 
         <button
-          onClick={() => { window.location.href = STRIPE_LINK }}
+          onClick={() => { window.location.href = buyLink(session) }}
           style={{
             width: '100%', background: 'linear-gradient(135deg,rgba(158,40,40,0.4),rgba(158,40,40,0.18))',
             border: '1px solid rgba(158,40,40,0.55)', color: C.cream,
@@ -77,15 +85,37 @@ export default function Paywall({ onShowSignIn }) {
           One-time payment &nbsp;•&nbsp; Instant access &nbsp;•&nbsp; All 23 weapons unlocked forever
         </p>
 
-        <div style={{ marginTop: 24, fontSize: 13, color: C.dim }}>
-          Already purchased?{' '}
-          <button
-            onClick={onShowSignIn}
-            style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 13, textDecoration: 'underline', fontFamily: 'inherit' }}
-          >
-            Sign in
-          </button>
-        </div>
+        {pending && session && (
+          <div style={{ marginTop: 20, background: C.goldF, border: `1px solid ${C.goldB}`, borderRadius: 12, padding: '14px 16px', fontSize: 14, color: C.text, lineHeight: 1.6 }}>
+            Just paid? It can take a minute to show up.{' '}
+            <button onClick={onCheckAgain} style={{ background: 'none', border: 'none', color: C.gold, cursor: 'pointer', fontSize: 14, textDecoration: 'underline', fontFamily: 'inherit' }}>
+              Check again
+            </button>
+            <div style={{ fontSize: 12, color: C.dim, marginTop: 6 }}>Paid with a different email? Contact us at eloraradiance.com/contact-us.</div>
+          </div>
+        )}
+
+        {session ? (
+          <div style={{ marginTop: 24, fontSize: 13, color: C.dim }}>
+            Signed in as {session.user?.email}.{' '}
+            <button
+              onClick={onSignOut}
+              style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 13, textDecoration: 'underline', fontFamily: 'inherit' }}
+            >
+              Sign out
+            </button>
+          </div>
+        ) : (
+          <div style={{ marginTop: 24, fontSize: 13, color: C.dim }}>
+            Already purchased?{' '}
+            <button
+              onClick={onShowSignIn}
+              style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 13, textDecoration: 'underline', fontFamily: 'inherit' }}
+            >
+              Sign in
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

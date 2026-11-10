@@ -25,7 +25,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
     gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)', goldB: 'rgba(176,138,78,0.28)',
   }
 
-  const referralText = `I've been using Armed & Anchored — a spiritual warfare training journal with 15 weapons of Scripture, teaching, declarations, and prayer. Worth every penny.\n\nGet it here: ${REFERRAL_LINK}`
+  const referralText = `I've been using Armed & Anchored — a spiritual warfare training journal with 23 weapons of Scripture, teaching, declarations, and prayer. Worth every penny.\n\nGet it here: ${REFERRAL_LINK}`
 
   const handleCopyReferral = async () => {
     if (isNative) { await nativeShareText({ title: 'Armed & Anchored', text: referralText }); return }
@@ -50,7 +50,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
     if (!userId || exporting) return
     setExporting(true)
     try {
-      const { data } = await supabase.from('weapon_entries')
+      const { data } = await supabase.from('aa_weapon_entries')
         .select('*').eq('user_id', userId)
       const get = (wId, key) => data?.find(e => String(e.weapon_id) === String(wId) && e.field_key === key)?.field_value || ''
       const lines = []
@@ -116,7 +116,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
 
   const handlePrintPDF = async () => {
     if (!userId) return
-    const { data } = await supabase.from('weapon_entries').select('*').eq('user_id', userId)
+    const { data } = await supabase.from('aa_weapon_entries').select('*').eq('user_id', userId)
     const get = (wId, key) => data?.find(e => String(e.weapon_id) === String(wId) && e.field_key === key)?.field_value || ''
     let html = `<!DOCTYPE html><html><head><title>Armed & Anchored Journal</title>
     <style>

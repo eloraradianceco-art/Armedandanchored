@@ -8,9 +8,8 @@ import { StatusBar, Style } from '@capacitor/status-bar'
 
 export const isNative = Capacitor.isNativePlatform()
 
-// The app runs from files on the phone, so server routes need the full website address.
+// The app runs from files on the phone, so shared links use the full website address.
 export const WEB_ORIGIN = 'https://armedandanchored.vercel.app'
-export const apiUrl = (path) => (isNative ? WEB_ORIGIN : '') + path
 
 // Keeps the sign-in session in the phone's native storage, which iOS never clears on its own.
 export const nativeAuthStorage = {

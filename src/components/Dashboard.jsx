@@ -7,7 +7,7 @@ export default function Dashboard({ userId, weapons, onClose, onSelectWeapon, C 
 
   useEffect(() => {
     if (!userId) return
-    supabase.from('weapon_entries').select('*').eq('user_id', userId)
+    supabase.from('aa_weapon_entries').select('*').eq('user_id', userId)
       .then(({ data }) => { setEntries(data || []); setLoading(false) })
   }, [userId])
 

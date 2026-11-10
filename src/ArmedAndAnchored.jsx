@@ -739,7 +739,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   useEffect(() => {
     if (!userId) return
     supabase
-      .from('weapon_entries')
+      .from('aa_weapon_entries')
       .select('*')
       .eq('user_id', userId)
       .order('updated_at', { ascending: false })
@@ -788,7 +788,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     const timerKey = `${selected}__${fieldKey}`
     clearTimeout(saveTimers.current[timerKey])
     saveTimers.current[timerKey] = setTimeout(async () => {
-      await supabase.from('weapon_entries').upsert({
+      await supabase.from('aa_weapon_entries').upsert({
         user_id: userId,
         weapon_id: selected,
         field_key: fieldKey,
@@ -813,7 +813,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     setDeclared(newDec)
     setDeployFlash(f => ({ ...f, [id]: true }))
     setTimeout(() => setDeployFlash(f => ({ ...f, [id]: false })), 2000)
-    await supabase.from('weapon_entries').upsert({
+    await supabase.from('aa_weapon_entries').upsert({
       user_id: userId, weapon_id: id, field_key: 'declared', field_value: 'true'
     }, { onConflict: 'user_id,weapon_id,field_key' })
   }
@@ -835,7 +835,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   const shareApp = async () => {
     const url = isNative ? WEB_ORIGIN : window.location.href
-    const text = 'Armed & Anchored — Spiritual Warfare Training Journal. 15 weapons. Scripture, teaching, enemy tactics, declarations, and prayer for every battle.'
+    const text = 'Armed & Anchored — Spiritual Warfare Training Journal. 23 weapons. Scripture, teaching, enemy tactics, declarations, and prayer for every battle.'
     if (isNative) { await nativeShareText({ title: 'Armed & Anchored', text, url }); return }
     if (navigator.share) {
       try { await navigator.share({ title: 'Armed & Anchored', text, url }) } catch {}
@@ -863,7 +863,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     setLightMode(next)
     try { localStorage.setItem('aa_lightmode', String(next)) } catch {}
     if (userId) {
-      supabase.from('profiles').update({ light_mode: next }).eq('id', userId)
+      supabase.from('aa_profiles').update({ light_mode: next }).eq('id', userId)
         .then(({ error }) => { if (error) console.warn('lightmode sync:', error.message) })
     }
   }
@@ -908,7 +908,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     setSavedWeapons(next)
     try { localStorage.setItem('aa_saved', JSON.stringify(next)) } catch {}
     if (userId) {
-      supabase.from('profiles').update({ saved: next }).eq('id', userId)
+      supabase.from('aa_profiles').update({ saved: next }).eq('id', userId)
         .then(({ error }) => { if (error) console.warn('saved sync:', error.message) })
     }
   }
@@ -941,7 +941,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         <div style={{padding:"6px 16px 20px"}}>
           <div style={{fontSize:8,color:C.dim,letterSpacing:"0.12em",textTransform:"uppercase",
             fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",marginBottom:8}}>
-            15 Weapons
+            23 Weapons
           </div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,maxWidth:300,margin:"0 auto"}}>
             {WEAPONS.map(w => {
@@ -983,7 +983,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       onComplete={() => {
         try { localStorage.setItem('aa_onboarded', 'true') } catch {}
         setShowOnboarding(false)
-        if (userId) supabase.from('profiles').update({ onboarded: true }).eq('id', userId)
+        if (userId) supabase.from('aa_profiles').update({ onboarded: true }).eq('id', userId)
       }}
       C={C}
     />
@@ -996,7 +996,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       onComplete={() => {
         try { localStorage.setItem('aa_onboarded', 'true') } catch {}
         setOnboarded(true)
-        if (userId) supabase.from('profiles').update({ onboarded: true }).eq('id', userId)
+        if (userId) supabase.from('aa_profiles').update({ onboarded: true }).eq('id', userId)
       }}
     />
   )
@@ -1484,7 +1484,7 @@ export default function ArmedAndAnchored({ session, profile }) {
               </div>
             )}
             <button onClick={async()=>{
-              await supabase.from('weapon_entries').upsert({user_id:userId,weapon_id:weapon.id,field_key:'declared',field_value:'true',updated_at:new Date().toISOString()},{onConflict:'user_id,weapon_id,field_key'});
+              await supabase.from('aa_weapon_entries').upsert({user_id:userId,weapon_id:weapon.id,field_key:'declared',field_value:'true',updated_at:new Date().toISOString()},{onConflict:'user_id,weapon_id,field_key'});
               setEntries(prev=>{const idx=prev.findIndex(e=>String(e.weapon_id)===String(weapon.id)&&e.field_key==='declared');if(idx>=0){const u=[...prev];u[idx]={...u[idx],field_value:'true'};return u;}return[...prev,{user_id:userId,weapon_id:weapon.id,field_key:'declared',field_value:'true'}];});
             }} style={{width:"100%",background:declared[weapon.id]?"rgba(120,184,120,0.15)":`linear-gradient(135deg,${C.redF},rgba(255,255,255,0.01))`,border:`1px solid ${declared[weapon.id]?"rgba(120,184,120,0.4)":C.redB}`,color:declared[weapon.id]?C.green:C.redL,padding:"16px",borderRadius:14,cursor:"pointer",fontSize:13,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",transition:"all .25s"}}>
               {declared[weapon.id]?"✦ Declaration Deployed":"⚔ Deploy This Declaration"}
@@ -1501,7 +1501,7 @@ export default function ArmedAndAnchored({ session, profile }) {
               style={{width:"100%",background:"rgba(255,255,255,0.03)",border:`1px solid ${C.borderGold}`,borderRadius:14,color:C.cream,fontSize:17,lineHeight:1.9,padding:"16px 18px",fontFamily:"'EB Garamond',Georgia,serif",outline:"none",resize:"vertical",boxSizing:"border-box",minHeight:220}}/>
             <button onClick={async()=>{
                 const val=get('journal');
-                if(userId&&selected){await supabase.from('weapon_entries').upsert({user_id:userId,weapon_id:selected,field_key:'journal',field_value:val,updated_at:new Date().toISOString()},{onConflict:'user_id,weapon_id,field_key'});}
+                if(userId&&selected){await supabase.from('aa_weapon_entries').upsert({user_id:userId,weapon_id:selected,field_key:'journal',field_value:val,updated_at:new Date().toISOString()},{onConflict:'user_id,weapon_id,field_key'});}
                 setJournalSaved(true);setTimeout(()=>setJournalSaved(false),2000);}}
               style={{width:"100%",marginTop:12,background:journalSaved?"rgba(120,184,120,0.12)":`linear-gradient(135deg,${C.redF},rgba(255,255,255,0.01))`,border:`1px solid ${journalSaved?"rgba(120,184,120,0.4)":C.redB}`,color:journalSaved?C.green:C.redL,padding:"13px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",transition:"all .25s"}}>
               {journalSaved?"✓ Saved":"Save Journal Entry"}

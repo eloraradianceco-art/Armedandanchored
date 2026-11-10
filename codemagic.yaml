@@ -1,12 +1,10 @@
 # Cloud builds for the Armed & Anchored phone apps (codemagic.io).
 # Each build: install → build the web app → copy it into the iOS/Android project → compile.
 # The website on Vercel is not affected by anything in this file.
+# The app connects to the shared Elora Radiance database (set in src/supabaseClient.js),
+# so no database settings are needed here.
 
 definitions:
-  supabase_vars: &supabase_vars
-    # Public values the app already ships to every browser. Not secrets.
-    VITE_SUPABASE_URL: https://awcnjducdrphgqvpksod.supabase.co
-    VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3Y25qZHVjZHJwaGdxdnBrc29kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMDM5MjUsImV4cCI6MjA5NDc3OTkyNX0.R3xh4ks38DPvGh7YvqRdRpUbCo6AM8WI1UsXSce9V9o
   build_web: &build_web
     name: Build the web app
     script: |
@@ -21,8 +19,6 @@ workflows:
     environment:
       node: 22
       java: 21
-      vars:
-        <<: *supabase_vars
     scripts:
       - *build_web
       - name: Copy into the Android project
@@ -48,8 +44,6 @@ workflows:
         bundle_identifier: com.eloraradiance.armedandanchored
       node: 22
       xcode: latest
-      vars:
-        <<: *supabase_vars
     scripts:
       - *build_web
       - name: Copy into the iOS project

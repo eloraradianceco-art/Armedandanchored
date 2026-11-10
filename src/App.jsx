@@ -1,6 +1,5 @@
 import { useState, useEffect, Component } from 'react'
 import { supabase } from './supabaseClient'
-import { apiUrl } from './native'
 import Paywall from './components/Paywall'
 import Auth from './components/Auth'
 import Onboarding from './components/Onboarding'
@@ -44,20 +43,22 @@ function AppInner() {
   const [resetError, setResetError] = useState(null)
   const [resetDone, setResetDone] = useState(false)
 
+  const [verifyTries, setVerifyTries] = useState(0)
+
   const params = new URLSearchParams(window.location.search)
   const stripeSessionId = params.get('session_id')
+  const returnedFromCheckout = !!stripeSessionId || params.get('paid') === 'true'
 
-  // Store Stripe session in localStorage the moment user arrives
+  // Remember a checkout the moment the buyer arrives back from Stripe
   useEffect(() => {
-    if (stripeSessionId) {
-      localStorage.setItem('pending_stripe_session', stripeSessionId)
-    }
-  }, [stripeSessionId])
+    if (stripeSessionId) localStorage.setItem('pending_stripe_session', stripeSessionId)
+    else if (returnedFromCheckout && !localStorage.getItem('pending_stripe_session')) localStorage.setItem('pending_stripe_session', 'pending')
+  }, [stripeSessionId, returnedFromCheckout])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
-      if (session) loadProfile(session.user.id)
+      if (session) loadProfile()
       else setLoading(false)
     })
 
@@ -69,20 +70,26 @@ function AppInner() {
         return
       }
       setSession(session)
-      if (session) loadProfile(session.user.id)
+      if (session) loadProfile()
       else { setProfile(null); setLoading(false) }
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
-  // Simple profile load — no recursive calls
-  const loadProfile = async (userId) => {
+  // Loads (and creates, if needed) this account's Armed & Anchored profile.
+  // The database applies any purchase made with this email or the checkout just completed.
+  const loadProfile = async () => {
     try {
-      const { data } = await supabase
-        .from('profiles').select('*').eq('id', userId).maybeSingle()
+      const pending = localStorage.getItem('pending_stripe_session')
+      const args = pending && pending.startsWith('cs_') ? { checkout_session: pending } : {}
+      const { data, error } = await supabase.rpc('aa_load_profile', args)
+      if (error) throw error
       setProfile(data || null)
-      if (data?.paid) localStorage.removeItem('pending_stripe_session')
+      if (data?.paid && pending) {
+        localStorage.removeItem('pending_stripe_session')
+        if (returnedFromCheckout) window.history.replaceState({}, '', window.location.pathname)
+      }
     } catch (e) {
       console.error('loadProfile error:', e)
     } finally {
@@ -90,30 +97,20 @@ function AppInner() {
     }
   }
 
-  // Verify payment and directly update profile state — no recursive loadProfile
-  const verifyPayment = async (sessionId, userId) => {
-    try {
-      const userIdParam = userId ? `&user_id=${userId}` : ''
-      const res = await fetch(apiUrl(`/api/verify-payment?session_id=${sessionId}${userIdParam}`))
-      const data = await res.json()
-      if (data.paid) {
-        window.history.replaceState({}, '', window.location.pathname)
-        localStorage.removeItem('pending_stripe_session')
-        // Update profile state directly — no recursive call
-        setProfile(prev => prev ? { ...prev, paid: true } : { id: userId, paid: true })
-        return true
-      }
-    } catch (e) {
-      console.error('Payment verification failed:', e)
-    }
-    return false
-  }
+  // Just paid: Stripe tells our server within seconds. Check a few times before showing the paywall.
+  const pendingPurchase = !!localStorage.getItem('pending_stripe_session')
+  const MAX_TRIES = 8
+  useEffect(() => {
+    if (!session || profile?.paid || !pendingPurchase || verifyTries >= MAX_TRIES) return
+    const t = setTimeout(() => { setVerifyTries(n => n + 1); loadProfile() }, 2500)
+    return () => clearTimeout(t)
+  }, [session, profile, pendingPurchase, verifyTries])
 
   const handleAuthComplete = async (isNewUser) => {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       if (session) {
-        await loadProfile(session.user.id)
+        await loadProfile()
         if (isNewUser) setShowOnboarding(true)
       }
     } catch (e) {
@@ -202,19 +199,9 @@ function AppInner() {
 
   if (loading) return <LoadingScreen/>
 
-  // Returned from Stripe — show auth
-  if (stripeSessionId && !session) {
-    return <Auth
-      stripeSessionId={stripeSessionId}
-      onComplete={handleAuthComplete}
-      onPaymentVerify={verifyPayment}
-    />
-  }
-
-  // Returned from Stripe, already logged in — verify and show loading
-  if (stripeSessionId && session && !profile?.paid) {
-    verifyPayment(stripeSessionId, session.user.id)
-    return <LoadingScreen message="Verifying payment..."/>
+  // Returned from Stripe, not signed in yet — create the account (or sign in)
+  if (returnedFromCheckout && !session) {
+    return <Auth isNewUser onComplete={handleAuthComplete}/>
   }
 
   // Not logged in
@@ -223,14 +210,15 @@ function AppInner() {
     return <Paywall onShowSignIn={() => setShowSignIn(true)}/>
   }
 
-  // Logged in but not paid — check for pending session
+  // Logged in but not unlocked yet
   if (!profile?.paid) {
-    const pendingSession = localStorage.getItem('pending_stripe_session')
-    if (pendingSession) {
-      verifyPayment(pendingSession, session.user.id)
-      return <LoadingScreen message="Verifying payment..."/>
-    }
-    return <Paywall onShowSignIn={() => setShowSignIn(true)}/>
+    if (pendingPurchase && verifyTries < MAX_TRIES) return <LoadingScreen message="Confirming your purchase..."/>
+    return <Paywall
+      session={session}
+      pending={pendingPurchase}
+      onCheckAgain={() => { setVerifyTries(0); loadProfile() }}
+      onSignOut={() => supabase.auth.signOut()}
+    />
   }
 
   // Onboarding

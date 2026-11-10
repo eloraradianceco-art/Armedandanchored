@@ -5,6 +5,7 @@ import ShareCard from './components/ShareCard'
 import Dashboard from './components/Dashboard'
 import Settings from './components/Settings'
 import WeaponTool from './components/WeaponTool'
+import Drill from './components/Drill'
 
 // C palette defined dynamically inside component (light/dark mode);
 
@@ -766,35 +767,45 @@ export default function ArmedAndAnchored({ session, profile }) {
     const e = entries.find(e => String(e.weapon_id) === String(selected) && e.field_key === fieldKey)
     return e?.field_value || ''
   }
+  // Any weapon (Daily Drill and Under Attack save across weapons; weapon 0 holds day-level records)
+  const getFor = (wid, fieldKey) => {
+    const e = entries.find(e => String(e.weapon_id) === String(wid) && e.field_key === fieldKey)
+    return e?.field_value || ''
+  }
 
   // Debounce timers per field key
   const saveTimers = useRef({})
 
-  const set = useCallback((fieldKey, value) => {
-    if (!userId || !selected) return
+  const setFor = useCallback((wid, fieldKey, value) => {
+    if (!userId || wid == null) return
     // Optimistic update — immediate
     setEntries(prev => {
-      const idx = prev.findIndex(e => String(e.weapon_id) === String(selected) && e.field_key === fieldKey)
+      const idx = prev.findIndex(e => String(e.weapon_id) === String(wid) && e.field_key === fieldKey)
       if (idx >= 0) {
         const updated = [...prev]
         updated[idx] = { ...updated[idx], field_value: value, updated_at: new Date().toISOString() }
         return updated
       }
-      return [...prev, { user_id: userId, weapon_id: selected, field_key: fieldKey, field_value: value, updated_at: new Date().toISOString() }]
+      return [...prev, { user_id: userId, weapon_id: wid, field_key: fieldKey, field_value: value, updated_at: new Date().toISOString() }]
     })
     // Debounce Supabase persist — 1s after last change
-    const timerKey = `${selected}__${fieldKey}`
+    const timerKey = `${wid}__${fieldKey}`
     clearTimeout(saveTimers.current[timerKey])
     saveTimers.current[timerKey] = setTimeout(async () => {
       await supabase.from('aa_weapon_entries').upsert({
         user_id: userId,
-        weapon_id: selected,
+        weapon_id: wid,
         field_key: fieldKey,
         field_value: value,
         updated_at: new Date().toISOString(),
       }, { onConflict: 'user_id,weapon_id,field_key' })
     }, 1000)
-  }, [userId, selected])
+  }, [userId])
+
+  const set = useCallback((fieldKey, value) => {
+    if (!selected) return
+    setFor(selected, fieldKey, value)
+  }, [selected, setFor])
 
   const getToolData = () => {
     const raw = get('tool_data')
@@ -1177,7 +1188,9 @@ export default function ArmedAndAnchored({ session, profile }) {
         </div>
       </div>
 
-      <div style={{padding:"18px 18px 0"}}>
+      <div style={{padding:"18px 18px 0",maxWidth:860,margin:"0 auto"}}>
+        <Drill weapons={WEAPONS} entries={entries} getFor={getFor} setFor={setFor} onDeclare={markDeclared}
+          onOpenWeapon={id=>{setSelected(id);setTab('scripture');window.scrollTo(0,0)}} lightMode={lightMode}/>
         <div style={{background:`linear-gradient(135deg,rgba(158,40,40,0.1),rgba(176,138,78,0.06))`,border:`1px solid rgba(158,40,40,0.22)`,borderRadius:14,padding:"16px 20px",marginBottom:6}}>
           <p style={{fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.8,margin:"0 0 8px"}}>"Put on the whole armor of God, that you may be able to stand against the schemes of the devil."</p>
           <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",textTransform:"uppercase"}}>Ephesians 6:11 (ESV)</div>

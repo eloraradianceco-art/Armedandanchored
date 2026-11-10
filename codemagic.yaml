@@ -6,14 +6,7 @@ definitions:
   supabase_vars: &supabase_vars
     # Public values the app already ships to every browser. Not secrets.
     VITE_SUPABASE_URL: https://awcnjducdrphgqvpksod.supabase.co
-    VITE_SUPABASE_ANON_KEY: ADD_AFTER_DATABASE_RESTORE
-  check_vars: &check_vars
-    name: Check app settings
-    script: |
-      if [ "$VITE_SUPABASE_ANON_KEY" = "ADD_AFTER_DATABASE_RESTORE" ]; then
-        echo "The Supabase public key still needs to be added to codemagic.yaml."
-        exit 1
-      fi
+    VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3Y25qZHVjZHJwaGdxdnBrc29kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMDM5MjUsImV4cCI6MjA5NDc3OTkyNX0.R3xh4ks38DPvGh7YvqRdRpUbCo6AM8WI1UsXSce9V9o
   build_web: &build_web
     name: Build the web app
     script: |
@@ -31,7 +24,6 @@ workflows:
       vars:
         <<: *supabase_vars
     scripts:
-      - *check_vars
       - *build_web
       - name: Copy into the Android project
         script: npx cap sync android
@@ -59,7 +51,6 @@ workflows:
       vars:
         <<: *supabase_vars
     scripts:
-      - *check_vars
       - *build_web
       - name: Copy into the iOS project
         script: npx cap sync ios

@@ -9,12 +9,12 @@ const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
 import { isNative } from '../native'
 
 const FEATURES = [
-  { icon: '⚔️', text: '23 Weapons of Spiritual Warfare — deep teaching, tactics, prayer, and declaration on each' },
+  { icon: '⚔️', text: '26 Weapons of Spiritual Warfare — deep teaching, tactics, prayer, and declaration on each' },
   { icon: '🎯', text: 'Enemy Tactics — exactly how he attacks in every area of your life' },
   { icon: '🧠', text: '3-mode scripture memorization — recall, fill the gaps, and write it out' },
   { icon: '🛠️', text: 'Interactive training tools for every weapon — battle logs, trackers, and warfare journals' },
   { icon: '✍️', text: 'Personal battle journal saved to your account — access on any device' },
-  { icon: '📊', text: 'Progress dashboard — track your arsenal readiness across all 23 weapons' },
+  { icon: '📊', text: 'Progress dashboard — track your arsenal readiness across all 26 weapons' },
   { icon: '🔗', text: 'Premium share cards — scripture, declaration, and prayer cards for social media' },
 ]
 
@@ -102,7 +102,7 @@ export default function Paywall({ onShowSignIn, session, pending, onCheckAgain, 
           ⚔️ Get Lifetime Access
         </button>
         <p style={{ fontSize: 12, color: C.dim, lineHeight: 1.7 }}>
-          One-time payment &nbsp;•&nbsp; Instant access &nbsp;•&nbsp; All 23 weapons unlocked forever
+          One-time payment &nbsp;•&nbsp; Instant access &nbsp;•&nbsp; All 26 weapons unlocked forever
         </p>
         </>)}
 

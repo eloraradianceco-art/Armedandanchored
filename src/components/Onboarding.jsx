@@ -11,7 +11,7 @@ const SLIDES = [
   {
     icon: '🗡',
     tag: 'THE ARSENAL',
-    title: '23 Weapons of\nthe Believer',
+    title: '26 Weapons of\nthe Believer',
     body: 'Every weapon is a biblical truth or discipline — the Name of Jesus, the Blood, the Armor of God, Fasting, Declarations, and more.',
     detail: 'Each weapon has seven sections: Scripture, Teaching, Enemy Tactics, Declaration, Word Study, Journal, and a hands-on Tool.',
   },

@@ -57,12 +57,15 @@ const hush = () => { try { if (window.speechSynthesis) window.speechSynthesis.ca
 /* What people face, and the weapon that answers it */
 export const ATTACKS = [
   { id: "fear", label: "Fear or anxiety", weapon: 8 },
+  { id: "hopeless", label: "Hopeless, like nothing will change", weapon: 26 },
   { id: "temptation", label: "Temptation", weapon: 14 },
   { id: "shame", label: "Guilt, shame or accusation", weapon: 17 },
   { id: "lies", label: "Lies running through my head", weapon: 7 },
+  { id: "sword", label: "I need a word to fight back with", weapon: 24 },
   { id: "voice", label: "Confusion about whose voice this is", weapon: 11 },
   { id: "anger", label: "Anger or unforgiveness", weapon: 19 },
   { id: "quit", label: "Wanting to give up", weapon: 15 },
+  { id: "forget", label: "Forgetting what God has done", weapon: 25 },
   { id: "heavy", label: "Heaviness or discouragement", weapon: 18 },
   { id: "pride", label: "Pride or needing control", weapon: 22 },
   { id: "conflict", label: "Conflict with someone", weapon: 20 },

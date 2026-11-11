@@ -185,7 +185,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
         {/* Header */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: 'calc(16px + env(safe-area-inset-top, 0px)) 20px 16px', borderBottom: `1px solid ${C.border}`,
+          padding: 'calc(16px + var(--safe-top, env(safe-area-inset-top, 0px))) 20px 16px', borderBottom: `1px solid ${C.border}`,
           position: 'sticky', top: 0, zIndex: 10,
           background: lightMode ? '#F2EDE3' : '#070E17',
           backdropFilter: 'blur(12px)',

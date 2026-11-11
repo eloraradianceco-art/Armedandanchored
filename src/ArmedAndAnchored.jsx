@@ -518,7 +518,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
 
     return (
       <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.88)",zIndex:600,
-        display:"flex",alignItems:"center",justifyContent:"center",padding:"calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px))",overflowY:"auto"}}
+        display:"flex",alignItems:"center",justifyContent:"center",padding:"calc(16px + var(--safe-top, env(safe-area-inset-top, 0px))) 16px calc(16px + env(safe-area-inset-bottom, 0px))",overflowY:"auto"}}
         onClick={()=>{if(!mode)onClose()}}>
         <div onClick={e=>e.stopPropagation()} style={{
           background:`linear-gradient(145deg,${C.bg},${C.mid||'rgba(13,26,42,1)'})`,
@@ -1126,7 +1126,7 @@ export default function ArmedAndAnchored({ session, profile }) {
   const SearchModal = () => (
     <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:700,
       display:'flex',alignItems:'flex-start',justifyContent:'center',
-      overflowY:'auto',padding:'calc(16px + env(safe-area-inset-top, 0px)) 16px calc(48px + env(safe-area-inset-bottom, 0px))'}} onClick={()=>setShowSearch(false)}>
+      overflowY:'auto',padding:'calc(16px + var(--safe-top, env(safe-area-inset-top, 0px))) 16px calc(48px + env(safe-area-inset-bottom, 0px))'}} onClick={()=>setShowSearch(false)}>
       <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},${C.mid||'rgba(13,26,42,1)'})`,
         border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:'100%',maxWidth:460,marginTop:20}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
@@ -1174,7 +1174,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     return (
       <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:700,
         display:'flex',alignItems:'flex-start',justifyContent:'center',
-        overflowY:'auto',padding:'calc(16px + env(safe-area-inset-top, 0px)) 16px calc(48px + env(safe-area-inset-bottom, 0px))'}} onClick={()=>setShowSaved(false)}>
+        overflowY:'auto',padding:'calc(16px + var(--safe-top, env(safe-area-inset-top, 0px))) 16px calc(48px + env(safe-area-inset-bottom, 0px))'}} onClick={()=>setShowSaved(false)}>
         <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},${C.mid||'rgba(13,26,42,1)'})`,
           border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:'100%',maxWidth:460,marginTop:20}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
@@ -1243,7 +1243,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%,rgba(158,40,40,0.15) 0%,transparent 60%),${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text}}>
 
       {/* AS1-style compact sticky header */}
-      <div style={{position:"sticky",top:0,zIndex:200,paddingTop:"env(safe-area-inset-top, 0px)",marginTop:"calc(-1 * env(safe-area-inset-top, 0px))",background:lightMode?"#F2EDE3":"#070E17",borderBottom:`1px solid ${C.border}`}}>
+      <div style={{position:"sticky",top:0,zIndex:200,paddingTop:"var(--safe-top, env(safe-area-inset-top, 0px))",marginTop:"calc(-1 * env(safe-area-inset-top, 0px))",background:lightMode?"#F2EDE3":"#070E17",borderBottom:`1px solid ${C.border}`}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",maxWidth:1100,margin:"0 auto"}}>
           <div style={{display:"flex",alignItems:"center",gap:8,minWidth:0,flex:1}}>
             <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)",flexShrink:0}}/>
@@ -1385,7 +1385,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         )
       })()}
       {/* AS1-style compact sticky header */}
-      <div style={{position:"sticky",top:0,zIndex:200,paddingTop:"env(safe-area-inset-top, 0px)",marginTop:"calc(-1 * env(safe-area-inset-top, 0px))",background:lightMode?"#F2EDE3":"#070E17",borderBottom:`1px solid ${C.border}`}}>
+      <div style={{position:"sticky",top:0,zIndex:200,paddingTop:"var(--safe-top, env(safe-area-inset-top, 0px))",marginTop:"calc(-1 * env(safe-area-inset-top, 0px))",background:lightMode?"#F2EDE3":"#070E17",borderBottom:`1px solid ${C.border}`}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)"}}/>
@@ -1439,7 +1439,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         {/* Weapon jump dropdown */}
         {showWeaponJump && (
           <div onClick={()=>setShowWeaponJump(false)} style={{position:"fixed",inset:0,zIndex:800}} >
-            <div onClick={e=>e.stopPropagation()} style={{position:"fixed",top:"calc(140px + env(safe-area-inset-top, 0px))",left:10,right:10,background:C.bg,border:`1px solid ${C.border}`,borderRadius:16,padding:14,maxHeight:280,overflowY:"auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,zIndex:900,boxShadow:"0 8px 32px rgba(0,0,0,0.7)"}}>
+            <div onClick={e=>e.stopPropagation()} style={{position:"fixed",top:"calc(140px + var(--safe-top, env(safe-area-inset-top, 0px)))",left:10,right:10,background:C.bg,border:`1px solid ${C.border}`,borderRadius:16,padding:14,maxHeight:280,overflowY:"auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,zIndex:900,boxShadow:"0 8px 32px rgba(0,0,0,0.7)"}}>
               {WEAPONS.map(w=>(
                 <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");setShowWeaponJump(false);window.scrollTo(0,0);}} style={{background:w.id===selected?C.redF:"transparent",border:`1px solid ${w.id===selected?C.redB:C.border}`,color:w.id===selected?C.redL:C.muted,borderRadius:10,padding:"10px 4px",cursor:"pointer",fontSize:9,fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",lineHeight:1.3,touchAction:"manipulation"}}>
                   <div style={{fontSize:20,marginBottom:3}}>{w.icon}</div>

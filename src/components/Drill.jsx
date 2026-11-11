@@ -502,7 +502,7 @@ const CSS = `
 
 .dr-overlay{position:fixed;inset:0;z-index:1000;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .dr-session{min-height:100%;display:flex;flex-direction:column;max-width:480px;margin:0 auto;padding:0 22px}
-.dr-top{position:sticky;top:0;background:var(--bg);z-index:5;padding-top:calc(8px + env(safe-area-inset-top,0px))}
+.dr-top{position:sticky;top:0;background:var(--bg);z-index:5;padding-top:calc(8px + var(--safe-top, env(safe-area-inset-top, 0px)))}
 .dr-head{display:grid;grid-template-columns:44px 1fr 52px;align-items:center;padding-bottom:8px}
 .dr-icon{width:44px;height:44px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;color:var(--muted)!important;cursor:pointer;margin-left:-10px}
 .dr-stitle{text-align:center;font-family:Cinzel,Georgia,serif;font-weight:600;font-size:14px;color:var(--ink);letter-spacing:.08em;text-transform:uppercase}
@@ -553,7 +553,7 @@ const CSS = `
 .dr-wpn-t{font-size:16px;line-height:1.25;color:var(--ink)}
 .dr-wpn-d{position:absolute;top:10px;right:10px;color:var(--sage)}
 
-.dr-done{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(36px + env(safe-area-inset-top,0px)) 22px calc(28px + env(safe-area-inset-bottom,0px));max-width:480px;margin:0 auto}
+.dr-done{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(36px + var(--safe-top, env(safe-area-inset-top, 0px))) 22px calc(28px + env(safe-area-inset-bottom,0px));max-width:480px;margin:0 auto}
 .dr-badge{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;color:var(--onRed);background:radial-gradient(circle at 50% 35%,#B33232,#6E1A1A);box-shadow:0 0 0 6px var(--redSoft),0 12px 40px rgba(158,40,40,.35);margin-bottom:24px;animation:dr-pop .5s cubic-bezier(.2,.8,.2,1)}
 .dr-badge svg{width:62px;height:62px}
 .dr-dcount{font-size:17px;color:var(--muted);margin-bottom:6px!important;font-style:italic}

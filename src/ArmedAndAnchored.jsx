@@ -522,7 +522,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
         display:"flex",alignItems:"center",justifyContent:"center",padding:"calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px))",overflowY:"auto"}}
         onClick={()=>{if(!mode)onClose()}}>
         <div onClick={e=>e.stopPropagation()} style={{
-          background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,
+          background:`linear-gradient(145deg,${C.bg},${C.mid||'rgba(13,26,42,1)'})`,
           border:`1px solid ${C.goldB}`,borderRadius:20,padding:24,
           maxWidth:420,width:"100%",boxShadow:"0 20px 60px rgba(0,0,0,0.6)",
         }}>
@@ -741,12 +741,12 @@ export default function ArmedAndAnchored({ session, profile }) {
   // Dynamic palette — switches with lightMode
   const C = lightMode ? {
     bg: "#F2EDE3", bgCard: "rgba(0,0,0,0.04)", mid: "#E8E0D0",
-    red: "#9E2828", redL: "#C94848", redF: "rgba(158,40,40,0.1)", redB: "rgba(158,40,40,0.25)",
-    gold: "#8B6A30", goldL: "#A07A38", goldF: "rgba(139,106,48,0.12)", goldB: "rgba(139,106,48,0.3)",
-    steel: "#5A6878", steelF: "rgba(90,104,120,0.12)", steelB: "rgba(90,104,120,0.3)",
-    cream: "#1A1209", text: "#3D2E1A", muted: "#7A6A5A", dim: "#B0A090",
+    red: "#7A2420", redL: "#7A2420", redF: "rgba(158,40,40,0.07)", redB: "rgba(158,40,40,0.25)",
+    gold: "#5E4414", goldL: "#6B4E18", goldF: "rgba(139,106,48,0.12)", goldB: "rgba(139,106,48,0.3)",
+    steel: "#4A5664", steelF: "rgba(90,104,120,0.12)", steelB: "rgba(90,104,120,0.3)",
+    cream: "#1A1209", text: "#3D2E1A", muted: "#5E4E3C", dim: "#6E6052",
     border: "rgba(0,0,0,0.08)", borderGold: "rgba(139,106,48,0.25)", borderRed: "rgba(158,40,40,0.2)",
-    green: "#4A7A5A",
+    green: "#3A6248",
   } : {
     bg: "#070E17", bgCard: "rgba(255,255,255,0.025)", mid: "#0D1B2A",
     red: "#9E2828", redL: "#C94848", redF: "rgba(158,40,40,0.14)", redB: "rgba(158,40,40,0.32)",
@@ -1019,7 +1019,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         </div>
         {/* Grid */}
         <div style={{padding:"6px 16px 20px"}}>
-          <div style={{fontSize:8,color:C.dim,letterSpacing:"0.12em",textTransform:"uppercase",
+          <div style={{fontSize:8,color:"#8A9AAA",letterSpacing:"0.12em",textTransform:"uppercase",
             fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",marginBottom:8}}>
             {WEAPONS.length} Weapons
           </div>
@@ -1037,7 +1037,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                     boxShadow:active?"0 0 14px rgba(158,40,40,0.55)":"none",
                     transform:active?"scale(1.08)":"none",position:"relative"}}>
                   {w.icon}
-                  {done && !active && <span style={{position:"absolute",top:1,right:2,fontSize:6,color:C.redL,lineHeight:1}}>✦</span>}
+                  {done && !active && <span style={{position:"absolute",top:1,right:2,fontSize:6,color:"#C94848",lineHeight:1}}>✦</span>}
                 </button>
               );
             })}
@@ -1112,7 +1112,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:700,
       display:'flex',alignItems:'flex-start',justifyContent:'center',
       overflowY:'auto',padding:'calc(16px + env(safe-area-inset-top, 0px)) 16px calc(48px + env(safe-area-inset-bottom, 0px))'}} onClick={()=>setShowSearch(false)}>
-      <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,
+      <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},${C.mid||'rgba(13,26,42,1)'})`,
         border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:'100%',maxWidth:460,marginTop:20}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
           <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.18em',textTransform:'uppercase'}}>🔍 Search Weapons</div>
@@ -1160,7 +1160,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:700,
         display:'flex',alignItems:'flex-start',justifyContent:'center',
         overflowY:'auto',padding:'calc(16px + env(safe-area-inset-top, 0px)) 16px calc(48px + env(safe-area-inset-bottom, 0px))'}} onClick={()=>setShowSaved(false)}>
-        <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},rgba(13,26,42,1))`,
+        <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},${C.mid||'rgba(13,26,42,1)'})`,
           border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:'100%',maxWidth:460,marginTop:20}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
             <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.18em',textTransform:'uppercase'}}>★ Saved</div>
@@ -1297,7 +1297,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                     border:`1px solid ${done?"rgba(158,40,40,0.32)":C.border}`,borderRadius:12}}>
                   <span style={{fontSize:21,lineHeight:1}}>{w.icon}</span>
                   <span style={{fontSize:13.5,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,lineHeight:1.3,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden",paddingRight:14}}>{w.title}</span>
-                  <span style={{marginTop:"auto",fontSize:9,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",color:done?C.redL:acc(w),opacity:done?1:0.75}}>{done?"\u2726 Deployed":w.tag}</span>
+                  <span style={{marginTop:"auto",fontSize:9,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",color:done?C.redL:acc(w),opacity:done||lightMode?1:0.75}}>{done?"\u2726 Deployed":w.tag}</span>
                 </button>
                 <button onClick={(e)=>{e.stopPropagation();toggleSave(w.id);}} aria-label={saved?"Remove from saved":"Save weapon"}
                   style={{position:"absolute",right:4,top:4,background:"transparent",border:"none",color:saved?C.gold:C.dim,cursor:"pointer",fontSize:15,lineHeight:1,touchAction:"manipulation",padding:8}}>{saved?"\u2605":"\u2606"}</button>
@@ -1326,7 +1326,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         const nextWeapon = WEAPONS[wIdx + 1]
         const showPrev = prevTab || prevWeapon
         const showNext = nextTab || nextWeapon
-        const pillStatic = {background:'rgba(7,14,23,0.88)',backdropFilter:'blur(12px)',border:`1px solid ${C.redB}`,color:C.redL,borderRadius:50,padding:'10px 14px',cursor:'pointer',fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.04em',boxShadow:'0 4px 16px rgba(139,26,26,0.18)',touchAction:'manipulation',transition:'all .2s',display:'flex',alignItems:'center',gap:5,maxWidth:160}
+        const pillStatic = {background:lightMode?'rgba(242,237,227,0.94)':'rgba(7,14,23,0.88)',backdropFilter:'blur(12px)',border:`1px solid ${C.redB}`,color:C.redL,borderRadius:50,padding:'10px 14px',cursor:'pointer',fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.04em',boxShadow:'0 4px 16px rgba(139,26,26,0.18)',touchAction:'manipulation',transition:'all .2s',display:'flex',alignItems:'center',gap:5,maxWidth:160}
         const pillFixed = (extra) => ({...pillStatic, position:'fixed', bottom:32, zIndex:250, ...extra})
         const fabBtn = (
           <button

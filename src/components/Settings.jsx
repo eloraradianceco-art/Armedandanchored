@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../supabaseClient'
 import ReminderSettings from './ReminderSettings'
 import AccountPrivacy from './AccountPrivacy'
+import ScriptureCredits from './ScriptureCredits'
 import Reviews from './Reviews'
 import { isNative, nativeShareText, nativeShareFile } from '../native'
 
@@ -276,6 +277,8 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
             text: C.text, muted: C.muted, card: C.bgCard, border: C.border,
             danger: lightMode ? C.red : C.redL, dangerF: C.redF, dangerB: C.redB, dark: !lightMode,
           }} />
+
+          <ScriptureCredits notices={['ESV', 'NIV', 'NKJV', 'KJV']} theme={{ text: C.text, muted: C.muted, card: C.bgCard, border: C.border }} />
 
           {/* Appearance */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>

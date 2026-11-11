@@ -705,6 +705,20 @@ function MemorizeModal({verse, onClose, get, set, C}) {
     )
   }
 
+// Safari (iOS 26) colors the status-bar area and its bottom bar from the page background,
+// and the phone's Reduce Transparency setting decides whether that area is see-through
+// (blurred page) or solid. Keeping the page background, the header and theme-color one
+// solid color makes the top of the app look the same with the setting on or off.
+function paintChrome(color) {
+  try {
+    document.documentElement.style.backgroundColor = color;
+    document.body.style.backgroundColor = color;
+    let m = document.querySelector('meta[name="theme-color"]');
+    if (!m) { m = document.createElement("meta"); m.setAttribute("name", "theme-color"); document.head.appendChild(m); }
+    m.setAttribute("content", color);
+  } catch { /* no DOM */ }
+}
+
 export default function ArmedAndAnchored({ session, profile }) {
   const [onboarded, setOnboarded] = useState(() => {
     try { return !!localStorage.getItem('aa_onboarded') } catch { return false }
@@ -713,6 +727,12 @@ export default function ArmedAndAnchored({ session, profile }) {
     try { return localStorage.getItem('aa_lightmode') === 'true' } catch { return false }
   })
   useEffect(() => { syncStatusBar(lightMode) }, [lightMode])
+  // Page background, header and theme-color share one solid color (see paintChrome).
+  // Sign-in and paywall screens are dark, so leaving the app puts it back to dark.
+  useEffect(() => {
+    paintChrome(lightMode ? "#F2EDE3" : "#070E17")
+    return () => paintChrome("#070E17")
+  }, [lightMode])
   const userId = session?.user?.id
 
   // ── Cross-device sync: hydrate state from profile when it loads ───────
@@ -1228,7 +1248,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 20% 0%,rgba(158,40,40,0.15) 0%,transparent 60%),${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text}}>
 
       {/* AS1-style compact sticky header */}
-      <div style={{position:"sticky",top:0,zIndex:200,paddingTop:"env(safe-area-inset-top, 0px)",marginTop:"calc(-1 * env(safe-area-inset-top, 0px))",background:lightMode?"rgba(242,237,227,0.97)":"rgba(7,14,23,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`}}>
+      <div style={{position:"sticky",top:0,zIndex:200,paddingTop:"env(safe-area-inset-top, 0px)",marginTop:"calc(-1 * env(safe-area-inset-top, 0px))",background:lightMode?"#F2EDE3":"#070E17",borderBottom:`1px solid ${C.border}`}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",maxWidth:1100,margin:"0 auto"}}>
           <div style={{display:"flex",alignItems:"center",gap:8,minWidth:0,flex:1}}>
             <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)",flexShrink:0}}/>
@@ -1370,7 +1390,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         )
       })()}
       {/* AS1-style compact sticky header */}
-      <div style={{position:"sticky",top:0,zIndex:200,paddingTop:"env(safe-area-inset-top, 0px)",marginTop:"calc(-1 * env(safe-area-inset-top, 0px))",background:lightMode?"rgba(242,237,227,0.97)":"rgba(7,14,23,0.97)",backdropFilter:"blur(12px)",borderBottom:`1px solid ${C.border}`}}>
+      <div style={{position:"sticky",top:0,zIndex:200,paddingTop:"env(safe-area-inset-top, 0px)",marginTop:"calc(-1 * env(safe-area-inset-top, 0px))",background:lightMode?"#F2EDE3":"#070E17",borderBottom:`1px solid ${C.border}`}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)"}}/>

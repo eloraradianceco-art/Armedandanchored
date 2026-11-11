@@ -15,9 +15,9 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
 
   const C = lightMode ? {
     bg: '#F2EDE3', bgCard: 'rgba(0,0,0,0.04)', border: 'rgba(0,0,0,0.08)',
-    cream: '#1A1209', text: '#3D2E1A', muted: '#7A6A5A', dim: '#B0A090',
-    red: '#9E2828', redL: '#C94848', redF: 'rgba(158,40,40,0.1)', redB: 'rgba(158,40,40,0.25)',
-    gold: '#8B6A30', goldF: 'rgba(139,106,48,0.12)', goldB: 'rgba(139,106,48,0.3)',
+    cream: '#1A1209', text: '#3D2E1A', muted: '#5E4E3C', dim: '#6E6052',
+    red: '#7A2420', redL: '#7A2420', redF: 'rgba(158,40,40,0.1)', redB: 'rgba(158,40,40,0.25)',
+    gold: '#5E4414', goldF: 'rgba(139,106,48,0.12)', goldB: 'rgba(139,106,48,0.3)',
   } : {
     bg: '#070E17', bgCard: 'rgba(255,255,255,0.025)', border: 'rgba(255,255,255,0.06)',
     cream: '#EDE6D6', text: '#C8BEAA', muted: '#7C90A2', dim: '#4E6070',

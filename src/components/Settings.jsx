@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
+import ReminderSettings from './ReminderSettings'
 import Reviews from './Reviews'
 
 const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
@@ -223,6 +224,11 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
               </div>
             ))}
           </div>
+
+          <ReminderSettings supabase={supabase} app="aa" theme={{
+            text: C.text, muted: C.muted, accent: lightMode ? C.red : C.redL, accentF: C.redF, accentB: C.redB,
+            card: C.bgCard, border: C.border, dark: !lightMode,
+          }} />
 
       {/* Account */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>

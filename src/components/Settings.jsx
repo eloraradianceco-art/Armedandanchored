@@ -20,9 +20,9 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
     gold: '#5E4414', goldF: 'rgba(139,106,48,0.12)', goldB: 'rgba(139,106,48,0.3)',
   } : {
     bg: '#070E17', bgCard: 'rgba(255,255,255,0.025)', border: 'rgba(255,255,255,0.06)',
-    cream: '#EDE6D6', text: '#C8BEAA', muted: '#7C90A2', dim: '#4E6070',
-    red: '#9E2828', redL: '#C94848', redF: 'rgba(158,40,40,0.14)', redB: 'rgba(158,40,40,0.32)',
-    gold: '#B08A4E', goldF: 'rgba(176,138,78,0.11)', goldB: 'rgba(176,138,78,0.28)',
+    cream: '#EDE6D6', text: '#C8BEAA', muted: '#A0AAB2', dim: '#8A9AAA',
+    red: '#E57373', redL: '#E57373', redF: 'rgba(158,40,40,0.14)', redB: 'rgba(158,40,40,0.32)',
+    gold: '#CFA968', goldF: 'rgba(176,138,78,0.11)', goldB: 'rgba(176,138,78,0.28)',
   }
 
   const referralText = `I've been using Armed & Anchored — a spiritual warfare training journal with 26 weapons of Scripture, teaching, declarations, and prayer. Worth every penny.\n\nGet it here: ${STRIPE_LINK}`

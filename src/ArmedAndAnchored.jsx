@@ -747,10 +747,10 @@ export default function ArmedAndAnchored({ session, profile }) {
     green: "#3A6248",
   } : {
     bg: "#070E17", bgCard: "rgba(255,255,255,0.025)", mid: "#0D1B2A",
-    red: "#9E2828", redL: "#C94848", redF: "rgba(158,40,40,0.14)", redB: "rgba(158,40,40,0.32)",
-    gold: "#B08A4E", goldL: "#D4A853", goldF: "rgba(176,138,78,0.11)", goldB: "rgba(176,138,78,0.28)",
-    steel: "#6A8099", steelF: "rgba(106,128,153,0.12)", steelB: "rgba(106,128,153,0.3)",
-    cream: "#EDE6D6", text: "#C8BEAA", muted: "#7C90A2", dim: "#4E6070",
+    red: "#9E2828", redL: "#E57373", redF: "rgba(158,40,40,0.14)", redB: "rgba(158,40,40,0.32)",
+    gold: "#CFA968", goldL: "#D9B66A", goldF: "rgba(176,138,78,0.11)", goldB: "rgba(176,138,78,0.28)",
+    steel: "#93A7BD", steelF: "rgba(106,128,153,0.12)", steelB: "rgba(106,128,153,0.3)",
+    cream: "#EDE6D6", text: "#C8BEAA", muted: "#A0AAB2", dim: "#8A9AAA",
     border: "rgba(255,255,255,0.06)", borderGold: "rgba(176,138,78,0.2)", borderRed: "rgba(158,40,40,0.3)",
     green: "#7C9284",
   }
@@ -1292,7 +1292,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                     border:`1px solid ${done?"rgba(158,40,40,0.32)":C.border}`,borderRadius:12}}>
                   <span style={{fontSize:21,lineHeight:1}}>{w.icon}</span>
                   <span style={{fontSize:13.5,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,lineHeight:1.3,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden",paddingRight:14}}>{w.title}</span>
-                  <span style={{marginTop:"auto",fontSize:9,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",color:done?C.redL:acc(w),opacity:done||lightMode?1:0.75}}>{done?"\u2726 Deployed":w.tag}</span>
+                  <span style={{marginTop:"auto",fontSize:9,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",color:done?C.redL:acc(w)}}>{done?"\u2726 Deployed":w.tag}</span>
                 </button>
                 <button onClick={(e)=>{e.stopPropagation();toggleSave(w.id);}} aria-label={saved?"Remove from saved":"Save weapon"}
                   style={{position:"absolute",right:4,top:4,background:"transparent",border:"none",color:saved?C.gold:C.dim,cursor:"pointer",fontSize:15,lineHeight:1,touchAction:"manipulation",padding:8}}>{saved?"\u2605":"\u2606"}</button>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
 import ReminderSettings from './ReminderSettings'
+import AccountPrivacy from './AccountPrivacy'
 import Reviews from './Reviews'
 
 const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
@@ -255,6 +256,11 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
               </button>
             </Row>
           </div>
+
+          <AccountPrivacy supabase={supabase} theme={{
+            text: C.text, muted: C.muted, card: C.bgCard, border: C.border,
+            danger: lightMode ? C.red : C.redL, dangerF: C.redF, dangerB: C.redB, dark: !lightMode,
+          }} />
 
           {/* Appearance */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>

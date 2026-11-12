@@ -42,7 +42,7 @@ export default function Auth({ isNewUser = false, onComplete, onBack, initialMod
       if (!email) { setError('Please enter your email address.'); return }
       setLoading(true)
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'https://armedandanchored.vercel.app',
+        redirectTo: 'https://armed.eloraradiance.com',
       })
       setLoading(false)
       if (error) { setError(error.message); return }

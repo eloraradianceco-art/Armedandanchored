@@ -54,7 +54,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
       const get = (wId, key) => data?.find(e => String(e.weapon_id) === String(wId) && e.field_key === key)?.field_value || ''
       const lines = []
       lines.push('ARMED & ANCHORED — SPIRITUAL WARFARE JOURNAL')
-      lines.push('Elora Radiance Co. | armedandanchored.vercel.app')
+      lines.push('Elora Radiance Co. | armed.eloraradiance.com')
       lines.push(`Exported: ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`)
       lines.push('='.repeat(50))
       if (weapons) {
@@ -324,11 +324,11 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
               The rest of the Elora Radiance ecosystem — Scripture-based tools for the whole Christian life.
             </p>
             {[
-              { label: 'Anchored Steps · Year 1', desc: '52 weeks of faith in action', url: 'https://anchored-steps.vercel.app/', icon: '⚓' },
-              { label: 'Anchored Steps · Year 2', desc: '52 weeks of deeper study', url: 'https://anchored-steps-year2.vercel.app/', icon: '⚓' },
-              { label: 'The Red Letters', desc: 'The words of Jesus by theme — free', url: 'https://redletters.vercel.app/', icon: '✦' },
-              { label: 'Anchored Verse', desc: 'Scripture for every emotion — free', url: 'https://anchoredverse.vercel.app/', icon: '📖' },
-              { label: 'The Living Planner', desc: 'Faith-centered life planner', url: 'https://the-living-planner.vercel.app/', icon: '📓' },
+              { label: 'Anchored Steps · Year 1', desc: '52 weeks of faith in action', url: 'https://steps.eloraradiance.com/', icon: '⚓' },
+              { label: 'Anchored Steps · Year 2', desc: '52 weeks of deeper study', url: 'https://steps2.eloraradiance.com/', icon: '⚓' },
+              { label: 'The Red Letters', desc: 'The words of Jesus by theme — free', url: 'https://redletters.eloraradiance.com/', icon: '✦' },
+              { label: 'Anchored Verse', desc: 'Scripture for every emotion — free', url: 'https://verse.eloraradiance.com/', icon: '📖' },
+              { label: 'The Living Planner', desc: 'Faith-centered life planner', url: 'https://planner.eloraradiance.com/', icon: '📓' },
             ].map(app => (
               <a key={app.url} href={app.url} target="_blank" rel="noopener noreferrer" style={{
                 display: 'flex', alignItems: 'center', gap: 14,

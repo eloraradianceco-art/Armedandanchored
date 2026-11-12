@@ -66,7 +66,7 @@ export default function ResetPassword() {
       setError(error.message)
     } else {
       setMessage("Password updated. Taking you to your arsenal...")
-      setTimeout(() => { window.location.href = "https://armedandanchored.vercel.app" }, 2000)
+      setTimeout(() => { window.location.href = "https://armed.eloraradiance.com" }, 2000)
     }
     setLoading(false)
   }

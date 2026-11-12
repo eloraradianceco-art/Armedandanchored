@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { toPng } from 'html-to-image'
 import { isNative, nativeShareImage } from '../native'
 
-const TAGLINE = 'Stand firm. Fight from victory. — armedandanchored.vercel.app'
+const TAGLINE = 'Stand firm. Fight from victory. — armed.eloraradiance.com'
 
 export default function ShareCard({ weapon, onClose, initialType = 'scripture' }) {
   const cardRef = useRef(null)
@@ -27,32 +27,32 @@ export default function ShareCard({ weapon, onClose, initialType = 'scripture' }
       label: 'SCRIPTURE',
       main: `"${scripture.text}"`,
       sub: scripture.ref,
-      caption: `"${scripture.text}" — ${scripture.ref}\n\nWeapon ${weapon.id}: ${weapon.title}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmedandanchored.vercel.app`,
+      caption: `"${scripture.text}" — ${scripture.ref}\n\nWeapon ${weapon.id}: ${weapon.title}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmed.eloraradiance.com`,
     }
     if (type === 'teaching') return {
       label: 'WARFARE TEACHING',
       main: weapon.teaching,
       sub: null,
-      caption: `${weapon.icon} ${weapon.title} — Warfare Teaching\n\n${weapon.teaching}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmedandanchored.vercel.app`,
+      caption: `${weapon.icon} ${weapon.title} — Warfare Teaching\n\n${weapon.teaching}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmed.eloraradiance.com`,
     }
     if (type === 'tactics') return {
       label: 'KNOW THE ENEMY',
       main: weapon.tactics,
       sub: null,
       isList: true,
-      caption: `${weapon.icon} ${weapon.title} — Know the Enemy's Tactics\n\n${weapon.tactics.map((t,i)=>`${i+1}. ${t}`).join('\n')}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmedandanchored.vercel.app`,
+      caption: `${weapon.icon} ${weapon.title} — Know the Enemy's Tactics\n\n${weapon.tactics.map((t,i)=>`${i+1}. ${t}`).join('\n')}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmed.eloraradiance.com`,
     }
     if (type === 'declaration') return {
       label: 'DECLARATION',
       main: `"${weapon.declaration}"`,
       sub: null,
-      caption: `${weapon.icon} ${weapon.title} — Declaration\n\n"${weapon.declaration}"\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmedandanchored.vercel.app`,
+      caption: `${weapon.icon} ${weapon.title} — Declaration\n\n"${weapon.declaration}"\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmed.eloraradiance.com`,
     }
     if (type === 'prayer') return {
       label: 'WAR PRAYER',
       main: weapon.prayer,
       sub: null,
-      caption: `${weapon.icon} ${weapon.title} — War Prayer\n\n${weapon.prayer}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmedandanchored.vercel.app`,
+      caption: `${weapon.icon} ${weapon.title} — War Prayer\n\n${weapon.prayer}\n\nArmed & Anchored — Spiritual Warfare Training Journal\narmed.eloraradiance.com`,
     }
     return { label: '', main: '', sub: null, caption: '' }
   }

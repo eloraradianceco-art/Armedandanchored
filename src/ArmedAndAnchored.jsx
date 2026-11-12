@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from './supabaseClient'
-import Onboarding from './components/Onboarding.jsx'
 import ShareCard from './components/ShareCard'
 import Dashboard from './components/Dashboard'
 import Settings from './components/Settings'
@@ -719,9 +718,7 @@ function paintChrome(color) {
 }
 
 export default function ArmedAndAnchored({ session, profile }) {
-  const [onboarded, setOnboarded] = useState(() => {
-    try { return !!localStorage.getItem('aa_onboarded') } catch { return false }
-  })
+  // The intro (Onboarding) is shown by App.jsx before this screen loads.
   const [lightMode, setLightMode] = useState(() => {
     try { return localStorage.getItem('aa_lightmode') === 'true' } catch { return false }
   })
@@ -744,17 +741,9 @@ export default function ArmedAndAnchored({ session, profile }) {
       setLightMode(profile.light_mode)
       try { localStorage.setItem('aa_lightmode', String(profile.light_mode)) } catch {}
     }
-    if (profile.onboarded) {
-      try { localStorage.setItem('aa_onboarded', 'true') } catch {}
-      setOnboarded(true)
-      setShowOnboarding(false)
-    }
   }, [profile])
 
   // ── STATE ──────────────────────────────────────────────────────────────
-  const [showOnboarding, setShowOnboarding] = useState(
-    () => !localStorage.getItem('aa_onboarded')
-  )
   const [entries, setEntries] = useState([])
   // Dynamic palette — switches with lightMode
   const C = lightMode ? {
@@ -1071,30 +1060,6 @@ export default function ArmedAndAnchored({ session, profile }) {
     s.textContent = '@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }'
     document.head.appendChild(s)
   }
-
-  // Onboarding
-  if (showOnboarding) return (
-    <Onboarding
-      onComplete={() => {
-        try { localStorage.setItem('aa_onboarded', 'true') } catch {}
-        setShowOnboarding(false)
-        if (userId) supabase.from('aa_profiles').update({ onboarded: true }).eq('id', userId)
-      }}
-      C={C}
-    />
-  )
-
-  // Onboarding
-  if (!onboarded) return (
-    <Onboarding
-      C={C}
-      onComplete={() => {
-        try { localStorage.setItem('aa_onboarded', 'true') } catch {}
-        setOnboarded(true)
-        if (userId) supabase.from('aa_profiles').update({ onboarded: true }).eq('id', userId)
-      }}
-    />
-  )
 
   // Dashboard overlay
   if (showDashboard) return (

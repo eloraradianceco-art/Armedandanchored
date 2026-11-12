@@ -36,6 +36,11 @@ function AppInner() {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showOnboarding, setShowOnboarding] = useState(false)
+  // The intro shows once per account: remembered on this device and on the account (aa_profiles.onboarded),
+  // so a new device or a new address doesn't show it again. Kept in state so finishing it re-renders.
+  const [onboarded, setOnboarded] = useState(() => {
+    try { return !!localStorage.getItem('aa_onboarded') } catch { return false }
+  })
   const [showSignIn, setShowSignIn] = useState(false)
   const [showPasswordReset, setShowPasswordReset] = useState(false)
   const [newPassword, setNewPassword] = useState('')
@@ -86,6 +91,10 @@ function AppInner() {
       const { data, error } = await supabase.rpc('aa_load_profile', args)
       if (error) throw error
       setProfile(data || null)
+      if (data?.onboarded) {
+        try { localStorage.setItem('aa_onboarded', 'true') } catch {}
+        setOnboarded(true)
+      }
       if (data?.paid && pending) {
         localStorage.removeItem('pending_stripe_session')
         if (returnedFromCheckout) window.history.replaceState({}, '', window.location.pathname)
@@ -140,8 +149,15 @@ function AppInner() {
   }
 
   const handleOnboardingComplete = () => {
+    try { localStorage.setItem('aa_onboarded', 'true') } catch {}
+    setOnboarded(true)
     setShowOnboarding(false)
-    localStorage.setItem('aa_onboarded', 'true')
+    const uid = session?.user?.id
+    if (uid) {
+      // .then() is what sends the request: a Supabase query that is never awaited never runs.
+      supabase.from('aa_profiles').update({ onboarded: true }).eq('id', uid)
+        .then(({ error }) => { if (error) console.warn('onboarded sync:', error.message) })
+    }
   }
 
   // ── Password Reset Screen ─────────────────────────────────────────────
@@ -222,7 +238,7 @@ function AppInner() {
   }
 
   // Onboarding
-  if (showOnboarding || (!localStorage.getItem('aa_onboarded') && profile?.paid)) {
+  if (showOnboarding || !onboarded) {
     return <Onboarding onComplete={handleOnboardingComplete}/>
   }
 

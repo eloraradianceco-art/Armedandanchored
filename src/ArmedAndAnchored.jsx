@@ -4,7 +4,7 @@ import ShareCard from './components/ShareCard'
 import Dashboard from './components/Dashboard'
 import Settings from './components/Settings'
 import WeaponTool from './components/WeaponTool'
-import Drill from './components/Drill'
+import Drill, { useToday, verseOfDay } from './components/Drill'
 
 // C palette defined dynamically inside component (light/dark mode);
 
@@ -766,6 +766,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   const [selected, setSelected] = useState(null)
   const [tab, setTab] = useState("scripture")
+  const today = useToday()   // rolls over at midnight so the verse of the day changes while the app is open
   const [declared, setDeclared] = useState({})
   const [day, setDay] = useState(-1)
   const [deployFlash, setDeployFlash] = useState({})
@@ -1248,9 +1249,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
         {/* Verse of the day: one quiet line */}
         {(() => {
-          const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0).getTime()) / 86400000)
-          const all = WEAPONS.flatMap(w => w.scriptures.map(s => ({...s, weapon:w})))
-          const daily = all[dayOfYear % all.length]
+          const daily = verseOfDay(WEAPONS, today)
           return (
             <button onClick={()=>{setSelected(daily.weapon.id);setTab("scripture");window.scrollTo(0,0);}}
               style={{display:"block",width:"100%",textAlign:"left",fontFamily:"'EB Garamond',Georgia,serif",background:"transparent",border:"none",borderTop:`1px solid ${C.border}`,borderBottom:`1px solid ${C.border}`,padding:"14px 2px",margin:"18px 0 0",cursor:"pointer"}}>

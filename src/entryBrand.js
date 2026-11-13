@@ -1,0 +1,35 @@
+// Words and colors for this app's welcome, sign-in and unlock screens (components/EntryScreens.jsx).
+export const BRAND = {
+  name: 'Armed & Anchored',
+  shortName: 'Armed & Anchored',
+  icon: '/icon.png',
+  tagline: 'Spiritual Warfare Training Journal',
+  verse: {
+    text: 'Put on the whole armor of God, that you may be able to stand against the schemes of the devil.',
+    ref: 'Ephesians 6:11 · ESV',
+  },
+  features: [
+    { icon: '⚔️', text: '26 weapons of the believer: teaching, enemy tactics, declaration and prayer for each' },
+    { icon: '🎯', text: 'A five-minute Daily Drill, and an Under Attack button for the moment it hits' },
+    { icon: '🧠', text: 'Scripture memorization in three modes' },
+    { icon: '✍️', text: 'Your battle journal, saved to your account on every device' },
+    { icon: '📊', text: 'Progress across your whole arsenal' },
+  ],
+  cta: '⚔️ Get Lifetime Access',
+  fine: 'One-time $39 · Instant access · All 26 weapons, yours forever',
+  signInPrompt: 'Already have access?',
+  signinSubtitle: 'Welcome back, warrior',
+  colors: {
+    bg: '#070E17',
+    glow: 'radial-gradient(ellipse at 20% 0%, rgba(158,40,40,0.22) 0%, transparent 55%), radial-gradient(ellipse at 80% 100%, rgba(176,138,78,0.10) 0%, transparent 50%)',
+    eyebrow: '#E08A8A', title: '#EDE6D6', text: '#D6CCB8', muted: '#9CB0C2', accent: '#CFA968', link: '#E8A3A3',
+    card: 'linear-gradient(145deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015))', cardBorder: 'rgba(176,138,78,0.28)',
+    divider: 'rgba(255,255,255,0.08)',
+    ctaBg: 'linear-gradient(135deg, rgba(158,40,40,0.62), rgba(158,40,40,0.28))', ctaBorder: 'rgba(201,72,72,0.65)', ctaText: '#F2EDE3',
+    panel: 'rgba(13,26,42,0.97)', panelBorder: 'rgba(176,138,78,0.22)',
+    inputBg: 'rgba(255,255,255,0.045)', inputBorder: 'rgba(176,138,78,0.3)', inputText: '#EDE6D6',
+    tabBg: 'rgba(255,255,255,0.03)', tabActiveBg: 'rgba(158,40,40,0.34)', tabActiveText: '#F2EDE3',
+    errorBg: 'rgba(201,72,72,0.12)', errorBorder: 'rgba(201,72,72,0.42)', errorText: '#F2A6A6',
+    okBg: 'rgba(124,146,132,0.14)', okBorder: 'rgba(157,181,166,0.42)', okText: '#BFD6C7',
+  },
+}

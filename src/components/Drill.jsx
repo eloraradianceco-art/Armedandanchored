@@ -12,10 +12,35 @@ import { createPortal } from "react-dom";
    Day-level records live on weapon_id 0:
      drill_<YYYY-MM-DD> = weapon id drilled that day
      battles = JSON list of Under Attack responses
+   Today's drill and the verse of the day rotate with the calendar date (local midnight), so every
+   device shows the same ones on the same day and they change every 24 hours (2026-11-12).
    ───────────────────────────────────────────────────────────── */
 
 const pad = n => String(n).padStart(2, "0");
-const localDay = (d = new Date()) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+export const localDay = (d = new Date()) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+// Whole days since 1970-01-01 for a local YYYY-MM-DD (daylight-saving safe)
+export const dayNumber = (ymd = localDay()) => { const [y, m, d] = String(ymd).split("-").map(Number); return Math.floor(Date.UTC(y, m - 1, d) / 86400000); };
+// The weapon drilled today: one per day, cycling through the arsenal
+export const drillOfDay = (weapons, ymd = localDay()) => weapons[dayNumber(ymd) % weapons.length];
+// Verse of the day: from a weapon half the arsenal away from today's drill, a different verse each time round
+export const verseOfDay = (weapons, ymd = localDay()) => {
+  const n = dayNumber(ymd), N = weapons.length;
+  const w = weapons[(n + Math.floor(N / 2)) % N];
+  return { ...w.scriptures[Math.floor(n / N) % w.scriptures.length], weapon: w };
+};
+// Today's date that rolls over at local midnight, including when the app comes back from the background
+export function useToday() {
+  const [day, setDay] = useState(localDay);
+  useEffect(() => {
+    const check = () => setDay(prev => { const now = localDay(); return now === prev ? prev : now; });
+    const n = new Date(); const next = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, 0, 0, 2);
+    const t = setTimeout(check, next - n);
+    const onVis = () => { if (document.visibilityState === "visible") check(); };
+    document.addEventListener("visibilitychange", onVis); window.addEventListener("focus", check); window.addEventListener("pageshow", check);
+    return () => { clearTimeout(t); document.removeEventListener("visibilitychange", onVis); window.removeEventListener("focus", check); window.removeEventListener("pageshow", check); };
+  }, [day]);
+  return day;
+}
 const shortRef = r => String(r || "").replace(/\s*\([^)]*\)\s*$/, "");
 const plural = (n, one, many) => n + " " + (n === 1 ? one : many);
 const paras = t => String(t || "").replace(/\t+/g, " ").split(/\n\s*\n/).map(s => s.trim()).filter(Boolean);
@@ -227,7 +252,7 @@ export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare
   const [toast, setToast] = useState("");
   const ovRef = useRef(null);
   const closeRef = useRef(null);
-  const today = localDay();
+  const today = useToday();
   const theme = "dr-root " + (lightMode ? "dr-light" : "dr-dark");
   const byId = id => weapons.find(w => w.id === id);
 
@@ -245,14 +270,10 @@ export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare
     return n;
   }, [drillDays]);
   const doneToday = drillDays[today] ? byId(drillDays[today]) : null;
-  const suggested = useMemo(() => {
-    const next = weapons.find(w => !drilledSet.has(w.id));
-    if (next) return next;
-    // Every weapon drilled: start the round again from the one drilled longest ago
-    const last = {}; Object.entries(drillDays).forEach(([d, id]) => { if (!last[id] || d > last[id]) last[id] = d; });
-    return weapons.slice().sort((a, b) => String(last[a.id] || "").localeCompare(String(last[b.id] || "")))[0];
-  }, [weapons, drilledSet, drillDays]);
+  const suggested = useMemo(() => drillOfDay(weapons, today), [weapons, today]);
+  const tomorrowWeapon = weapons[(dayNumber(today) + 1) % weapons.length];
   const [pick, setPick] = useState(null);
+  useEffect(() => { setPick(null); }, [today]);   // a "Change" pick lasts for the day it was made
   const todayWeapon = pick ? byId(pick) : suggested;
 
   /* ---- toast ---- */
@@ -386,7 +407,6 @@ export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare
       {done && (() => {
         const w = byId(done.weaponId);
         const sos = done.flow === "sos";
-        const nextUp = weapons.find(x => !drilledSet.has(x.id) && x.id !== w.id);
         return (
           <div className="dr-done">
             <div className="dr-badge"><Shield /></div>
@@ -400,7 +420,7 @@ export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare
               <div className="dr-arsenal" role="img" aria-label={drilledSet.size + " of " + weapons.length + " weapons drilled"}>
                 {weapons.map(x => <span key={x.id} className={drilledSet.has(x.id) ? "is-done" : ""} />)}
               </div>
-              <p className="dr-meta">{drilledSet.size} of {weapons.length} weapons drilled{nextUp ? " · Tomorrow: " + nextUp.title : ""}</p>
+              <p className="dr-meta">{drilledSet.size} of {weapons.length} weapons drilled · Tomorrow: {tomorrowWeapon.icon} {tomorrowWeapon.title}</p>
             </>)}
             <button className="dr-btn dr-primary dr-wide" onClick={close}>Done</button>
             <button className="dr-link" onClick={() => { close(); onOpenWeapon && onOpenWeapon(w.id); }}>Open the full weapon</button>

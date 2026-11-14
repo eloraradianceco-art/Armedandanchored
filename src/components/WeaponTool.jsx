@@ -10,7 +10,7 @@ const inp = (C) => ({
 })
 const ta = (C, rows=3) => ({...inp(C), resize:'vertical', lineHeight:1.7, minHeight: rows*32 })
 const lbl = (C) => ({
-  fontSize:9,color:C.gold,letterSpacing:'0.14em',
+  fontSize:11,color:C.gold,letterSpacing:'0.14em',
   textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",
   marginBottom:6,display:'block',
 })
@@ -33,7 +33,7 @@ const saveBtn = (C,saved) => ({
   letterSpacing:'0.08em',transition:'all .25s',marginTop:8,
 })
 const tag = (C,color='red') => ({
-  fontSize:9,color:color==='gold'?C.gold:C.redL,
+  fontSize:11,color:color==='gold'?C.gold:C.redL,
   fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',
   textTransform:'uppercase',marginBottom:4,display:'block',
 })
@@ -42,7 +42,7 @@ const dateStr = () => new Date().toLocaleDateString('en-US',{month:'short',day:'
 function Section({title,C,children}) {
   return (
     <div style={{marginBottom:20}}>
-      <div style={{fontSize:9,color:C.muted,letterSpacing:'0.16em',textTransform:'uppercase',
+      <div style={{fontSize:11,color:C.muted,letterSpacing:'0.16em',textTransform:'uppercase',
         fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>{title}</div>
       {children}
     </div>
@@ -52,11 +52,11 @@ function Section({title,C,children}) {
 function Entry({C,date,children,onDelete}) {
   return (
     <div style={{...card(C),position:'relative'}}>
-      <div style={{fontSize:10,color:C.dim,marginBottom:8,fontFamily:"'Cinzel',Georgia,serif"}}>{date}</div>
+      <div style={{fontSize:11,color:C.dim,marginBottom:8,fontFamily:"'Cinzel',Georgia,serif"}}>{date}</div>
       {children}
       {onDelete && (
         <button onClick={onDelete} style={{position:'absolute',top:6,right:8,background:'rgba(255,255,255,0.05)',
-          border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:13,
+          border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:16,
           width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',
           lineHeight:1}}>×</button>
       )}
@@ -116,9 +116,9 @@ function BattleLog({C, get, set}) {
         <Section title={`Battle Log (${entries.length})`} C={C}>
           {entries.map((e,i)=>(
             <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
-              <span style={{fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",
+              <span style={{fontSize:11,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",
                 letterSpacing:'0.1em',textTransform:'capitalize',marginBottom:6,display:'block'}}>{e.category}</span>
-              <p style={{fontSize:15,color:C.text,lineHeight:1.7,margin:0}}>{e.notes}</p>
+              <p style={{fontSize:16,color:C.text,lineHeight:1.7,margin:0}}>{e.notes}</p>
             </Entry>
           ))}
         </Section>
@@ -170,13 +170,13 @@ function ArmorCheck({C, get, set}) {
               <div style={{width:22,height:22,borderRadius:6,border:`2px solid ${on?C.redL:C.dim}`,
                 background:on?C.redL:'transparent',flexShrink:0,marginTop:1,
                 display:'flex',alignItems:'center',justifyContent:'center',
-                fontSize:12,color:'#fff',transition:'all .2s'}}>
+                fontSize:15,color:'#fff',transition:'all .2s'}}>
                 {on?'✓':''}
               </div>
               <div>
                 <div style={{fontSize:13,color:on?C.cream:C.text,fontFamily:"'Cinzel',Georgia,serif",
                   fontWeight:600,marginBottom:2}}>{p.label}</div>
-                <div style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.5}}>{p.desc}</div>
+                <div style={{fontSize:16,color:C.muted,fontStyle:'italic',lineHeight:1.5}}>{p.desc}</div>
               </div>
             </button>
           )
@@ -234,10 +234,10 @@ function StrongholdBreaker({C, get, set}) {
               <div key={i} style={{...card(C),borderLeft:`3px solid ${C.redL}`}}>
                 <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
                   <span style={tag(C)}>Day {days} of Breaking</span>
-                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:13,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
+                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:16,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
                 </div>
-                <p style={{fontSize:13,color:C.muted,fontStyle:'italic',marginBottom:4}}>Lie: "{e.lie}"</p>
-                <p style={{fontSize:15,color:C.cream,lineHeight:1.65,marginBottom:e.scripture?6:10}}>Truth: {e.truth}</p>
+                <p style={{fontSize:16,color:C.muted,fontStyle:'italic',marginBottom:4}}>Lie: "{e.lie}"</p>
+                <p style={{fontSize:16,color:C.cream,lineHeight:1.65,marginBottom:e.scripture?6:10}}>Truth: {e.truth}</p>
                 {e.scripture && <p style={{fontSize:12,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",marginBottom:10}}>{e.scripture}</p>}
                 <button onClick={()=>markToday(i)} style={{
                   width:'100%',background:declaredToday?'rgba(124,146,132,0.15)':C.redF,
@@ -298,10 +298,10 @@ function AttackPatternLog({C, get, set}) {
         <Section title={`Pattern Log (${entries.length})`} C={C}>
           {entries.map((e,i)=>(
             <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
-              <span style={{fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",
+              <span style={{fontSize:11,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",
                 letterSpacing:'0.1em',textTransform:'capitalize',marginBottom:6,display:'block'}}>{e.type}</span>
-              <p style={{fontSize:15,color:C.text,lineHeight:1.65,marginBottom:e.response?8:0}}>{e.method}</p>
-              {e.response && <p style={{fontSize:14,color:C.green,fontStyle:'italic',lineHeight:1.6,margin:0}}>Response: {e.response}</p>}
+              <p style={{fontSize:16,color:C.text,lineHeight:1.65,marginBottom:e.response?8:0}}>{e.method}</p>
+              {e.response && <p style={{fontSize:16,color:C.green,fontStyle:'italic',lineHeight:1.6,margin:0}}>Response: {e.response}</p>}
             </Entry>
           ))}
         </Section>
@@ -362,9 +362,9 @@ function FastTracker({C, get, set}) {
       ) : (
         <Section title="Active Fast" C={C}>
           <div style={{background:C.redF,border:`1px solid ${C.redB}`,borderRadius:14,padding:'16px',marginBottom:14}}>
-            <div style={{fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.1em',marginBottom:6}}>🔥 FASTING NOW — {active.type} · {active.duration} day{active.duration>1?'s':''}</div>
+            <div style={{fontSize:11,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.1em',marginBottom:6}}>🔥 FASTING NOW — {active.type} · {active.duration} day{active.duration>1?'s':''}</div>
             <p style={{fontSize:16,color:C.cream,lineHeight:1.75,margin:0,fontStyle:'italic'}}>{active.intention}</p>
-            <div style={{fontSize:11,color:C.muted,marginTop:6}}>Started {active.startDate}</div>
+            <div style={{fontSize:14,color:C.muted,marginTop:6}}>Started {active.startDate}</div>
           </div>
           <label style={lbl(C)}>Daily Notes</label>
           <textarea style={ta(C)} rows={3} value={notes} onChange={e=>setNotes(e.target.value)}
@@ -383,9 +383,9 @@ function FastTracker({C, get, set}) {
         <Section title="Completed Fasts" C={C}>
           {entries.filter(e=>e.endDate).map((e,i)=>(
             <div key={i} style={card(C)}>
-              <div style={{fontSize:10,color:C.muted,marginBottom:4}}>{e.startDate} → {e.endDate} · {e.type} · {e.duration}d</div>
-              <p style={{fontSize:14,color:C.cream,fontStyle:'italic',lineHeight:1.65,marginBottom:e.revelations?8:0}}>{e.intention}</p>
-              {e.revelations && <p style={{fontSize:13,color:C.gold,lineHeight:1.65,margin:0}}>✦ {e.revelations}</p>}
+              <div style={{fontSize:14,color:C.muted,marginBottom:4}}>{e.startDate} → {e.endDate} · {e.type} · {e.duration}d</div>
+              <p style={{fontSize:16,color:C.cream,fontStyle:'italic',lineHeight:1.65,marginBottom:e.revelations?8:0}}>{e.intention}</p>
+              {e.revelations && <p style={{fontSize:16,color:C.gold,lineHeight:1.65,margin:0}}>✦ {e.revelations}</p>}
             </div>
           ))}
         </Section>
@@ -433,7 +433,7 @@ function DeclarationBuilder({C, get, set}) {
                   <span style={{fontSize:11,color:spokenToday?C.green:C.redL,fontFamily:"'Cinzel',Georgia,serif"}}>
                     {days} day{days!==1?'s':''} declared
                   </span>
-                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:13,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
+                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:16,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
                 </div>
                 <p style={{fontSize:16,color:C.cream,fontStyle:'italic',lineHeight:1.8,marginBottom:10}}>"{e.text}"</p>
                 <button onClick={()=>markToday(i)} style={{
@@ -487,11 +487,11 @@ function ThoughtJournal({C, get, set}) {
           {entries.map((e,i)=>(
             <div key={i} style={card(C)}>
               <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
-                <span style={{fontSize:10,color:C.dim}}>{e.date}</span>
-                <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:13,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
+                <span style={{fontSize:14,color:C.dim}}>{e.date}</span>
+                <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:16,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
               </div>
-              <p style={{fontSize:13,color:C.muted,fontStyle:'italic',marginBottom:4,lineHeight:1.6}}>Lie: "{e.lie}"</p>
-              <p style={{fontSize:15,color:C.cream,lineHeight:1.7,marginBottom:10}}>Truth: {e.truth}</p>
+              <p style={{fontSize:16,color:C.muted,fontStyle:'italic',marginBottom:4,lineHeight:1.6}}>Lie: "{e.lie}"</p>
+              <p style={{fontSize:16,color:C.cream,lineHeight:1.7,marginBottom:10}}>Truth: {e.truth}</p>
               <button onClick={()=>renew(i)} style={{
                 width:'100%',background:C.redF,border:`1px solid ${C.redB}`,
                 color:C.redL,padding:'8px',borderRadius:9,cursor:'pointer',
@@ -527,7 +527,7 @@ function FearInventory({C, get, set}) {
   return (
     <div>
       <Section title="Name a Fear" C={C}>
-        <p style={{fontSize:14,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:12}}>
+        <p style={{fontSize:16,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:12}}>
           Name it specifically. A named fear is a confronted fear.
         </p>
         <label style={lbl(C)}>The Fear</label>
@@ -544,11 +544,11 @@ function FearInventory({C, get, set}) {
           {entries.map((e,i)=>(
             <div key={i} style={{...card(C),opacity:e.groundLost?0.6:1,borderLeft:`3px solid ${e.groundLost?C.green:C.redL}`}}>
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:6}}>
-                <p style={{fontSize:15,color:e.groundLost?C.muted:C.cream,lineHeight:1.65,
+                <p style={{fontSize:16,color:e.groundLost?C.muted:C.cream,lineHeight:1.65,
                   margin:0,textDecoration:e.groundLost?'line-through':'none',flex:1}}>{e.fear}</p>
-                <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:13,flexShrink:0,marginLeft:8}}>×</button>
+                <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:16,flexShrink:0,marginLeft:8}}>×</button>
               </div>
-              {e.scripture && <p style={{fontSize:13,color:C.gold,fontStyle:'italic',lineHeight:1.65,marginBottom:8}}>{e.scripture}</p>}
+              {e.scripture && <p style={{fontSize:16,color:C.gold,fontStyle:'italic',lineHeight:1.65,marginBottom:8}}>{e.scripture}</p>}
               <button onClick={()=>toggleGround(i)} style={{
                 width:'100%',background:e.groundLost?'rgba(124,146,132,0.15)':C.redF,
                 border:`1px solid ${e.groundLost?'rgba(124,146,132,0.4)':C.redB}`,
@@ -593,8 +593,8 @@ function WorshipLog({C, get, set}) {
         <Section title={`Worship Log (${entries.length})`} C={C}>
           {entries.map((e,i)=>(
             <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
-              <p style={{fontSize:15,color:C.text,lineHeight:1.7,marginBottom:e.shift?8:0}}>{e.notes}</p>
-              {e.shift && <p style={{fontSize:13,color:C.gold,fontStyle:'italic',lineHeight:1.6,margin:0}}>✦ Shift: {e.shift}</p>}
+              <p style={{fontSize:16,color:C.text,lineHeight:1.7,marginBottom:e.shift?8:0}}>{e.notes}</p>
+              {e.shift && <p style={{fontSize:16,color:C.gold,fontStyle:'italic',lineHeight:1.6,margin:0}}>✦ Shift: {e.shift}</p>}
             </Entry>
           ))}
         </Section>
@@ -644,10 +644,10 @@ function GenerationalMap({C, get, set}) {
             }}>
               <div style={{width:18,height:18,borderRadius:4,border:`2px solid ${p.broken?C.green:C.redL}`,
                 background:p.broken?C.green:'transparent',flexShrink:0,display:'flex',
-                alignItems:'center',justifyContent:'center',fontSize:11,color:'#fff'}}>
+                alignItems:'center',justifyContent:'center',fontSize:14,color:'#fff'}}>
                 {p.broken?'✓':''}
               </div>
-              <span style={{fontSize:14,color:p.broken?C.muted:C.cream,
+              <span style={{fontSize:16,color:p.broken?C.muted:C.cream,
                 textDecoration:p.broken?'line-through':'none'}}>{p.text}</span>
             </button>
           ))}
@@ -660,8 +660,8 @@ function GenerationalMap({C, get, set}) {
         <div style={{marginTop:12}}>
           {d.declarations.map((dec,i)=>(
             <div key={i} style={{...card(C),borderLeft:`3px solid ${C.gold}`}}>
-              <div style={{fontSize:10,color:C.dim,marginBottom:6}}>{dec.date}</div>
-              <p style={{fontSize:15,color:C.cream,fontStyle:'italic',lineHeight:1.75,margin:0}}>"{dec.text}"</p>
+              <div style={{fontSize:14,color:C.dim,marginBottom:6}}>{dec.date}</div>
+              <p style={{fontSize:16,color:C.cream,fontStyle:'italic',lineHeight:1.75,margin:0}}>"{dec.text}"</p>
             </div>
           ))}
         </div>
@@ -713,10 +713,10 @@ function VoiceTracker({C, get, set}) {
         <Section title={`Voice Log (${entries.length})`} C={C}>
           {entries.map((e,i)=>(
             <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
-              <span style={{fontSize:10,color:srcColor(e.source),fontFamily:"'Cinzel',Georgia,serif",
+              <span style={{fontSize:11,color:srcColor(e.source),fontFamily:"'Cinzel',Georgia,serif",
                 letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:6,display:'block'}}>{e.source}</span>
-              <p style={{fontSize:15,color:C.text,lineHeight:1.65,marginBottom:e.response?8:0}}>{e.thought}</p>
-              {e.response && <p style={{fontSize:13,color:C.green,fontStyle:'italic',lineHeight:1.6,margin:0}}>Response: {e.response}</p>}
+              <p style={{fontSize:16,color:C.text,lineHeight:1.65,marginBottom:e.response?8:0}}>{e.thought}</p>
+              {e.response && <p style={{fontSize:16,color:C.green,fontStyle:'italic',lineHeight:1.6,margin:0}}>Response: {e.response}</p>}
             </Entry>
           ))}
         </Section>
@@ -758,9 +758,9 @@ function AuthorityLog({C, get, set}) {
         <Section title={`Authority Log (${entries.length})`} C={C}>
           {entries.map((e,i)=>(
             <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
-              <p style={{fontSize:15,color:C.text,lineHeight:1.65,marginBottom:e.action?8:0}}>{e.situation}</p>
-              {e.action && <p style={{fontSize:14,color:C.cream,lineHeight:1.6,marginBottom:e.result?6:0}}>Action: {e.action}</p>}
-              {e.result && <p style={{fontSize:13,color:C.green,fontStyle:'italic',lineHeight:1.6,margin:0}}>Result: {e.result}</p>}
+              <p style={{fontSize:16,color:C.text,lineHeight:1.65,marginBottom:e.action?8:0}}>{e.situation}</p>
+              {e.action && <p style={{fontSize:16,color:C.cream,lineHeight:1.6,marginBottom:e.result?6:0}}>Action: {e.action}</p>}
+              {e.result && <p style={{fontSize:16,color:C.green,fontStyle:'italic',lineHeight:1.6,margin:0}}>Result: {e.result}</p>}
             </Entry>
           ))}
         </Section>
@@ -810,11 +810,11 @@ function IntercessionList({C, get, set}) {
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}}>
                 <span style={{fontSize:14,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600}}>{e.name}</span>
                 <div style={{display:'flex',gap:6,alignItems:'center'}}>
-                  {e.breakthrough && <span style={{fontSize:10,color:C.green,fontFamily:"'Cinzel',Georgia,serif"}}>✦ Breakthrough</span>}
-                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:13,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
+                  {e.breakthrough && <span style={{fontSize:11,color:C.green,fontFamily:"'Cinzel',Georgia,serif"}}>✦ Breakthrough</span>}
+                  <button onClick={()=>save(entries.filter((_,j)=>j!==i))} style={{background:'rgba(255,255,255,0.05)',border:`1px solid ${C.border}`,color:C.muted,cursor:'pointer',fontSize:16,width:28,height:28,borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1,flexShrink:0}}>×</button>
                 </div>
               </div>
-              {e.request && <p style={{fontSize:14,color:C.text,lineHeight:1.65,marginBottom:10}}>{e.request}</p>}
+              {e.request && <p style={{fontSize:16,color:C.text,lineHeight:1.65,marginBottom:10}}>{e.request}</p>}
               <div style={{display:'flex',gap:7}}>
                 <button onClick={()=>pray(i)} style={{
                   flex:1,background:C.goldF,border:`1px solid ${C.goldB}`,
@@ -868,8 +868,8 @@ function CovenantTracker({C, get, set}) {
           <div style={{marginTop:12}}>
             {d.commitments.map((c,i)=>(
               <div key={i} style={{...card(C),borderLeft:`3px solid ${C.gold}`}}>
-                <div style={{fontSize:10,color:C.dim,marginBottom:4}}>{c.date}</div>
-                <p style={{fontSize:15,color:C.cream,fontStyle:'italic',lineHeight:1.75,margin:0}}>"{c.text}"</p>
+                <div style={{fontSize:14,color:C.dim,marginBottom:4}}>{c.date}</div>
+                <p style={{fontSize:16,color:C.cream,fontStyle:'italic',lineHeight:1.75,margin:0}}>"{c.text}"</p>
               </div>
             ))}
           </div>
@@ -878,8 +878,8 @@ function CovenantTracker({C, get, set}) {
       <Section title="Daily Check-In" C={C}>
         {checkedIn ? (
           <div style={{...card(C),borderLeft:`3px solid ${C.green}`}}>
-            <div style={{fontSize:10,color:C.green,fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>✦ Checked in today</div>
-            <p style={{fontSize:15,color:C.text,lineHeight:1.7,margin:0}}>{checkedIn}</p>
+            <div style={{fontSize:11,color:C.green,fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>✦ Checked in today</div>
+            <p style={{fontSize:16,color:C.text,lineHeight:1.7,margin:0}}>{checkedIn}</p>
           </div>
         ) : (
           <>
@@ -929,9 +929,9 @@ function FinishStrong({C, get, set}) {
         <div>
           <Section title="Your Commitment" C={C}>
             <div style={{background:C.redF,border:`1px solid ${C.redB}`,borderRadius:14,padding:'16px',marginBottom:10}}>
-              <div style={{fontSize:9,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.1em',marginBottom:6}}>I WILL NOT QUIT</div>
+              <div style={{fontSize:11,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.1em',marginBottom:6}}>I WILL NOT QUIT</div>
               <p style={{fontSize:17,color:C.cream,fontStyle:'italic',lineHeight:1.8,margin:0}}>{d.commitment}</p>
-              {d.why && <p style={{fontSize:14,color:C.muted,lineHeight:1.65,marginTop:8,fontStyle:'italic'}}>Why: {d.why}</p>}
+              {d.why && <p style={{fontSize:16,color:C.muted,lineHeight:1.65,marginTop:8,fontStyle:'italic'}}>Why: {d.why}</p>}
             </div>
             <button onClick={()=>saveData({...d,commitment:'',why:''})} style={{
               background:'transparent',border:`1px solid ${C.border}`,color:C.dim,
@@ -947,7 +947,7 @@ function FinishStrong({C, get, set}) {
               <div style={{marginTop:12}}>
                 {d.recommitments.map((r,i)=>(
                   <Entry key={i} C={C} date={r.date}>
-                    <p style={{fontSize:15,color:C.text,lineHeight:1.7,margin:0}}>{r.note}</p>
+                    <p style={{fontSize:16,color:C.text,lineHeight:1.7,margin:0}}>{r.note}</p>
                   </Entry>
                 ))}
               </div>
@@ -975,18 +975,18 @@ function NameLog({ C, get, set }) {
   }
   return (
     <div>
-      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
+      <p style={{fontSize:16,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
         Record situations where you are invoking the authority of the Name of Jesus.
       </p>
       <textarea rows={3} value={situation} onChange={e=>setSituation(e.target.value)}
         placeholder="Describe the situation where you are declaring the name of Jesus..."
         style={{width:'100%',background:'rgba(255,255,255,0.04)',border:`1px solid ${C.border}`,
-          borderRadius:10,color:C.cream,fontSize:15,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
+          borderRadius:10,color:C.cream,fontSize:16,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
           outline:'none',resize:'vertical',boxSizing:'border-box',marginBottom:10}}/>
       <SaveButton onSave={add} saved={saved} C={C} label="Log Declaration"/>
       {entries.map((e,i) => (
         <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
-          <p style={{fontSize:14,color:C.text,lineHeight:1.65,margin:0}}>{e.situation}</p>
+          <p style={{fontSize:16,color:C.text,lineHeight:1.65,margin:0}}>{e.situation}</p>
         </Entry>
       ))}
     </div>
@@ -1007,19 +1007,19 @@ function AccusationCounter({ C, get, set }) {
   }
   return (
     <div>
-      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
+      <p style={{fontSize:16,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
         When the enemy accuses, write it down — then counter it with the blood of Jesus.
       </p>
       <textarea rows={3} value={accusation} onChange={e=>setAccusation(e.target.value)}
         placeholder="What is the enemy accusing you of? (It was covered at Calvary.)"
         style={{width:'100%',background:'rgba(255,255,255,0.04)',border:`1px solid ${C.border}`,
-          borderRadius:10,color:C.cream,fontSize:15,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
+          borderRadius:10,color:C.cream,fontSize:16,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
           outline:'none',resize:'vertical',boxSizing:'border-box',marginBottom:10}}/>
       <SaveButton onSave={add} saved={saved} C={C} label="Counter with the Blood"/>
       {entries.map((e,i) => (
         <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
-          <p style={{fontSize:12,color:C.muted,fontStyle:'italic',marginBottom:4}}>Accusation:</p>
-          <p style={{fontSize:14,color:C.text,lineHeight:1.65,marginBottom:6}}>{e.accusation}</p>
+          <p style={{fontSize:15,color:C.muted,fontStyle:'italic',marginBottom:4}}>Accusation:</p>
+          <p style={{fontSize:16,color:C.text,lineHeight:1.65,marginBottom:6}}>{e.accusation}</p>
           <p style={{fontSize:12,color:'rgba(201,72,72,0.8)',fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.06em'}}>
             → Covered by the blood of Jesus. Case dismissed.
           </p>
@@ -1044,25 +1044,25 @@ function PraiseLog({ C, get, set }) {
   }
   return (
     <div>
-      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
+      <p style={{fontSize:16,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
         Record your praise moments and any atmospheric shift you noticed.
       </p>
       {[['Praise declaration or moment', moment, setMoment],
         ['Atmospheric shift noticed (optional)', shift, setShift]].map(([label,val,setter],i) => (
         <div key={i} style={{marginBottom:10}}>
-          <div style={{fontSize:10,color:C.muted,letterSpacing:'0.1em',textTransform:'uppercase',
+          <div style={{fontSize:11,color:C.muted,letterSpacing:'0.1em',textTransform:'uppercase',
             fontFamily:"'Cinzel',Georgia,serif",marginBottom:5}}>{label}</div>
           <textarea rows={2} value={val} onChange={e=>setter(e.target.value)} placeholder={label}
             style={{width:'100%',background:'rgba(255,255,255,0.04)',border:`1px solid ${C.border}`,
-              borderRadius:10,color:C.cream,fontSize:15,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
+              borderRadius:10,color:C.cream,fontSize:16,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
               outline:'none',resize:'vertical',boxSizing:'border-box'}}/>
         </div>
       ))}
       <SaveButton onSave={add} saved={saved} C={C} label="Log Praise Moment"/>
       {entries.map((e,i) => (
         <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
-          <p style={{fontSize:14,color:C.text,lineHeight:1.65,marginBottom:e.shift?8:0}}>{e.moment}</p>
-          {e.shift && <p style={{fontSize:13,color:C.gold,fontStyle:'italic',margin:0}}>Shift: {e.shift}</p>}
+          <p style={{fontSize:16,color:C.text,lineHeight:1.65,marginBottom:e.shift?8:0}}>{e.moment}</p>
+          {e.shift && <p style={{fontSize:16,color:C.gold,fontStyle:'italic',margin:0}}>Shift: {e.shift}</p>}
         </Entry>
       ))}
     </div>
@@ -1088,15 +1088,15 @@ function ForgivenessInventory({ C, get, set }) {
   }
   return (
     <div>
-      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
+      <p style={{fontSize:16,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>
         Name who you need to forgive and what for. Mark released when you have chosen to let go.
       </p>
       {[['Person / Who to forgive', name, setName],['The offense (optional)', offense, setOffense]].map(([lbl,val,fn],i)=>(
         <div key={i} style={{marginBottom:10}}>
-          <div style={{fontSize:10,color:C.muted,letterSpacing:'0.1em',textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",marginBottom:5}}>{lbl}</div>
+          <div style={{fontSize:11,color:C.muted,letterSpacing:'0.1em',textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",marginBottom:5}}>{lbl}</div>
           <input value={val} onChange={e=>fn(e.target.value)} placeholder={lbl}
             style={{width:'100%',background:'rgba(255,255,255,0.04)',border:`1px solid ${C.border}`,
-              borderRadius:10,color:C.cream,fontSize:15,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
+              borderRadius:10,color:C.cream,fontSize:16,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
               outline:'none',boxSizing:'border-box'}}/>
         </div>
       ))}
@@ -1105,8 +1105,8 @@ function ForgivenessInventory({ C, get, set }) {
         <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:10}}>
             <div style={{flex:1}}>
-              <p style={{fontSize:15,fontWeight:600,color:C.cream,margin:'0 0 4px'}}>{e.name}</p>
-              {e.offense && <p style={{fontSize:13,color:C.muted,fontStyle:'italic',margin:0}}>{e.offense}</p>}
+              <p style={{fontSize:16,fontWeight:600,color:C.cream,margin:'0 0 4px'}}>{e.name}</p>
+              {e.offense && <p style={{fontSize:16,color:C.muted,fontStyle:'italic',margin:0}}>{e.offense}</p>}
             </div>
             <button onClick={()=>toggle(i)} style={{flexShrink:0,padding:'6px 12px',borderRadius:20,cursor:'pointer',fontSize:11,
               fontFamily:"'Cinzel',Georgia,serif",transition:'all .2s',
@@ -1136,16 +1136,16 @@ function SimpleJournalTool({ C, get, set, promptText, key_ }) {
   }
   return (
     <div>
-      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>{promptText}</p>
+      <p style={{fontSize:16,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>{promptText}</p>
       <textarea rows={4} value={entry} onChange={e=>setEntry(e.target.value)}
         placeholder="Write your reflection here..."
         style={{width:'100%',background:'rgba(255,255,255,0.04)',border:`1px solid ${C.border}`,
-          borderRadius:10,color:C.cream,fontSize:15,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
+          borderRadius:10,color:C.cream,fontSize:16,padding:'12px',fontFamily:"'EB Garamond',Georgia,serif",
           outline:'none',resize:'vertical',boxSizing:'border-box',marginBottom:10}}/>
       <SaveButton onSave={add} saved={saved} C={C} label="Save Entry"/>
       {entries.map((e,i) => (
         <Entry key={i} C={C} date={e.date} onDelete={()=>save(entries.filter((_,j)=>j!==i))}>
-          <p style={{fontSize:14,color:C.text,lineHeight:1.65,margin:0}}>{e.text}</p>
+          <p style={{fontSize:16,color:C.text,lineHeight:1.65,margin:0}}>{e.text}</p>
         </Entry>
       ))}
     </div>
@@ -1171,7 +1171,7 @@ function TwoFieldLog({ C, get, set, key_, promptText, labelA, labelB, phA, phB, 
   }
   return (
     <div>
-      <p style={{fontSize:13,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>{promptText}</p>
+      <p style={{fontSize:16,color:C.muted,fontStyle:'italic',lineHeight:1.7,marginBottom:14}}>{promptText}</p>
       <label style={lbl(C)}>{labelA}</label>
       <textarea style={ta(C)} rows={2} value={a} onChange={e=>setA(e.target.value)} placeholder={phA}/>
       <div style={{height:10}}/>
@@ -1181,10 +1181,10 @@ function TwoFieldLog({ C, get, set, key_, promptText, labelA, labelB, phA, phB, 
       <SaveButton onSave={add} saved={saved} C={C} label="Save Entry"/>
       {entries.map((e, i) => (
         <Entry key={i} C={C} date={e.date} onDelete={() => save(entries.filter((_, j) => j !== i))}>
-          <div style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:3}}>{headA}</div>
-          <p style={{fontSize:14,color:C.text,lineHeight:1.6,margin:'0 0 8px'}}>{e.a}</p>
-          <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:3}}>{headB}</div>
-          <p style={{fontSize:14,color:C.cream,lineHeight:1.6,margin:0,fontStyle:'italic'}}>{e.b}</p>
+          <div style={{fontSize:11,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:3}}>{headA}</div>
+          <p style={{fontSize:16,color:C.text,lineHeight:1.6,margin:'0 0 8px'}}>{e.a}</p>
+          <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:3}}>{headB}</div>
+          <p style={{fontSize:16,color:C.cream,lineHeight:1.6,margin:0,fontStyle:'italic'}}>{e.b}</p>
         </Entry>
       ))}
     </div>
@@ -1349,29 +1349,29 @@ export default function WeaponTool({ weapon, C, get, set }) {
   const Tool = TOOLS[weapon.id]
   const info = TOOL_INFO[weapon.id]
   if (!Tool) return (
-    <div style={{padding:'32px',textAlign:'center',color:C.muted,fontStyle:'italic',fontSize:15}}>
+    <div style={{padding:'32px',textAlign:'center',color:C.muted,fontStyle:'italic',fontSize:16}}>
       Tool coming soon for this weapon.
     </div>
   )
   return (
     <div>
       {/* Tool name */}
-      <div style={{fontSize:9,color:C.muted,letterSpacing:'0.16em',textTransform:'uppercase',
+      <div style={{fontSize:11,color:C.muted,letterSpacing:'0.16em',textTransform:'uppercase',
         fontFamily:"'Cinzel',Georgia,serif",marginBottom:12}}>{TOOL_NAMES[weapon.id]}</div>
 
       {/* How to use card */}
       {info && (
         <div style={{background:'rgba(176,138,78,0.07)',border:`1px solid rgba(176,138,78,0.2)`,
           borderRadius:12,padding:'14px 16px',marginBottom:20}}>
-          <div style={{fontSize:9,color:'rgba(176,138,78,0.8)',letterSpacing:'0.14em',
+          <div style={{fontSize:11,color:'rgba(176,138,78,0.8)',letterSpacing:'0.14em',
             textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",marginBottom:8}}>
             ⚡ How to Use
           </div>
-          <p style={{fontSize:14,color:C.text,lineHeight:1.75,margin:'0 0 10px'}}>
+          <p style={{fontSize:16,color:C.text,lineHeight:1.75,margin:'0 0 10px'}}>
             {info.howTo}
           </p>
           <div style={{borderTop:`1px solid rgba(176,138,78,0.15)`,paddingTop:8}}>
-            <span style={{fontSize:12,color:'rgba(176,138,78,0.7)',fontStyle:'italic'}}>
+            <span style={{fontSize:15,color:'rgba(176,138,78,0.7)',fontStyle:'italic'}}>
               💡 {info.tip}
             </span>
           </div>

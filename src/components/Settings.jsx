@@ -191,7 +191,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
           backdropFilter: 'blur(12px)',
         }}>
           <div>
-            <div style={{ fontSize: 9, color: C.redL, letterSpacing: '0.16em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif" }}>Armed & Anchored</div>
+            <div style={{ fontSize: 11, color: C.redL, letterSpacing: '0.16em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif" }}>Armed & Anchored</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: C.cream, fontFamily: "'Cinzel',Georgia,serif" }}>Settings</div>
           </div>
           <button onClick={onClose} style={{ background: C.bgCard, border: `1px solid ${C.border}`, color: C.muted, width: 36, height: 36, borderRadius: 9, cursor: 'pointer', fontSize: 18 }}>←</button>
@@ -201,7 +201,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
 
           {/* Progress */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase',
+            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase',
               fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Progress</div>
           </div>
           <div style={{ background: C.redF, border: `1px solid ${C.redB}`, borderRadius: 14, overflow: 'hidden' }}>
@@ -234,11 +234,11 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
 
       {/* Account */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Account</div>
+            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Account</div>
           </div>
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '0 16px' }}>
             <Row icon="✉️" label={profile?.email || 'Your account'}>
-              <span style={{ fontSize: 12, color: C.muted }}>Lifetime Access ✦</span>
+              <span style={{ fontSize: 15, color: C.muted }}>Lifetime Access ✦</span>
             </Row>
             <Row icon="⭐" label="Ratings & Reviews">
               <button onClick={() => setShowReviews(true)} style={{ background: C.goldF, border: `1px solid ${C.goldB}`, color: C.gold, padding: '6px 16px', borderRadius: 10, fontSize: 12, fontFamily: "'Cinzel',Georgia,serif", cursor: 'pointer', letterSpacing: '0.06em' }}>Open</button>
@@ -267,7 +267,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
 
           {/* Appearance */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Appearance</div>
+            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Appearance</div>
           </div>
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '0 16px' }}>
             <Row icon={lightMode ? '🌙' : '☀️'} label={lightMode ? 'Dark Mode' : 'Light Mode'} border={false}>
@@ -293,13 +293,13 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
 
           {/* Share & Referral */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Share & Referral</div>
+            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Share & Referral</div>
           </div>
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '16px' }}>
-            <p style={{ fontSize: 15, color: C.text, lineHeight: 1.75, marginBottom: 14 }}>
+            <p style={{ fontSize: 16, color: C.text, lineHeight: 1.75, marginBottom: 14 }}>
               Know a warrior who needs this? Share Armed & Anchored with someone in your life. Every soldier needs to be equipped.
             </p>
-            <div style={{ background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.03)', border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px', marginBottom: 12, fontSize: 13, color: C.muted, fontStyle: 'italic', lineHeight: 1.7 }}>
+            <div style={{ background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.03)', border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px', marginBottom: 12, fontSize: 16, color: C.muted, fontStyle: 'italic', lineHeight: 1.7 }}>
               "{referralText.split('\n')[0]}"
             </div>
             <button onClick={handleCopyReferral} style={{
@@ -317,10 +317,10 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
 
           {/* More from Elora Radiance */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>More from Elora Radiance Co.</div>
+            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>More from Elora Radiance Co.</div>
           </div>
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '12px 16px', marginBottom: 0 }}>
-            <p style={{ fontSize: 13, color: C.muted, fontStyle: 'italic', lineHeight: 1.7, marginBottom: 14 }}>
+            <p style={{ fontSize: 16, color: C.muted, fontStyle: 'italic', lineHeight: 1.7, marginBottom: 14 }}>
               The rest of the Elora Radiance ecosystem — Scripture-based tools for the whole Christian life.
             </p>
             {[
@@ -339,34 +339,34 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
                 <span style={{ fontSize: 22, flexShrink: 0 }}>{app.icon}</span>
                 <span style={{ flex: 1 }}>
                   <span style={{ display: 'block', fontSize: 13, color: C.cream, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.05em', marginBottom: 2 }}>{app.label}</span>
-                  <span style={{ display: 'block', fontSize: 12, color: C.muted, fontStyle: 'italic' }}>{app.desc}</span>
+                  <span style={{ display: 'block', fontSize: 15, color: C.muted, fontStyle: 'italic' }}>{app.desc}</span>
                 </span>
-                <span style={{ fontSize: 13, color: C.gold }}>↗</span>
+                <span style={{ fontSize: 16, color: C.gold }}>↗</span>
               </a>
             ))}
           </div>
 
           {/* About */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>About</div>
+            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>About</div>
           </div>
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '0 16px' }}>
             <Row icon="⚔️" label="Armed & Anchored">
-              <span style={{ fontSize: 11, color: C.dim }}>v1.0</span>
+              <span style={{ fontSize: 14, color: C.dim }}>v1.0</span>
             </Row>
             <a href="https://eloraradiance.com" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
             <Row icon="🌿" label="Elora Radiance Co." border={false}>
-              <span style={{ fontSize: 11, color: C.gold }}>eloraradiance.com &rarr;</span>
+              <span style={{ fontSize: 14, color: C.gold }}>eloraradiance.com &rarr;</span>
             </Row>
             </a>
           </div>
 
           {/* Export Journal */}
           <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Your Data</div>
+            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Your Data</div>
           </div>
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '16px' }}>
-            <p style={{ fontSize: 14, color: C.text, lineHeight: 1.7, marginBottom: 14 }}>
+            <p style={{ fontSize: 16, color: C.text, lineHeight: 1.7, marginBottom: 14 }}>
               Download all your journal entries, declarations, tool logs, and memorized verses as a text file.
             </p>
             <button onClick={handleExport} disabled={exporting} style={{

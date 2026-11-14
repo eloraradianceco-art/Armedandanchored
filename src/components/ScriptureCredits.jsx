@@ -26,7 +26,7 @@ export default function ScriptureCredits({ notices, theme: t, note, label = 'Scr
   return (
     <div>
       <div style={{ marginTop: 24, marginBottom: 8 }}>
-        <div style={{ fontSize: 9, color: t.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: heading, marginBottom: 4 }}>{label}</div>
+        <div style={{ fontSize: 11, color: t.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: heading, marginBottom: 4 }}>{label}</div>
       </div>
       <div style={{ background: t.card, border: `1px solid ${t.border}`, borderRadius: 14, padding: '0 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 0' }}>
@@ -34,14 +34,14 @@ export default function ScriptureCredits({ notices, theme: t, note, label = 'Scr
           <span style={{ flex: 1, fontSize: 16, color: t.text, fontFamily: body }}>Bible translations used</span>
           <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} style={{
             background: 'transparent', border: `1px solid ${t.border}`, color: t.muted, padding: '6px 14px',
-            borderRadius: 10, fontSize: 12, fontFamily: heading, letterSpacing: '0.06em', cursor: 'pointer',
+            borderRadius: 10, fontSize: 13, fontFamily: heading, letterSpacing: '0.06em', cursor: 'pointer',
           }}>{open ? 'Hide' : 'Show'}</button>
         </div>
         {open && (
           <div style={{ paddingBottom: 14 }}>
-            {note && <p style={{ fontSize: 14, lineHeight: 1.6, color: t.text, fontFamily: body, margin: '0 0 12px' }}>{note}</p>}
+            {note && <p style={{ fontSize: 15, lineHeight: 1.6, color: t.text, fontFamily: body, margin: '0 0 12px' }}>{note}</p>}
             {list.map((k) => (
-              <p key={k} style={{ fontSize: 13, lineHeight: 1.6, color: t.muted, fontFamily: body, margin: '0 0 12px' }}>{NOTICES[k]}</p>
+              <p key={k} style={{ fontSize: 14, lineHeight: 1.6, color: t.muted, fontFamily: body, margin: '0 0 12px' }}>{NOTICES[k]}</p>
             ))}
           </div>
         )}

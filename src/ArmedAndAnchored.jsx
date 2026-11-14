@@ -547,7 +547,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
           {!mode ? (
             // Mode picker
             <div>
-              <p style={{fontSize:14,color:C.muted,textAlign:"center",marginBottom:16,fontStyle:"italic",lineHeight:1.6}}>
+              <p style={{fontSize:16,color:C.muted,textAlign:"center",marginBottom:16,fontStyle:"italic",lineHeight:1.6}}>
                 Choose your memorization method:
               </p>
               <div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -564,7 +564,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
                     <span style={{fontSize:22,flexShrink:0}}>{m.icon}</span>
                     <span>
                       <span style={{display:"block",fontSize:13,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em",marginBottom:2}}>{m.title}</span>
-                      <span style={{display:"block",fontSize:12,color:C.muted,fontStyle:"italic"}}>{m.desc}</span>
+                      <span style={{display:"block",fontSize:15,color:C.muted,fontStyle:"italic"}}>{m.desc}</span>
                     </span>
                   </button>
                 ))}
@@ -575,7 +575,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
             <div>
               {!revealed ? (
                 <div style={{textAlign:"center"}}>
-                  <p style={{fontSize:14,color:C.muted,fontStyle:"italic",marginBottom:20,lineHeight:1.7}}>
+                  <p style={{fontSize:16,color:C.muted,fontStyle:"italic",marginBottom:20,lineHeight:1.7}}>
                     Say the verse aloud from memory, then reveal to check yourself.
                   </p>
                   <button onClick={()=>setRevealed(true)} style={{
@@ -597,7 +597,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
                   }}>✓ I've Got It — Mark Memorized</button>
                   <button onClick={()=>setRevealed(false)} style={{
                     width:"100%",background:"transparent",border:"none",
-                    color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"'EB Garamond',Georgia,serif",
+                    color:C.muted,cursor:"pointer",fontSize:16,fontFamily:"'EB Garamond',Georgia,serif",
                   }}>Try Again</button>
                 </div>
               )}
@@ -605,7 +605,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
           ) : mode === 'blanks' ? (
             // Mode 2: Fill the Gaps
             <div>
-              <p style={{fontSize:14,color:C.muted,fontStyle:"italic",marginBottom:14,lineHeight:1.6,textAlign:"center"}}>
+              <p style={{fontSize:16,color:C.muted,fontStyle:"italic",marginBottom:14,lineHeight:1.6,textAlign:"center"}}>
                 Read aloud, filling in the blanked words from memory.
               </p>
               <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${C.border}`,
@@ -649,7 +649,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
           ) : (
             // Mode 3: Write it Out
             <div>
-              <p style={{fontSize:14,color:C.muted,fontStyle:"italic",marginBottom:12,lineHeight:1.6,textAlign:"center"}}>
+              <p style={{fontSize:16,color:C.muted,fontStyle:"italic",marginBottom:12,lineHeight:1.6,textAlign:"center"}}>
                 Type the verse from memory, then check your score.
               </p>
               {score === null ? (
@@ -657,7 +657,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
                   <textarea rows={5} value={typed} onChange={e=>setTyped(e.target.value)}
                     placeholder="Type the verse here from memory..."
                     style={{width:"100%",background:"rgba(255,255,255,0.04)",border:`1px solid ${C.border}`,
-                      borderRadius:10,color:C.cream,fontSize:15,padding:"12px",
+                      borderRadius:10,color:C.cream,fontSize:16,padding:"12px",
                       fontFamily:"'EB Garamond',Georgia,serif",outline:"none",
                       resize:"none",boxSizing:"border-box",marginBottom:10,lineHeight:1.7}}/>
                   <button onClick={checkScore} disabled={!typed.trim()} style={{
@@ -673,12 +673,12 @@ function MemorizeModal({verse, onClose, get, set, C}) {
                     fontFamily:"'Cinzel',Georgia,serif",marginBottom:4}}>
                     {score}%
                   </div>
-                  <div style={{fontSize:13,color:C.muted,marginBottom:16}}>
+                  <div style={{fontSize:16,color:C.muted,marginBottom:16}}>
                     {score>=90?"Nearly perfect — keep going!":score>=70?"Great progress — almost there!":score>=50?"Good start — practice more!":"Keep at it — repetition builds memory!"}
                   </div>
                   <div style={{background:"rgba(255,255,255,0.04)",border:`1px solid ${C.border}`,
                     borderRadius:10,padding:"12px",marginBottom:14,textAlign:"left"}}>
-                    <div style={{fontSize:10,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>Full verse</div>
+                    <div style={{fontSize:11,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>Full verse</div>
                     <p style={{fontSize:16,color:C.text,fontStyle:"italic",lineHeight:1.8,margin:0}}>"{verse.text}"</p>
                   </div>
                   {score >= 70 && (
@@ -691,7 +691,7 @@ function MemorizeModal({verse, onClose, get, set, C}) {
                   )}
                   <button onClick={()=>{setTyped('');setScore(null)}} style={{
                     width:"100%",background:"transparent",border:"none",
-                    color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"'EB Garamond',Georgia,serif",
+                    color:C.muted,cursor:"pointer",fontSize:16,fontFamily:"'EB Garamond',Georgia,serif",
                   }}>Try Again</button>
                 </div>
               )}
@@ -1032,7 +1032,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                 background:'transparent',border:'none',cursor:'pointer',touchAction:'manipulation',padding:'8px 2px 6px',position:'relative'}}>
               {on && <span style={{position:'absolute',top:0,left:'28%',right:'28%',height:2,borderRadius:2,background:C.redL}}/>}
               <span style={{fontSize:21,lineHeight:1,filter:on?'none':'saturate(0.55)',opacity:on?1:0.78}}>{icon}</span>
-              <span style={{fontSize:9.5,letterSpacing:'0.08em',textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",fontWeight:on?700:500,color:on?C.gold:C.muted}}>{label}</span>
+              <span style={{fontSize:11,letterSpacing:'0.08em',textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",fontWeight:on?700:500,color:on?C.gold:C.muted}}>{label}</span>
             </button>
           )
         })}
@@ -1088,7 +1088,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},${C.mid||'rgba(13,26,42,1)'})`,
         border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:'100%',maxWidth:460,marginTop:20}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
-          <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.18em',textTransform:'uppercase'}}>🔍 Search Weapons</div>
+          <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.18em',textTransform:'uppercase'}}>🔍 Search Weapons</div>
           <button onClick={()=>setShowSearch(false)} style={{background:'transparent',border:'none',color:C.muted,cursor:'pointer',fontSize:20,lineHeight:1}}>×</button>
         </div>
         <input autoFocus value={searchQuery} onChange={e=>doSearch(e.target.value)}
@@ -1098,27 +1098,27 @@ export default function ArmedAndAnchored({ session, profile }) {
             fontFamily:"'EB Garamond',Georgia,serif",outline:'none',boxSizing:'border-box',marginBottom:14}}/>
         {searchQuery && (
           <div>
-            <div style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:10}}>
+            <div style={{fontSize:11,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:10}}>
               {searchResults.length} results
             </div>
-            {searchResults.length===0 && <p style={{fontSize:14,color:C.muted,fontStyle:'italic',textAlign:'center',padding:'16px 0'}}>No results found.</p>}
+            {searchResults.length===0 && <p style={{fontSize:16,color:C.muted,fontStyle:'italic',textAlign:'center',padding:'16px 0'}}>No results found.</p>}
             {searchResults.map(({weapon:w,hits})=>(
               <button key={w.id} onClick={()=>{setSelected(w.id);setTab(hits.includes('scripture')?'scripture':hits.includes('teaching')?'teaching':'tactics');setShowSearch(false);window.scrollTo(0,0);}}
                 style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'12px 14px',borderRadius:12,marginBottom:8,cursor:'pointer',textAlign:'left',background:C.redF,border:`1px solid ${C.redB}`,transition:'all .2s'}}>
                 <span style={{fontSize:20,flexShrink:0}}>{w.icon}</span>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:9,color:acc(w),letterSpacing:'0.12em',textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",marginBottom:2}}>{w.tag}</div>
+                  <div style={{fontSize:11,color:acc(w),letterSpacing:'0.12em',textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",marginBottom:2}}>{w.tag}</div>
                   <div style={{fontSize:13,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{w.title}</div>
-                  <div style={{fontSize:10,color:C.muted,marginTop:2}}>Matches: {hits.join(', ')}</div>
+                  <div style={{fontSize:14,color:C.muted,marginTop:2}}>Matches: {hits.join(', ')}</div>
                 </div>
-                <span style={{color:C.redL,fontSize:14}}>›</span>
+                <span style={{color:C.redL,fontSize:16}}>›</span>
               </button>
             ))}
           </div>
         )}
         {!searchQuery && <div style={{textAlign:'center',padding:'24px 0'}}>
           <div style={{fontSize:28,marginBottom:8}}>⚔️</div>
-          <p style={{fontSize:14,color:C.muted,fontStyle:'italic'}}>Search all {WEAPONS.length} weapons by scripture, teaching, or tactics.</p>
+          <p style={{fontSize:16,color:C.muted,fontStyle:'italic'}}>Search all {WEAPONS.length} weapons by scripture, teaching, or tactics.</p>
         </div>}
       </div>
     </div>
@@ -1136,20 +1136,20 @@ export default function ArmedAndAnchored({ session, profile }) {
         <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},${C.mid||'rgba(13,26,42,1)'})`,
           border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:'100%',maxWidth:460,marginTop:20}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
-            <div style={{fontSize:10,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.18em',textTransform:'uppercase'}}>★ Saved</div>
+            <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.18em',textTransform:'uppercase'}}>★ Saved</div>
             <button onClick={()=>setShowSaved(false)} style={{background:'transparent',border:'none',color:C.muted,cursor:'pointer',fontSize:20,lineHeight:1}}>×</button>
           </div>
           {savedWeapons.length===0 ? (
             <div style={{textAlign:'center',padding:'32px 0'}}>
               <div style={{fontSize:32,marginBottom:10}}>☆</div>
-              <p style={{fontSize:14,color:C.muted,fontStyle:'italic'}}>No saved items yet.<br/>Tap ☆ on any weapon or scripture to save it.</p>
+              <p style={{fontSize:16,color:C.muted,fontStyle:'italic'}}>No saved items yet.<br/>Tap ☆ on any weapon or scripture to save it.</p>
             </div>
           ) : (
             <div>
               {/* Saved Scriptures */}
               {savedScriptureEntries.length > 0 && (
                 <div style={{marginBottom:16}}>
-                  <div style={{fontSize:9,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:8}}>Scriptures</div>
+                  <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:8}}>Scriptures</div>
                   {savedScriptureEntries.map(key => {
                     const [wid,,si] = key.split('_s')
                     const w = WEAPONS.find(x=>x.id===wid) || WEAPONS.find(x=>String(x.id)===String(wid))
@@ -1159,8 +1159,8 @@ export default function ArmedAndAnchored({ session, profile }) {
                       <button key={key} onClick={()=>{setSelected(w.id);setTab('scripture');setShowSaved(false);window.scrollTo(0,0)}}
                         style={{width:'100%',display:'flex',alignItems:'flex-start',gap:10,padding:'12px 14px',borderRadius:12,marginBottom:8,cursor:'pointer',textAlign:'left',background:C.redF,border:`1px solid ${C.redB}`}}>
                         <div style={{flex:1,minWidth:0}}>
-                          <div style={{fontSize:9,color:acc(w),fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:2}}>{w.icon} {w.tag}</div>
-                          <p style={{fontSize:13,color:C.cream,fontStyle:'italic',lineHeight:1.6,marginBottom:4,overflow:'hidden',display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical'}}>"{s.text}"</p>
+                          <div style={{fontSize:11,color:acc(w),fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:2}}>{w.icon} {w.tag}</div>
+                          <p style={{fontSize:16,color:C.cream,fontStyle:'italic',lineHeight:1.6,marginBottom:4,overflow:'hidden',display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical'}}>"{s.text}"</p>
                           <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif"}}>{s.ref}</div>
                         </div>
                         <button onClick={e=>{e.stopPropagation();toggleSave(key)}} style={{background:'transparent',border:'none',color:C.gold,cursor:'pointer',fontSize:16,flexShrink:0,touchAction:'manipulation'}}>★</button>
@@ -1172,7 +1172,7 @@ export default function ArmedAndAnchored({ session, profile }) {
               {/* Saved Weapons */}
               {savedWeaponEntries.length > 0 && (
                 <div>
-                  <div style={{fontSize:9,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:8}}>Weapons</div>
+                  <div style={{fontSize:11,color:C.gold,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:8}}>Weapons</div>
                   {savedWeaponEntries.map(id=>{
                     const w=WEAPONS.find(x=>x.id===id)||WEAPONS.find(x=>String(x.id)===String(id))
                     if(!w) return null
@@ -1181,7 +1181,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                         style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'12px 14px',borderRadius:12,marginBottom:8,cursor:'pointer',textAlign:'left',background:C.redF,border:`1px solid ${C.redB}`}}>
                         <span style={{fontSize:20}}>{w.icon}</span>
                         <div style={{flex:1,minWidth:0}}>
-                          <div style={{fontSize:9,color:acc(w),fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:2}}>{w.tag}</div>
+                          <div style={{fontSize:11,color:acc(w),fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:2}}>{w.tag}</div>
                           <div style={{fontSize:13,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{w.title}</div>
                         </div>
                         <button onClick={e=>{e.stopPropagation();toggleSave(id)}} style={{background:'transparent',border:'none',color:C.gold,cursor:'pointer',fontSize:16,touchAction:'manipulation'}}>★</button>
@@ -1207,16 +1207,16 @@ export default function ArmedAndAnchored({ session, profile }) {
             <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)",flexShrink:0}}/>
             <div style={{minWidth:0}}>
               <div style={{fontSize:13,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.03em",lineHeight:1.1,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>Armed & Anchored</div>
-              <div style={{fontSize:8,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Spiritual Warfare</div>
+              <div style={{fontSize:11,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Spiritual Warfare</div>
             </div>
             {completedCount > 0 && (
-              <span style={{background:C.redF,border:`1px solid ${C.redB}`,borderRadius:20,padding:"2px 7px",fontSize:9,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",flexShrink:0}}>
+              <span style={{background:C.redF,border:`1px solid ${C.redB}`,borderRadius:20,padding:"2px 7px",fontSize:11,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",flexShrink:0}}>
                 ⚔️ {completedCount}/{WEAPONS.length}
               </span>
             )}
           </div>
           <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
-            <span style={{fontSize:9,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",maxWidth:"clamp(80px,22vw,240px)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{session?.user?.email?.split("@")[0]}</span>
+            <span style={{fontSize:11,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",maxWidth:"clamp(80px,22vw,240px)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{session?.user?.email?.split("@")[0]}</span>
             
           </div>
         </div>
@@ -1232,7 +1232,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           return (
             <button onClick={()=>{setSelected(daily.weapon.id);setTab("scripture");window.scrollTo(0,0);}}
               style={{display:"block",width:"100%",textAlign:"left",fontFamily:"'EB Garamond',Georgia,serif",background:"transparent",border:"none",borderTop:`1px solid ${C.border}`,borderBottom:`1px solid ${C.border}`,padding:"14px 2px",margin:"18px 0 0",cursor:"pointer"}}>
-              <span style={{display:"block",fontSize:10,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>Verse of the day {"\u00B7"} {daily.ref.replace(/\s*\([^)]*\)\s*$/,"")}</span>
+              <span style={{display:"block",fontSize:11,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:6}}>Verse of the day {"\u00B7"} {daily.ref.replace(/\s*\([^)]*\)\s*$/,"")}</span>
               <span style={{display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden",maxWidth:720,fontSize:17,color:C.cream,fontStyle:"italic",lineHeight:1.6}}>"{daily.text}"</span>
             </button>
           )
@@ -1240,8 +1240,8 @@ export default function ArmedAndAnchored({ session, profile }) {
 
         {/* Arsenal */}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",margin:"24px 2px 10px"}}>
-          <span style={{fontSize:10,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Your arsenal</span>
-          <span style={{fontSize:13,color:C.muted}}>{completedCount} of {WEAPONS.length} deployed</span>
+          <span style={{fontSize:11,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Your arsenal</span>
+          <span style={{fontSize:16,color:C.muted}}>{completedCount} of {WEAPONS.length} deployed</span>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))",gap:8}}>
           {WEAPONS.map(w => {
@@ -1255,10 +1255,10 @@ export default function ArmedAndAnchored({ session, profile }) {
                     border:`1px solid ${done?"rgba(158,40,40,0.32)":C.border}`,borderRadius:12}}>
                   <span style={{fontSize:21,lineHeight:1}}>{w.icon}</span>
                   <span style={{fontSize:13.5,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,lineHeight:1.3,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden",paddingRight:14}}>{w.title}</span>
-                  <span style={{marginTop:"auto",fontSize:9,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",color:done?C.redL:acc(w)}}>{done?"\u2726 Deployed":w.tag}</span>
+                  <span style={{marginTop:"auto",fontSize:11,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",color:done?C.redL:acc(w)}}>{done?"\u2726 Deployed":w.tag}</span>
                 </button>
                 <button onClick={(e)=>{e.stopPropagation();toggleSave(w.id);}} aria-label={saved?"Remove from saved":"Save weapon"}
-                  style={{position:"absolute",right:4,top:4,background:"transparent",border:"none",color:saved?C.gold:C.dim,cursor:"pointer",fontSize:15,lineHeight:1,touchAction:"manipulation",padding:8}}>{saved?"\u2605":"\u2606"}</button>
+                  style={{position:"absolute",right:4,top:4,background:"transparent",border:"none",color:saved?C.gold:C.dim,cursor:"pointer",fontSize:16,lineHeight:1,touchAction:"manipulation",padding:8}}>{saved?"\u2605":"\u2606"}</button>
               </div>
             );
           })}
@@ -1334,12 +1334,12 @@ export default function ArmedAndAnchored({ session, profile }) {
             <img src="/icon.png" alt="" style={{width:36,height:36,borderRadius:9,boxShadow:"0 2px 8px rgba(0,0,0,0.4)"}}/>
             <div>
               <div style={{fontSize:15,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",lineHeight:1.1}}>Armed & Anchored</div>
-              <div style={{fontSize:9,color:C.muted,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Spiritual Warfare</div>
+              <div style={{fontSize:11,color:C.muted,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Spiritual Warfare</div>
             </div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
-            {declared[weapon.id] && <span style={{fontSize:10,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</span>}
-            <button onClick={()=>setShareCard({weapon,type:tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"})} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:"#B08A4E",borderRadius:8,padding:"5px 9px",cursor:"pointer",fontSize:12}}>↗</button>
+            {declared[weapon.id] && <span style={{fontSize:11,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</span>}
+            <button onClick={()=>setShareCard({weapon,type:tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"})} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:"#B08A4E",borderRadius:8,padding:"5px 9px",cursor:"pointer",fontSize:15}}>↗</button>
             
           </div>
         </div>
@@ -1356,11 +1356,11 @@ export default function ArmedAndAnchored({ session, profile }) {
             <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:6}}>
               <button onClick={()=>{if(prev){setSelected(prev.id);setTab("scripture");window.scrollTo(0,0);}}} disabled={!prev} style={{...navBtn,opacity:prev?1:0.3}}>‹</button>
               <div style={{flex:1,textAlign:"center"}}>
-                <div style={{fontSize:10,color:acc(weapon),letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:3}}>{weapon.icon} Weapon {idx+1} of {WEAPONS.length}</div>
+                <div style={{fontSize:11,color:acc(weapon),letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:3}}>{weapon.icon} Weapon {idx+1} of {WEAPONS.length}</div>
                 <button onClick={()=>setShowWeaponJump(v=>!v)} style={{background:"transparent",border:"none",cursor:"pointer",padding:0,touchAction:"manipulation"}}>
-                  <h2 style={{fontSize:22,fontWeight:700,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.03em",lineHeight:1.1,margin:0}}>{weapon.title} <span style={{fontSize:12,color:C.muted}}>{showWeaponJump?"▲":"▼"}</span></h2>
+                  <h2 style={{fontSize:22,fontWeight:700,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.03em",lineHeight:1.1,margin:0}}>{weapon.title} <span style={{fontSize:15,color:C.muted}}>{showWeaponJump?"▲":"▼"}</span></h2>
                 </button>
-                <p style={{fontSize:13,color:C.muted,fontStyle:"italic",marginTop:2}}>{weapon.subtitle}</p>
+                <p style={{fontSize:16,color:C.muted,fontStyle:"italic",marginTop:2}}>{weapon.subtitle}</p>
               </div>
               <button onClick={()=>{if(next){setSelected(next.id);setTab("scripture");window.scrollTo(0,0);}}} disabled={!next} style={{...navBtn,opacity:next?1:0.3}}>›</button>
             </div>
@@ -1371,7 +1371,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           <div onClick={()=>setShowWeaponJump(false)} style={{position:"fixed",inset:0,zIndex:800}} >
             <div onClick={e=>e.stopPropagation()} style={{position:"fixed",top:"calc(140px + var(--safe-top, env(safe-area-inset-top, 0px)))",left:10,right:10,background:C.bg,border:`1px solid ${C.border}`,borderRadius:16,padding:14,maxHeight:280,overflowY:"auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,zIndex:900,boxShadow:"0 8px 32px rgba(0,0,0,0.7)"}}>
               {WEAPONS.map(w=>(
-                <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");setShowWeaponJump(false);window.scrollTo(0,0);}} style={{background:w.id===selected?C.redF:"transparent",border:`1px solid ${w.id===selected?C.redB:C.border}`,color:w.id===selected?C.redL:C.muted,borderRadius:10,padding:"10px 4px",cursor:"pointer",fontSize:9,fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",lineHeight:1.3,touchAction:"manipulation"}}>
+                <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");setShowWeaponJump(false);window.scrollTo(0,0);}} style={{background:w.id===selected?C.redF:"transparent",border:`1px solid ${w.id===selected?C.redB:C.border}`,color:w.id===selected?C.redL:C.muted,borderRadius:10,padding:"10px 4px",cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",lineHeight:1.3,touchAction:"manipulation"}}>
                   <div style={{fontSize:20,marginBottom:3}}>{w.icon}</div>
                   <div style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",padding:"0 2px"}}>{w.title.split(" ").slice(0,2).join(" ")}</div>
                 </button>
@@ -1404,7 +1404,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         {/* SCRIPTURE */}
         {tab==="scripture" && (
           <div>
-            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Key Scriptures — {weapon.tag}</div>
+            <div style={{fontSize:11,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Key Scriptures — {weapon.tag}</div>
             {weapon.scriptures.map((s,i) => (
               <div key={i} style={{background:i===0?"linear-gradient(145deg,rgba(158,40,40,0.14),rgba(158,40,40,0.05))":"linear-gradient(145deg,rgba(158,40,40,0.07),rgba(158,40,40,0.02))",border:`1px solid ${C.redB}`,borderRadius:16,padding:"22px 24px",marginBottom:14,boxShadow:"0 8px 24px rgba(0,0,0,0.12)"}}>
                 <div style={{display:"flex",gap:10}}>
@@ -1417,10 +1417,10 @@ export default function ArmedAndAnchored({ session, profile }) {
                         <button onClick={()=>setMemorizeVerse({text:s.text,ref:s.ref,idx:i})} style={{background:get(`mem_${i}`)==="true"?"rgba(120,184,120,0.15)":C.redF,border:`1px solid ${get(`mem_${i}`)==="true"?"rgba(120,184,120,0.4)":C.redB}`,color:get(`mem_${i}`)==="true"?C.green:C.redL,padding:"2px 10px",borderRadius:12,cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif"}}>
                           {get(`mem_${i}`)==="true"?"✓ Memorized":"✦ Memorize"}
                         </button>
-                        <button onClick={()=>toggleSave(`${weapon.id}_s${i}`)} style={{background:isSaved(`${weapon.id}_s${i}`)?"rgba(176,138,78,0.2)":"transparent",border:`1px solid ${isSaved(`${weapon.id}_s${i}`)?"rgba(176,138,78,0.4)":C.border}`,color:isSaved(`${weapon.id}_s${i}`)?C.gold:C.muted,padding:"2px 10px",borderRadius:12,cursor:"pointer",fontSize:13}}>
+                        <button onClick={()=>toggleSave(`${weapon.id}_s${i}`)} style={{background:isSaved(`${weapon.id}_s${i}`)?"rgba(176,138,78,0.2)":"transparent",border:`1px solid ${isSaved(`${weapon.id}_s${i}`)?"rgba(176,138,78,0.4)":C.border}`,color:isSaved(`${weapon.id}_s${i}`)?C.gold:C.muted,padding:"2px 10px",borderRadius:12,cursor:"pointer",fontSize:16}}>
                           {isSaved(`${weapon.id}_s${i}`)?"★":"☆"}
                         </button>
-                        <button onClick={()=>setShareCard({weapon,type:"scripture"})} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"2px 8px",borderRadius:12,cursor:"pointer",fontSize:11}}>&#8599;</button>
+                        <button onClick={()=>setShareCard({weapon,type:"scripture"})} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"2px 8px",borderRadius:12,cursor:"pointer",fontSize:14}}>&#8599;</button>
                       </div>
                     </div>
                   </div>
@@ -1433,7 +1433,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         {/* TEACHING */}
         {tab==="teaching" && (
           <div>
-            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Teaching — {weapon.title}</div>
+            <div style={{fontSize:11,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Teaching — {weapon.title}</div>
             <div style={{background:"linear-gradient(145deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))",border:`1px solid ${C.borderGold}`,borderRadius:16,padding:"22px 24px",boxShadow:"0 8px 24px rgba(0,0,0,0.1)"}}>
               <p style={{fontSize:17,color:C.text,lineHeight:1.95,whiteSpace:"pre-line",margin:0}}>{weapon.teaching}</p>
             </div>
@@ -1443,23 +1443,23 @@ export default function ArmedAndAnchored({ session, profile }) {
         {/* LEXICON */}
         {tab==="lexicon" && (
           <div>
-            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Lexicon — {weapon.title}</div>
-            <p style={{fontSize:13,color:C.muted,fontStyle:"italic",marginBottom:14,lineHeight:1.7}}>Key Greek &amp; Hebrew words from this weapon&apos;s Scripture. Original meaning behind the English.</p>
+            <div style={{fontSize:11,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Lexicon — {weapon.title}</div>
+            <p style={{fontSize:16,color:C.muted,fontStyle:"italic",marginBottom:14,lineHeight:1.7}}>Key Greek &amp; Hebrew words from this weapon&apos;s Scripture. Original meaning behind the English.</p>
             {(weapon.lexicon || []).map((entry, i) => (
               <div key={i} style={{background:C.bgCard,border:`1px solid ${C.borderGold}`,borderRadius:16,padding:"22px 24px 20px",marginBottom:14}}>
                 <div style={{fontSize:18,fontFamily:"'Cinzel',Georgia,serif",color:C.cream,letterSpacing:"0.04em",marginBottom:6}}>{entry.word}</div>
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:2}}>
-                  <div style={{fontSize:15,color:C.gold,fontFamily:"'EB Garamond',Georgia,serif",fontStyle:"italic",flex:1}}>{entry.original}</div>
-                  <button onClick={() => speak(entry)} aria-label="Hear pronunciation" style={{background:speaking?"rgba(176,138,78,0.35)":"rgba(176,138,78,0.12)",border:`1px solid ${C.borderGold}`,color:C.gold,width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,padding:0,touchAction:"manipulation"}}>{speaking?"▶":"🔊"}</button>
+                  <div style={{fontSize:16,color:C.gold,fontFamily:"'EB Garamond',Georgia,serif",fontStyle:"italic",flex:1}}>{entry.original}</div>
+                  <button onClick={() => speak(entry)} aria-label="Hear pronunciation" style={{background:speaking?"rgba(176,138,78,0.35)":"rgba(176,138,78,0.12)",border:`1px solid ${C.borderGold}`,color:C.gold,width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,padding:0,touchAction:"manipulation"}}>{speaking?"▶":"🔊"}</button>
                 </div>
-                <div style={{fontSize:10,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>{entry.language}</div>
+                <div style={{fontSize:11,color:C.muted,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>{entry.language}</div>
                 <div style={{height:1,background:"rgba(176,138,78,0.2)",marginBottom:12}} />
                 <p style={{fontSize:17,color:C.text,lineHeight:1.85,marginBottom:12,fontFamily:"'EB Garamond',Georgia,serif"}}>{entry.meaning}</p>
-                {entry.note && <p style={{fontSize:13,color:C.muted,lineHeight:1.85,fontStyle:"italic",fontFamily:"'EB Garamond',Georgia,serif"}}>{entry.note}</p>}
+                {entry.note && <p style={{fontSize:16,color:C.muted,lineHeight:1.85,fontStyle:"italic",fontFamily:"'EB Garamond',Georgia,serif"}}>{entry.note}</p>}
               </div>
             ))}
             {(!weapon.lexicon || weapon.lexicon.length === 0) && (
-              <p style={{fontSize:14,color:C.muted,fontStyle:"italic",textAlign:"center",padding:"24px 0"}}>Lexicon entries coming soon for this weapon.</p>
+              <p style={{fontSize:16,color:C.muted,fontStyle:"italic",textAlign:"center",padding:"24px 0"}}>Lexicon entries coming soon for this weapon.</p>
             )}
           </div>
         )}
@@ -1467,7 +1467,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         {/* TACTICS */}
         {tab==="tactics" && (
           <div>
-            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Enemy Tactics — {weapon.title}</div>
+            <div style={{fontSize:11,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Enemy Tactics — {weapon.title}</div>
             {weapon.tactics?.map((t,i) => (
               <div key={i} style={{background:`linear-gradient(145deg,rgba(158,40,40,0.08),rgba(158,40,40,0.02))`,border:`1px solid ${C.redB}`,borderRadius:14,padding:"16px 20px",marginBottom:10}}>
                 <div style={{display:"flex",gap:12,alignItems:"flex-start"}}>
@@ -1482,7 +1482,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         {/* DECLARE */}
         {tab==="declare" && (
           <div>
-            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Declaration — Deploy This Weapon</div>
+            <div style={{fontSize:11,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:14}}>Declaration — Deploy This Weapon</div>
             {weapon.declaration && (
               <div style={{background:"linear-gradient(145deg,rgba(176,138,78,0.14),rgba(176,138,78,0.05))",border:"1px solid rgba(176,138,78,0.3)",borderRadius:16,padding:"22px 24px",marginBottom:18,boxShadow:"0 8px 24px rgba(0,0,0,0.12)"}}>
                 <div style={{display:"flex",gap:10}}>
@@ -1503,8 +1503,8 @@ export default function ArmedAndAnchored({ session, profile }) {
         {/* JOURNAL */}
         {tab==="journal" && (
           <div>
-            <div style={{fontSize:9,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:10}}>Journal — {weapon.title}</div>
-            <p style={{fontSize:13,color:C.muted,fontStyle:"italic",lineHeight:1.7,marginBottom:14}}>Write your response, reflections, and warfare notes here.</p>
+            <div style={{fontSize:11,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:10}}>Journal — {weapon.title}</div>
+            <p style={{fontSize:16,color:C.muted,fontStyle:"italic",lineHeight:1.7,marginBottom:14}}>Write your response, reflections, and warfare notes here.</p>
             <textarea rows={10} value={get('journal')} onChange={e=>set('journal',e.target.value)} placeholder="Write your reflection here..."
               style={{width:"100%",background:"rgba(255,255,255,0.03)",border:`1px solid ${C.borderGold}`,borderRadius:14,color:C.cream,fontSize:17,lineHeight:1.9,padding:"16px 18px",fontFamily:"'EB Garamond',Georgia,serif",outline:"none",resize:"vertical",boxSizing:"border-box",minHeight:220}}/>
             <button onClick={async()=>{

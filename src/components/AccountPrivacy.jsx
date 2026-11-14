@@ -43,13 +43,13 @@ export default function AccountPrivacy({ supabase, theme: t, label = 'Privacy & 
 
   const rowButton = {
     background: 'transparent', border: `1px solid ${t.border}`, color: t.muted, padding: '6px 14px',
-    borderRadius: 10, fontSize: 12, fontFamily: heading, letterSpacing: '0.06em', cursor: 'pointer', textDecoration: 'none',
+    borderRadius: 10, fontSize: 13, fontFamily: heading, letterSpacing: '0.06em', cursor: 'pointer', textDecoration: 'none',
   }
 
   return (
     <div>
       <div style={{ marginTop: 24, marginBottom: 8 }}>
-        <div style={{ fontSize: 9, color: t.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: heading, marginBottom: 4 }}>{label}</div>
+        <div style={{ fontSize: 11, color: t.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: heading, marginBottom: 4 }}>{label}</div>
       </div>
       <div style={{ background: t.card, border: `1px solid ${t.border}`, borderRadius: 14, padding: '0 16px' }}>
         {LINKS.map((l) => (
@@ -74,10 +74,10 @@ export default function AccountPrivacy({ supabase, theme: t, label = 'Privacy & 
           {open && (
             <div style={{ marginTop: 12, paddingLeft: 38 }}>
               <p style={{ fontSize: 15, lineHeight: 1.6, color: t.text, fontFamily: body, margin: '0 0 10px' }}>{deletes}</p>
-              <p style={{ fontSize: 14, lineHeight: 1.6, color: t.muted, fontFamily: body, fontStyle: 'italic', margin: '0 0 12px' }}>
+              <p style={{ fontSize: 15, lineHeight: 1.6, color: t.muted, fontFamily: body, fontStyle: 'italic', margin: '0 0 12px' }}>
                 Purchases are not refunded. A record of each purchase is kept for tax purposes.
               </p>
-              <label style={{ display: 'block', fontSize: 14, color: t.muted, fontFamily: body, marginBottom: 6 }}>
+              <label style={{ display: 'block', fontSize: 15, color: t.muted, fontFamily: body, marginBottom: 6 }}>
                 Type DELETE to confirm
               </label>
               <input
@@ -100,7 +100,7 @@ export default function AccountPrivacy({ supabase, theme: t, label = 'Privacy & 
                   {busy ? 'Deleting…' : 'Delete forever'}
                 </button>
               </div>
-              {error && <div role="alert" style={{ marginTop: 10, fontSize: 14, color: t.danger, fontFamily: body }}>{error}</div>}
+              {error && <div role="alert" style={{ marginTop: 10, fontSize: 15, color: t.danger, fontFamily: body }}>{error}</div>}
             </div>
           )}
         </div>

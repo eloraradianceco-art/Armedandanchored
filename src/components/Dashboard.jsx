@@ -86,7 +86,7 @@ export default function Dashboard({ userId, weapons, onClose, onSelectWeapon, C 
         backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.border}`,
         padding: 'calc(14px + var(--safe-top, env(safe-area-inset-top, 0px))) 20px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 }}>
         <div>
-          <div style={{ fontSize: 9, color: C.redL, letterSpacing: '0.16em', textTransform: 'uppercase',
+          <div style={{ fontSize: 11, color: C.redL, letterSpacing: '0.16em', textTransform: 'uppercase',
             fontFamily: "'Cinzel',Georgia,serif", marginBottom: 2 }}>Your Warfare</div>
           <div style={{ fontSize: 20, fontWeight: 700, color: C.cream, fontFamily: "'Cinzel',Georgia,serif" }}>
             Progress Dashboard
@@ -102,7 +102,7 @@ export default function Dashboard({ userId, weapons, onClose, onSelectWeapon, C 
         <div style={{ background: `linear-gradient(145deg, rgba(158,40,40,0.15), rgba(176,138,78,0.08))`,
           border: `1px solid rgba(158,40,40,0.3)`, borderRadius: 16, padding: '20px',
           marginBottom: 24, textAlign: 'center' }}>
-          <div style={{ fontSize: 10, color: C.redL, letterSpacing: '0.16em',
+          <div style={{ fontSize: 11, color: C.redL, letterSpacing: '0.16em',
             fontFamily: "'Cinzel',Georgia,serif", textTransform: 'uppercase', marginBottom: 8 }}>
             Arsenal Readiness
           </div>
@@ -110,7 +110,7 @@ export default function Dashboard({ userId, weapons, onClose, onSelectWeapon, C 
             fontFamily: "'Cinzel',Georgia,serif", lineHeight: 1, marginBottom: 4 }}>
             {pct(weaponsExplored, weapons.length)}%
           </div>
-          <div style={{ fontSize: 13, color: C.muted, fontStyle: 'italic' }}>
+          <div style={{ fontSize: 16, color: C.muted, fontStyle: 'italic' }}>
             {weaponsExplored} of {weapons.length} weapons in your arsenal
           </div>
           {/* Progress bar */}
@@ -130,9 +130,9 @@ export default function Dashboard({ userId, weapons, onClose, onSelectWeapon, C 
               <div style={{ fontSize: 20, marginBottom: 6 }}>{s.icon}</div>
               <div style={{ fontSize: 24, fontWeight: 700, color: s.color,
                 fontFamily: "'Cinzel',Georgia,serif", lineHeight: 1, marginBottom: 4 }}>
-                {s.value}{s.total ? <span style={{ fontSize: 13, color: C.dim, fontWeight: 400 }}>/{s.total}</span> : ''}
+                {s.value}{s.total ? <span style={{ fontSize: 16, color: C.dim, fontWeight: 400 }}>/{s.total}</span> : ''}
               </div>
-              <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.3 }}>{s.label}</div>
+              <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.3 }}>{s.label}</div>
               {s.total && (
                 <div style={{ height: 3, background: 'rgba(255,255,255,0.05)',
                   borderRadius: 2, marginTop: 8, overflow: 'hidden' }}>
@@ -145,7 +145,7 @@ export default function Dashboard({ userId, weapons, onClose, onSelectWeapon, C 
         </div>
 
         {/* Per-weapon breakdown */}
-        <div style={{ fontSize: 9, color: C.muted, letterSpacing: '0.14em',
+        <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em',
           textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 12 }}>
           Weapon by Weapon
         </div>
@@ -178,11 +178,11 @@ export default function Dashboard({ userId, weapons, onClose, onSelectWeapon, C 
                 ))}
               </span>
             </span>
-            {w.score >= 4 && <span style={{ fontSize: 10, color: C.gold }}>✦</span>}
+            {w.score >= 4 && <span style={{ fontSize: 14, color: C.gold }}>✦</span>}
           </button>
         ))}
 
-        <div style={{ marginTop: 16, fontSize: 12, color: C.dim, textAlign: 'center', fontStyle: 'italic' }}>
+        <div style={{ marginTop: 16, fontSize: 15, color: C.dim, textAlign: 'center', fontStyle: 'italic' }}>
           Tap any weapon to open it
         </div>
       </div>

@@ -70,15 +70,16 @@ export default function Dashboard({ userId, weapons, onClose, onSelectWeapon, C 
   const pct = (v, t) => t ? Math.round((v / t) * 100) : 0
 
   if (loading) return (
-    <div style={{ position: 'fixed', inset: 0, background: C.bg, zIndex: 600,
+    <div style={{ position: 'fixed', inset: 0, background: C.bg, zIndex: 400,
       display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ color: C.muted, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.1em' }}>Loading…</div>
     </div>
   )
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: C.bg, zIndex: 600,
-      overflowY: 'auto', fontFamily: "'EB Garamond',Georgia,serif", color: C.text }}>
+    <div style={{ position: 'fixed', inset: 0, background: C.bg, zIndex: 400,
+      overflowY: 'auto', fontFamily: "'EB Garamond',Georgia,serif", color: C.text,
+      paddingBottom: 'calc(84px + env(safe-area-inset-bottom, 0px))' /* clears the bottom tab bar */ }}>
 
       {/* Header */}
       <div style={{ position: 'sticky', top: 0, background: 'rgba(7,14,23,0.96)',

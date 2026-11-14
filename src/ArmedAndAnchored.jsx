@@ -483,6 +483,10 @@ const TABS = [
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
 
 
+// Height of the bottom tab bar (plus the phone's home-indicator inset, added where it's used)
+const TAB_BAR_H = 60
+const BELOW_BAR = `calc(${TAB_BAR_H}px + env(safe-area-inset-bottom, 0px))`
+
 function MemorizeModal({verse, onClose, get, set, C}) {
     const [mode, setMode] = useState(null)          // null | 'recall' | 'blanks' | 'type'
     const [revealed, setRevealed] = useState(false)
@@ -774,7 +778,6 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [shareCard, setShareCard] = useState(null) // {weapon, type}
   const [memorizeVerse, setMemorizeVerse] = useState(null) // {text, ref, idx}
   const [journalSaved, setJournalSaved] = useState(false)
-  const [dockOpen, setDockOpen] = useState(false)
   const [tabMenuOpen, setTabMenuOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
@@ -999,60 +1002,43 @@ export default function ArmedAndAnchored({ session, profile }) {
   }
   const isSaved = (weaponId) => savedWeapons.includes(weaponId)
 
-  const EmojDock = ({activeId}) => (
-    <>
-      {/* Backdrop — separate from dock so it doesn't affect dock hit area */}
-      {dockOpen && (
-        <div onClick={()=>setDockOpen(false)}
-          style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:200}}/>
-      )}
-      {/* Dock — transform on the OUTER container so closed dock has zero hit area */}
-      <div style={{
-        position:"fixed",bottom:0,left:0,right:0,
-        zIndex:dockOpen?202:201,
-        fontFamily:"'EB Garamond',Georgia,serif",
-        background:"rgba(7,14,23,0.98)",backdropFilter:"blur(20px)",
-        borderTop:"1px solid rgba(158,40,40,0.35)",
-        borderRadius:"20px 20px 0 0",
-        transform:dockOpen?"translateY(0)":"translateY(calc(100% - 0px))",
-        transition:"transform 0.3s cubic-bezier(0.32,0.72,0,1)",
-        pointerEvents:dockOpen?"all":"none",
-      }}>
-        {/* Drag pill */}
-        <div style={{display:"flex",justifyContent:"center",padding:"8px 0 4px"}}>
-          <div style={{width:36,height:3,borderRadius:2,background:"rgba(158,40,40,0.4)"}}/>
-        </div>
-        {/* Grid */}
-        <div style={{padding:"6px 16px 20px"}}>
-          <div style={{fontSize:8,color:"#8A9AAA",letterSpacing:"0.12em",textTransform:"uppercase",
-            fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",marginBottom:8}}>
-            {WEAPONS.length} Weapons
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,maxWidth:300,margin:"0 auto"}}>
-            {WEAPONS.map(w => {
-              const done = declared[w.id];
-              const active = w.id === activeId;
-              return (
-                <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");setDockOpen(false);window.scrollTo(0,0);}} title={w.title}
-                  style={{background:active?"linear-gradient(145deg,rgba(158,40,40,0.4),rgba(158,40,40,0.18))":done?"rgba(158,40,40,0.12)":"rgba(255,255,255,0.04)",
-                    border:`1px solid ${active?"rgba(158,40,40,0.7)":done?"rgba(158,40,40,0.3)":"rgba(255,255,255,0.07)"}`,
-                    borderRadius:9,width:"100%",aspectRatio:"1/1",cursor:"pointer",fontSize:18,
-                    display:"flex",alignItems:"center",justifyContent:"center",
-                    transition:"all .15s",
-                    boxShadow:active?"0 0 14px rgba(158,40,40,0.55)":"none",
-                    transform:active?"scale(1.08)":"none",position:"relative"}}>
-                  {w.icon}
-                  {done && !active && <span style={{position:"absolute",top:1,right:2,fontSize:6,color:"#C94848",lineHeight:1}}>✦</span>}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+  // ── Bottom tab bar ─────────────────────────────────────────────
+  // Arsenal, Search, Saved, Progress and Settings sit at the bottom where a thumb reaches them
+  // (they were a row of small links under the header). Same pattern as The Living Planner. 2026-11-13
+  const activeTab = showSettings ? 'settings' : showDashboard ? 'progress' : showSaved ? 'saved' : showSearch ? 'search' : 'arsenal'
+  const goTab = (id) => {
+    if (id === activeTab && id === 'arsenal' && !selected) { window.scrollTo({ top: 0, behavior: 'smooth' }); return }
+    setShowSearch(false); setShowSaved(false); setShowDashboard(false); setShowSettings(false)
+    if (id === 'arsenal') { setSelected(null); window.scrollTo(0, 0) }
+    else if (id === 'search') { setSearchQuery(''); setSearchResults([]); setShowSearch(true) }
+    else if (id === 'saved') setShowSaved(true)
+    else if (id === 'progress') setShowDashboard(true)
+    else if (id === 'settings') setShowSettings(true)
+  }
+  const tabBar = () => (
+    <nav aria-label="Main" style={{
+      position:'fixed',left:0,right:0,bottom:0,zIndex:450,
+      background:lightMode?'rgba(242,237,227,0.97)':'rgba(7,14,23,0.97)',
+      backdropFilter:'blur(18px)',WebkitBackdropFilter:'blur(18px)',
+      borderTop:`1px solid ${C.border}`,boxShadow:'0 -8px 28px rgba(0,0,0,0.28)',
+      paddingBottom:'env(safe-area-inset-bottom, 0px)',
+    }}>
+      <div style={{display:'flex',maxWidth:560,margin:'0 auto'}}>
+        {[['arsenal','\u2694\uFE0F','Arsenal'],['search','\uD83D\uDD0D','Search'],['saved','\u2B50','Saved'],['progress','\uD83D\uDCCA','Progress'],['settings','\u2699\uFE0F','Settings']].map(([id,icon,label])=>{
+          const on = activeTab === id
+          return (
+            <button key={id} onClick={()=>goTab(id)} aria-current={on?'page':undefined}
+              style={{flex:1,minHeight:TAB_BAR_H,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:3,
+                background:'transparent',border:'none',cursor:'pointer',touchAction:'manipulation',padding:'8px 2px 6px',position:'relative'}}>
+              {on && <span style={{position:'absolute',top:0,left:'28%',right:'28%',height:2,borderRadius:2,background:C.redL}}/>}
+              <span style={{fontSize:21,lineHeight:1,filter:on?'none':'saturate(0.55)',opacity:on?1:0.78}}>{icon}</span>
+              <span style={{fontSize:9.5,letterSpacing:'0.08em',textTransform:'uppercase',fontFamily:"'Cinzel',Georgia,serif",fontWeight:on?700:500,color:on?C.gold:C.muted}}>{label}</span>
+            </button>
+          )
+        })}
       </div>
-    </>
-  );
-
-
+    </nav>
+  )
 
   // Inject fadeIn keyframe once
   if (typeof document !== 'undefined' && !document.getElementById('aa-fadein')) {
@@ -1064,35 +1050,41 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   // Dashboard overlay
   if (showDashboard) return (
-    <Dashboard
-      userId={userId}
-      weapons={WEAPONS}
-      onClose={()=>setShowDashboard(false)}
-      onSelectWeapon={(id)=>{setSelected(id);setTab("scripture");window.scrollTo(0,0)}}
-      C={C}
-    />
+    <>
+      <Dashboard
+        userId={userId}
+        weapons={WEAPONS}
+        onClose={()=>setShowDashboard(false)}
+        onSelectWeapon={(id)=>{setShowDashboard(false);setSelected(id);setTab("scripture");window.scrollTo(0,0)}}
+        C={C}
+      />
+      {tabBar()}
+    </>
   )
 
   // Settings overlay
   if (showSettings) return (
-    <Settings
-      profile={profile}
-      userId={userId}
-      weapons={WEAPONS}
-      entries={entries}
-      lightMode={lightMode}
-      onToggleLightMode={toggleLightMode}
-      onClose={() => setShowSettings(false)}
-    />
+    <>
+      <Settings
+        profile={profile}
+        userId={userId}
+        weapons={WEAPONS}
+        entries={entries}
+        lightMode={lightMode}
+        onToggleLightMode={toggleLightMode}
+        onClose={() => setShowSettings(false)}
+      />
+      {tabBar()}
+    </>
   )
 
 
 
   // ── Search Modal ────────────────────────────────────────────────────────
   const SearchModal = () => (
-    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:700,
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:400,
       display:'flex',alignItems:'flex-start',justifyContent:'center',
-      overflowY:'auto',padding:'calc(16px + var(--safe-top, env(safe-area-inset-top, 0px))) 16px calc(48px + env(safe-area-inset-bottom, 0px))'}} onClick={()=>setShowSearch(false)}>
+      overflowY:'auto',padding:`calc(16px + var(--safe-top, env(safe-area-inset-top, 0px))) 16px calc(48px + ${BELOW_BAR})`}} onClick={()=>setShowSearch(false)}>
       <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},${C.mid||'rgba(13,26,42,1)'})`,
         border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:'100%',maxWidth:460,marginTop:20}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
@@ -1138,9 +1130,9 @@ export default function ArmedAndAnchored({ session, profile }) {
     const savedWeaponEntries = savedWeapons.filter(id => !String(id).includes('_s'))
     const savedScriptureEntries = savedWeapons.filter(id => String(id).includes('_s'))
     return (
-      <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:700,
+      <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:400,
         display:'flex',alignItems:'flex-start',justifyContent:'center',
-        overflowY:'auto',padding:'calc(16px + var(--safe-top, env(safe-area-inset-top, 0px))) 16px calc(48px + env(safe-area-inset-bottom, 0px))'}} onClick={()=>setShowSaved(false)}>
+        overflowY:'auto',padding:`calc(16px + var(--safe-top, env(safe-area-inset-top, 0px))) 16px calc(48px + ${BELOW_BAR})`}} onClick={()=>setShowSaved(false)}>
         <div onClick={e=>e.stopPropagation()} style={{background:`linear-gradient(145deg,${C.bg},${C.mid||'rgba(13,26,42,1)'})`,
           border:`1px solid ${C.border}`,borderRadius:20,padding:22,width:'100%',maxWidth:460,marginTop:20}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
@@ -1228,22 +1220,9 @@ export default function ArmedAndAnchored({ session, profile }) {
             
           </div>
         </div>
-        {/* Under-header nav pills */}
-        <div style={{display:"flex",justifyContent:"center",gap:2,padding:"5px 12px 8px",flexWrap:"nowrap",overflowX:"auto"}}>
-          {[["search","🔍 Search"],["saved","☆ Saved"],["dashboard","📊 Progress"],["settings","⚙️ Settings"]].map(([v,l])=>(
-            <button key={v} onClick={()=>{
-              if(v==="search"){setShowSearch(true);setSearchQuery('');setSearchResults([])}
-              else if(v==="saved"){setShowSaved(true)}
-              else if(v==="dashboard"){setShowDashboard(true)}
-              else if(v==="settings"){setShowSettings(true)}
-            }} style={{background:"transparent",border:"1px solid transparent",color:C.muted,padding:"4px 8px",borderRadius:6,cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",whiteSpace:"nowrap",flexShrink:0,touchAction:"manipulation",transition:"all .2s"}}>
-              {l}
-            </button>
-          ))}
-        </div>
       </div>
 
-      <div style={{maxWidth:1100,margin:"0 auto",padding:"18px 16px 120px"}}>
+      <div style={{maxWidth:1100,margin:"0 auto",padding:`18px 16px calc(32px + ${BELOW_BAR})`}}>
         <Drill weapons={WEAPONS} entries={entries} getFor={getFor} setFor={setFor} onDeclare={markDeclared}
           onOpenWeapon={id=>{setSelected(id);setTab('scripture');window.scrollTo(0,0)}} lightMode={lightMode}/>
 
@@ -1287,12 +1266,12 @@ export default function ArmedAndAnchored({ session, profile }) {
       </div>
     {showSearch && <SearchModal/>}
     {showSaved && <SavedModal/>}
-    <EmojDock activeId={null}/>
+    {tabBar()}
     </div>
   );
 
   return (
-    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 50% 0%, ${accF(weapon).replace("0.1","0.2")} 0%, transparent 50%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:90}}>
+    <div style={{minHeight:"100vh",background:`radial-gradient(ellipse at 50% 0%, ${accF(weapon).replace("0.1","0.2")} 0%, transparent 50%), ${C.bg}`,fontFamily:"'EB Garamond',Georgia,serif",color:C.text,paddingBottom:`calc(96px + ${BELOW_BAR})`}}>
 
       {/* Floating prev/next study tab buttons */}
       {/* Floating prev/next + share FAB — FAB stacks above next pill, shares its horizontal center */}
@@ -1306,7 +1285,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         const showPrev = prevTab || prevWeapon
         const showNext = nextTab || nextWeapon
         const pillStatic = {background:lightMode?'rgba(242,237,227,0.94)':'rgba(7,14,23,0.88)',backdropFilter:'blur(12px)',border:`1px solid ${C.redB}`,color:C.redL,borderRadius:50,padding:'10px 14px',cursor:'pointer',fontSize:11,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.04em',boxShadow:'0 4px 16px rgba(139,26,26,0.18)',touchAction:'manipulation',transition:'all .2s',display:'flex',alignItems:'center',gap:5,maxWidth:160}
-        const pillFixed = (extra) => ({...pillStatic, position:'fixed', bottom:32, zIndex:250, ...extra})
+        const pillFixed = (extra) => ({...pillStatic, position:'fixed', bottom:`calc(14px + ${BELOW_BAR})`, zIndex:250, ...extra})
         const fabBtn = (
           <button
             onClick={()=>setShareCard({weapon, type: tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"})}
@@ -1335,7 +1314,7 @@ export default function ArmedAndAnchored({ session, profile }) {
               <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{prevTab ? prevTab.label : prevWeapon?.title.split(' ').slice(0,2).join(' ')}</span>
             </button>}
             {/* Right-side column: FAB on top, next pill below, both centered horizontally */}
-            <div style={{position:'fixed',bottom:32,right:16,zIndex:250,display:'flex',flexDirection:'column',alignItems:'center',gap:12}}>
+            <div style={{position:'fixed',bottom:`calc(14px + ${BELOW_BAR})`,right:16,zIndex:250,display:'flex',flexDirection:'column',alignItems:'center',gap:12}}>
               {fabBtn}
               {showNext && <button onClick={()=>{
                 if(nextTab) { setTab(nextTab.id); window.scrollTo(0,0) }
@@ -1363,19 +1342,6 @@ export default function ArmedAndAnchored({ session, profile }) {
             <button onClick={()=>setShareCard({weapon,type:tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"})} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:"#B08A4E",borderRadius:8,padding:"5px 9px",cursor:"pointer",fontSize:12}}>↗</button>
             
           </div>
-        </div>
-        {/* Under-header nav pills */}
-        <div style={{display:"flex",justifyContent:"center",gap:2,padding:"3px 12px 6px",flexWrap:"nowrap",overflowX:"auto"}}>
-          {[["back","← Arsenal"],["search","🔍 Search"],["saved","☆ Saved"],["settings","⚙️ Settings"]].map(([v,l])=>(
-            <button key={v} onClick={()=>{
-              if(v==="back"){setSelected(null);window.scrollTo(0,0);}
-              else if(v==="search"){setShowSearch(true);setSearchQuery('');setSearchResults([])}
-              else if(v==="saved"){setShowSaved(true)}
-              else if(v==="settings"){setShowSettings(true)}
-            }} style={{background:"transparent",border:"1px solid transparent",color:C.muted,padding:"4px 8px",borderRadius:6,cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",whiteSpace:"nowrap",flexShrink:0,touchAction:"manipulation",transition:"all .2s"}}>
-              {l}
-            </button>
-          ))}
         </div>
       </div>
 
@@ -1569,7 +1535,7 @@ export default function ArmedAndAnchored({ session, profile }) {
           <div style={{filter:'blur(4px)',pointerEvents:'none',position:'fixed',inset:0,zIndex:490,background:C.bg}}/>
         </>
       )}
-      <EmojDock activeId={selected}/>
+      {!shareCard && tabBar()}
     </div>
   );
 }

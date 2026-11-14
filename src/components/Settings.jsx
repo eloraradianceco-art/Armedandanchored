@@ -195,7 +195,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
       overflowY: 'auto', animation: 'fadeIn 0.25s ease',
     }}>
       {showReviews && <Reviews app="aa" appName="Armed & Anchored" eyebrow="Armed & Anchored" userEmail={profile?.email} C={C} lightMode={lightMode} onClose={() => setShowReviews(false)} />}
-      <div style={{ maxWidth: 560, margin: '0 auto', padding: '0 0 80px' }}>
+      <div style={{ maxWidth: 560, margin: '0 auto', padding: '0 0 calc(100px + env(safe-area-inset-bottom, 0px))' /* clears the bottom tab bar */ }}>
 
         {/* Header */}
         <div style={{

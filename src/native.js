@@ -29,6 +29,16 @@ export async function nativeShareImage(dataUrl, fileName, title) {
   try { await Share.share({ title, files: [uri], dialogTitle: title }) } catch (e) { /* closed */ }
 }
 
+// Several images in one share sheet (a set of share cards).
+export async function nativeShareImages(dataUrls, fileNames, title) {
+  const files = []
+  for (let i = 0; i < dataUrls.length; i++) {
+    const { uri } = await Filesystem.writeFile({ path: fileNames[i], data: dataUrls[i].split(',')[1], directory: Directory.Cache })
+    files.push(uri)
+  }
+  try { await Share.share({ title, files, dialogTitle: title }) } catch (e) { /* closed */ }
+}
+
 export async function nativeShareFile(content, fileName, title) {
   const { uri } = await Filesystem.writeFile({
     path: fileName, data: content, directory: Directory.Cache, encoding: Encoding.UTF8,

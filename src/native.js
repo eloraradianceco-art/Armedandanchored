@@ -6,8 +6,19 @@ import { Filesystem, Directory, Encoding } from '@capacitor/filesystem'
 import { Preferences } from '@capacitor/preferences'
 import { StatusBar, Style } from '@capacitor/status-bar'
 import { Purchases } from '@revenuecat/purchases-capacitor'
+import { TextToSpeech } from '@capacitor-community/text-to-speech'
+import { setNativeSpeaker } from './speech.js'
 
 export const isNative = Capacitor.isNativePlatform()
+
+// Read-aloud uses the phone's own speech engine in the app: Android's in-app browser has no read-aloud at all, and
+// on iPhone AppDelegate sets audio to "playback" so it is heard with the Silent switch on.
+if (isNative) {
+  setNativeSpeaker({
+    speak: ({ text, lang, rate }) => TextToSpeech.speak({ text, lang, rate, category: 'playback' }),
+    stop: () => TextToSpeech.stop(),
+  })
+}
 
 // The app runs from files on the phone, so shared links use the full website address.
 export const WEB_ORIGIN = 'https://armed.eloraradiance.com'

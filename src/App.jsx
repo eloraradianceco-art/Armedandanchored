@@ -1,6 +1,7 @@
 import { useState, useEffect, Component } from 'react'
 import { supabase } from './supabaseClient'
 import Paywall from './components/Paywall'
+import { NATIVE_PURCHASES, storeSignIn, storeSignOut } from './native'
 import Auth from './components/Auth'
 import Onboarding from './components/Onboarding'
 import ArmedAndAnchored from './ArmedAndAnchored'
@@ -76,7 +77,7 @@ function AppInner() {
       }
       setSession(session)
       if (session) loadProfile()
-      else { setProfile(null); setLoading(false) }
+      else { setProfile(null); setLoading(false); storeSignOut() }   // signed out anywhere: sign the App Store side out too
     })
 
     return () => subscription.unsubscribe()
@@ -85,12 +86,14 @@ function AppInner() {
   // Loads (and creates, if needed) this account's Armed & Anchored profile.
   // The database applies any purchase made with this email or the checkout just completed.
   const loadProfile = async () => {
+    let loaded = null
     try {
       const pending = localStorage.getItem('pending_stripe_session')
       const args = pending && pending.startsWith('cs_') ? { checkout_session: pending } : {}
       const { data, error } = await supabase.rpc('aa_load_profile', args)
       if (error) throw error
       setProfile(data || null)
+      loaded = data || null
       if (data?.onboarded) {
         try { localStorage.setItem('aa_onboarded', 'true') } catch {}
         setOnboarded(true)
@@ -104,7 +107,27 @@ function AppInner() {
     } finally {
       setLoading(false)
     }
+    return loaded
   }
+
+  // App Store: after an Apple purchase or restore, the server reads it from Apple (store-sync) and unlocks the
+  // account; check a few times while that lands. Also checked once when the app opens signed in.
+  const [storeConfirming, setStoreConfirming] = useState(false)
+  const storeSync = () => supabase.functions.invoke('store-sync', { body: { action: 'sync', app: 'aa' } }).catch(() => null)
+  const confirmStorePurchase = async () => {
+    setStoreConfirming(true)
+    for (let i = 0; i < 8; i++) {
+      if (i % 3 === 0) await storeSync()
+      const p = await loadProfile()
+      if (p?.paid) break
+      await new Promise((r) => setTimeout(r, 2000))
+    }
+    setStoreConfirming(false)
+  }
+  useEffect(() => {
+    if (!NATIVE_PURCHASES || !session?.user?.id) return
+    storeSignIn(session.user.id).then(() => storeSync()).then(() => loadProfile())
+  }, [session?.user?.id])
 
   // Just paid: Stripe tells our server within seconds. Check a few times before showing the paywall.
   const pendingPurchase = !!localStorage.getItem('pending_stripe_session')
@@ -228,12 +251,13 @@ function AppInner() {
 
   // Logged in but not unlocked yet
   if (!profile?.paid) {
-    if (pendingPurchase && verifyTries < MAX_TRIES) return <LoadingScreen message="Confirming your purchase..."/>
+    if (storeConfirming || (pendingPurchase && verifyTries < MAX_TRIES)) return <LoadingScreen message="Confirming your purchase..."/>
     return <Paywall
       session={session}
       pending={pendingPurchase}
       onCheckAgain={() => { setVerifyTries(0); loadProfile() }}
       onSignOut={() => supabase.auth.signOut()}
+      onStorePurchase={confirmStorePurchase}
     />
   }
 

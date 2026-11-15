@@ -71,7 +71,7 @@ function Note({ c, tone = 'ok', children }) {
 // purchasable=false (App Store app before in-app purchase): no buy button, unavailableNote instead.
 export function Welcome({
   brand: b, session, buyHref, onPrimary, onSignIn, onSignOut, purchasable = true, unavailableNote,
-  onCheckAgain, checking = false, checkMessage, notice,
+  onCheckAgain, checking = false, checkMessage, notice, footer,
 }) {
   const c = b.colors
   const signedIn = !!session
@@ -118,6 +118,7 @@ export function Welcome({
         }}>{checking ? 'Checking…' : "I've Paid · Check Again"}</button>
       )}
       {(notice || checkMessage) && <div style={{ marginTop: 14 }}>{notice && <Note c={c}>{notice}</Note>}{checkMessage && <Note c={c}>{checkMessage}</Note>}</div>}
+      {footer}
 
       <div style={{ marginTop: 22, fontSize: 14, color: c.muted, lineHeight: 1.6 }}>
         {signedIn ? (

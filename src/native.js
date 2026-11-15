@@ -5,6 +5,7 @@ import { Share } from '@capacitor/share'
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem'
 import { Preferences } from '@capacitor/preferences'
 import { StatusBar, Style } from '@capacitor/status-bar'
+import { Purchases } from '@revenuecat/purchases-capacitor'
 
 export const isNative = Capacitor.isNativePlatform()
 
@@ -50,4 +51,58 @@ export async function nativeShareFile(content, fileName, title) {
 export function syncStatusBar(lightMode) {
   if (!isNative) return
   StatusBar.setStyle({ style: lightMode ? Style.Light : Style.Dark }).catch(() => {})
+}
+
+// ── Apple in-app purchase (RevenueCat), decided 2026-11-15 ───────────────
+// Turns on by itself once REVENUECAT_IOS_KEY holds the app's public RevenueCat key (starts with "appl_"; it is
+// meant to ship inside the app). Until then the App Store app shows "sign in" with no buy button, as before.
+// App Store Connect: non-consumable product aa_lifetime. RevenueCat: entitlement "lifetime", current offering with
+// a Lifetime package. The purchase is tied to the signed-in account (RevenueCat app user id = account id), and the
+// shared database is updated by the store-sync function. Setup steps: claude/in-app-purchases.md in the project.
+export const REVENUECAT_IOS_KEY = '' || import.meta.env.VITE_REVENUECAT_IOS_KEY || ''  // key goes in the first quotes
+export const NATIVE_PURCHASES = isNative && Capacitor.getPlatform() === 'ios' && /^appl_/.test(REVENUECAT_IOS_KEY)
+export const LIFETIME_ENTITLEMENT = 'lifetime'
+let storeReady = null
+let storeUser = null
+export async function storeSignIn(userId) {
+  if (!NATIVE_PURCHASES || !userId) return false
+  try {
+    if (!storeReady) storeReady = Purchases.configure({ apiKey: REVENUECAT_IOS_KEY, appUserID: userId }).then(() => true)
+    await storeReady
+    if (storeUser && storeUser !== userId) await Purchases.logIn({ appUserID: userId })
+    storeUser = userId
+    return true
+  } catch { storeReady = null; return false }
+}
+export async function storeSignOut() {
+  if (!NATIVE_PURCHASES || !storeReady) return
+  try { await storeReady; await Purchases.logOut() } catch {} // fails for anonymous users; nothing to undo
+  storeUser = null
+}
+const unlocked = (info) => !!info?.entitlements?.active?.[LIFETIME_ENTITLEMENT]
+// The lifetime unlock with Apple's own price text for this person's country (null if the store is unreachable)
+export async function storeLifetime(userId) {
+  if (!(await storeSignIn(userId))) return null
+  try {
+    const cur = (await Purchases.getOfferings())?.current
+    const pkg = cur?.lifetime || cur?.availablePackages?.find((p) => p.packageType === 'LIFETIME' || p.identifier === '$rc_lifetime') || cur?.availablePackages?.[0]
+    return pkg ? { pkg, price: pkg.product?.priceString || '' } : null
+  } catch { return null }
+}
+// 'unlocked' | 'cancelled' | 'pending' (Ask to Buy) | { error }
+export async function storeBuy(userId, pkg) {
+  if (!(await storeSignIn(userId))) return { error: "The App Store isn't available right now." }
+  try {
+    const r = await Purchases.purchasePackage({ aPackage: pkg })
+    return unlocked(r?.customerInfo) ? 'unlocked' : 'pending'
+  } catch (e) {
+    if (e?.userCancelled || String(e?.code) === '1') return 'cancelled'   // PURCHASE_CANCELLED_ERROR
+    if (String(e?.code) === '20') return 'pending'                          // PAYMENT_PENDING_ERROR (Ask to Buy)
+    return { error: e?.message || "The purchase didn't go through." }
+  }
+}
+// true when this Apple ID already owns the lifetime unlock (restored onto the signed-in account)
+export async function storeRestore(userId) {
+  if (!(await storeSignIn(userId))) return false
+  try { return unlocked((await Purchases.restorePurchases())?.customerInfo) } catch { return false }
 }

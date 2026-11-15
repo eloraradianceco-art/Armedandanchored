@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
+import { speak as readAloud, stopSpeaking, silentSwitchMayMute } from "../speech.js";
 
 /* ─────────────────────────────────────────────────────────────
    ARMED & ANCHORED — DAILY DRILL + UNDER ATTACK
@@ -70,14 +71,15 @@ const splitTactic = t => {
 };
 const lines = t => (String(t || "").match(/[^.!?]+[.!?]+["'”’)]*/g) || [String(t || "")]).map(s => s.trim()).filter(Boolean);
 
-function speakText(text) {
-  try {
-    const s = window.speechSynthesis;
-    if (!s || !window.SpeechSynthesisUtterance) return false;
-    s.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 0.92; s.speak(u); return true;
-  } catch (e) { return false; }
+// Read-aloud lives in speech.js (iPhone Silent switch, Safari's dropped reads, long passages).
+const speakText = (text, onError) => readAloud(text, { rate: 0.92, onError });
+const hush = stopSpeaking;
+// Older iPhones (no audio-session control) still mute read-aloud with the Silent switch: say so once.
+function silentTip() {
+  if (!silentSwitchMayMute()) return "";
+  try { if (localStorage.getItem("listen_tip")) return ""; localStorage.setItem("listen_tip", "1"); } catch (e) { return ""; }
+  return "No sound? Turn off Silent Mode with the switch on the side of your iPhone, and turn the volume up.";
 }
-const hush = () => { try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {} };
 
 /* What people face, and the weapon that answers it */
 export const ATTACKS = [
@@ -293,7 +295,10 @@ export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare
       const stamp = new Date().toLocaleDateString(undefined, { month: "short", day: "numeric" });
       setFor(id, "journal", (prev ? prev.trim() + "\n\n" : "") + "Battle plan, " + stamp + ": " + text);
     },
-    speak: t => { if (!speakText(t)) setToast("Listening isn’t supported in this browser."); },
+    speak: t => {
+      if (!speakText(t, () => setToast("Couldn’t play the audio. Check that your volume is up, then tap Listen again."))) setToast("Listening isn’t supported in this browser.");
+      else { const tip = silentTip(); if (tip) setToast(tip); }
+    },
   });
   const c = ctx();
 

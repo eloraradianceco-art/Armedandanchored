@@ -1,5 +1,6 @@
 import { useState, useEffect, Component } from 'react'
 import { supabase } from './supabaseClient'
+import { startSync, queueProfile } from './entrySync'
 import Paywall from './components/Paywall'
 import Auth from './components/Auth'
 import Onboarding from './components/Onboarding'
@@ -154,9 +155,9 @@ function AppInner() {
     setShowOnboarding(false)
     const uid = session?.user?.id
     if (uid) {
-      // .then() is what sends the request: a Supabase query that is never awaited never runs.
-      supabase.from('aa_profiles').update({ onboarded: true }).eq('id', uid)
-        .then(({ error }) => { if (error) console.warn('onboarded sync:', error.message) })
+      // Kept on this device until the database confirms it (entrySync retries)
+      startSync(uid)
+      queueProfile({ onboarded: true })
     }
   }
 

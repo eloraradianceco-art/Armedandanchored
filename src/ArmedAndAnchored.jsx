@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from './supabaseClient'
+import { startSync, queueEntry, queueProfile, pendingEntries, pendingProfile, flush, onSaveStatus } from './entrySync'
 import { speak as readAloud } from './speech.js'
 import ShareCard from './components/ShareCard'
 import Dashboard from './components/Dashboard'
@@ -738,11 +739,15 @@ export default function ArmedAndAnchored({ session, profile }) {
   // ── Cross-device sync: hydrate state from profile when it loads ───────
   useEffect(() => {
     if (!profile) return
-    if (Array.isArray(profile.saved) && profile.saved.length > 0) {
+    startSync(userId)
+    const mine = pendingProfile() // changes made here that haven't reached the database yet win
+    if (Array.isArray(mine.saved)) { setSavedWeapons(mine.saved) }
+    else if (Array.isArray(profile.saved) && profile.saved.length > 0) {
       setSavedWeapons(profile.saved)
       try { localStorage.setItem('aa_saved', JSON.stringify(profile.saved)) } catch {}
     }
-    if (typeof profile.light_mode === 'boolean') {
+    if (typeof mine.light_mode === 'boolean') setLightMode(mine.light_mode)
+    else if (typeof profile.light_mode === 'boolean') {
       setLightMode(profile.light_mode)
       try { localStorage.setItem('aa_lightmode', String(profile.light_mode)) } catch {}
     }
@@ -779,6 +784,9 @@ export default function ArmedAndAnchored({ session, profile }) {
   const [shareCard, setShareCard] = useState(null) // {weapon, type}
   const [memorizeVerse, setMemorizeVerse] = useState(null) // {text, ref, idx}
   const [journalSaved, setJournalSaved] = useState(false)
+  // 'saved' | 'saving' | 'waiting' (changes kept on this device until the connection is back)
+  const [saveStatus, setSaveStatus] = useState('saved')
+  useEffect(() => onSaveStatus(setSaveStatus), [])
   const [tabMenuOpen, setTabMenuOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
@@ -814,6 +822,7 @@ export default function ArmedAndAnchored({ session, profile }) {
 
   useEffect(() => {
     if (!userId) return
+    startSync(userId)
     supabase
       .from('aa_weapon_entries')
       .select('*')
@@ -828,7 +837,14 @@ export default function ArmedAndAnchored({ session, profile }) {
             if (seen.has(k)) return false
             seen.add(k); return true
           })
+          // Entries saved on this device but not yet in the database (closed too fast, offline) win when newer
+          for (const p of pendingEntries()) {
+            const i = deduped.findIndex(e => String(e.weapon_id) === String(p.weapon_id) && e.field_key === p.field_key)
+            if (i < 0) deduped.push(p)
+            else if (String(p.updated_at || '') >= String(deduped[i].updated_at || '')) deduped[i] = { ...deduped[i], ...p }
+          }
           setEntries(deduped)
+          flush()
           const dec = {}
           deduped.filter(e => e.field_key === 'declared').forEach(e => { dec[e.weapon_id] = true })
           setDeclared(dec)
@@ -850,8 +866,6 @@ export default function ArmedAndAnchored({ session, profile }) {
     return e?.field_value || ''
   }
 
-  // Debounce timers per field key
-  const saveTimers = useRef({})
 
   const setFor = useCallback((wid, fieldKey, value) => {
     if (!userId || wid == null) return
@@ -865,18 +879,8 @@ export default function ArmedAndAnchored({ session, profile }) {
       }
       return [...prev, { user_id: userId, weapon_id: wid, field_key: fieldKey, field_value: value, updated_at: new Date().toISOString() }]
     })
-    // Debounce Supabase persist — 1s after last change
-    const timerKey = `${wid}__${fieldKey}`
-    clearTimeout(saveTimers.current[timerKey])
-    saveTimers.current[timerKey] = setTimeout(async () => {
-      await supabase.from('aa_weapon_entries').upsert({
-        user_id: userId,
-        weapon_id: wid,
-        field_key: fieldKey,
-        field_value: value,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: 'user_id,weapon_id,field_key' })
-    }, 1000)
+    // Saved on this device at once, sent to the database a second after typing stops, retried until it lands
+    queueEntry(wid, fieldKey, value)
   }, [userId])
 
   const set = useCallback((fieldKey, value) => {
@@ -899,9 +903,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     setDeclared(newDec)
     setDeployFlash(f => ({ ...f, [id]: true }))
     setTimeout(() => setDeployFlash(f => ({ ...f, [id]: false })), 2000)
-    await supabase.from('aa_weapon_entries').upsert({
-      user_id: userId, weapon_id: id, field_key: 'declared', field_value: 'true'
-    }, { onConflict: 'user_id,weapon_id,field_key' })
+    setFor(id, 'declared', 'true')
   }
 
   const goWk = (id) => { setSelected(id); setTab('scripture'); setDay(-1); window.scrollTo(0,0) }
@@ -945,10 +947,7 @@ export default function ArmedAndAnchored({ session, profile }) {
     const next = !lightMode
     setLightMode(next)
     try { localStorage.setItem('aa_lightmode', String(next)) } catch {}
-    if (userId) {
-      supabase.from('aa_profiles').update({ light_mode: next }).eq('id', userId)
-        .then(({ error }) => { if (error) console.warn('lightmode sync:', error.message) })
-    }
+    if (userId) queueProfile({ light_mode: next })
   }
 
   const daysComplete = (id) => entries.filter(e => e.weapon_id === id && e.field_key.startsWith('tr_') && (e.field_value || '').trim()).length
@@ -990,10 +989,7 @@ export default function ArmedAndAnchored({ session, profile }) {
       : [...savedWeapons, weaponId]
     setSavedWeapons(next)
     try { localStorage.setItem('aa_saved', JSON.stringify(next)) } catch {}
-    if (userId) {
-      supabase.from('aa_profiles').update({ saved: next }).eq('id', userId)
-        .then(({ error }) => { if (error) console.warn('saved sync:', error.message) })
-    }
+    if (userId) queueProfile({ saved: next })
   }
   const isSaved = (weaponId) => savedWeapons.includes(weaponId)
 
@@ -1486,10 +1482,7 @@ export default function ArmedAndAnchored({ session, profile }) {
                 </div>
               </div>
             )}
-            <button onClick={async()=>{
-              await supabase.from('aa_weapon_entries').upsert({user_id:userId,weapon_id:weapon.id,field_key:'declared',field_value:'true',updated_at:new Date().toISOString()},{onConflict:'user_id,weapon_id,field_key'});
-              setEntries(prev=>{const idx=prev.findIndex(e=>String(e.weapon_id)===String(weapon.id)&&e.field_key==='declared');if(idx>=0){const u=[...prev];u[idx]={...u[idx],field_value:'true'};return u;}return[...prev,{user_id:userId,weapon_id:weapon.id,field_key:'declared',field_value:'true'}];});
-            }} style={{width:"100%",background:declared[weapon.id]?"rgba(120,184,120,0.15)":`linear-gradient(135deg,${C.redF},rgba(255,255,255,0.01))`,border:`1px solid ${declared[weapon.id]?"rgba(120,184,120,0.4)":C.redB}`,color:declared[weapon.id]?C.green:C.redL,padding:"16px",borderRadius:14,cursor:"pointer",fontSize:13,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",transition:"all .25s"}}>
+            <button onClick={()=>markDeclared(weapon.id)} style={{width:"100%",background:declared[weapon.id]?"rgba(120,184,120,0.15)":`linear-gradient(135deg,${C.redF},rgba(255,255,255,0.01))`,border:`1px solid ${declared[weapon.id]?"rgba(120,184,120,0.4)":C.redB}`,color:declared[weapon.id]?C.green:C.redL,padding:"16px",borderRadius:14,cursor:"pointer",fontSize:13,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.1em",transition:"all .25s"}}>
               {declared[weapon.id]?"✦ Declaration Deployed":"⚔ Deploy This Declaration"}
             </button>
           </div>
@@ -1503,12 +1496,13 @@ export default function ArmedAndAnchored({ session, profile }) {
             <textarea rows={10} value={get('journal')} onChange={e=>set('journal',e.target.value)} placeholder="Write your reflection here..."
               style={{width:"100%",background:"rgba(255,255,255,0.03)",border:`1px solid ${C.borderGold}`,borderRadius:14,color:C.cream,fontSize:17,lineHeight:1.9,padding:"16px 18px",fontFamily:"'EB Garamond',Georgia,serif",outline:"none",resize:"vertical",boxSizing:"border-box",minHeight:220}}/>
             <button onClick={async()=>{
-                const val=get('journal');
-                if(userId&&selected){await supabase.from('aa_weapon_entries').upsert({user_id:userId,weapon_id:selected,field_key:'journal',field_value:val,updated_at:new Date().toISOString()},{onConflict:'user_id,weapon_id,field_key'});}
-                setJournalSaved(true);setTimeout(()=>setJournalSaved(false),2000);}}
+                if(userId&&selected) setFor(selected,'journal',get('journal'));
+                const ok=await flush();
+                setJournalSaved(ok?'ok':'local');setTimeout(()=>setJournalSaved(false),ok?2000:5000);}}
               style={{width:"100%",marginTop:12,background:journalSaved?"rgba(120,184,120,0.12)":`linear-gradient(135deg,${C.redF},rgba(255,255,255,0.01))`,border:`1px solid ${journalSaved?"rgba(120,184,120,0.4)":C.redB}`,color:journalSaved?C.green:C.redL,padding:"13px",borderRadius:12,cursor:"pointer",fontSize:12,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.08em",transition:"all .25s"}}>
-              {journalSaved?"✓ Saved":"Save Journal Entry"}
+              {journalSaved==='ok'?"✓ Saved":journalSaved==='local'?"✓ Saved on this device · syncing when online":"Save Journal Entry"}
             </button>
+            {saveStatus==='waiting' && journalSaved!=='local' && <p role="status" style={{fontSize:14,color:C.muted,fontStyle:"italic",marginTop:10,textAlign:"center"}}>Not synced yet. Your writing is saved on this device and will sync when you're back online.</p>}
           </div>
         )}
 

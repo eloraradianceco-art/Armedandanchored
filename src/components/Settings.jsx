@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
+import { flush } from '../entrySync'
 import ReminderSettings from './ReminderSettings'
 import AccountPrivacy from './AccountPrivacy'
 import ScriptureCredits from './ScriptureCredits'
@@ -49,6 +50,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
     if (!userId || exporting) return
     setExporting(true)
     try {
+      await flush() // include anything still waiting on this device
       const { data } = await supabase.from('aa_weapon_entries')
         .select('*').eq('user_id', userId)
       const get = (wId, key) => data?.find(e => String(e.weapon_id) === String(wId) && e.field_key === key)?.field_value || ''

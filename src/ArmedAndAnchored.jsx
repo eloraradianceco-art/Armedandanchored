@@ -1063,6 +1063,7 @@ export default function ArmedAndAnchored({ session, profile }) {
         entries={entries}
         lightMode={lightMode}
         onToggleLightMode={toggleLightMode}
+        onReset={(match) => { setEntries(prev => prev.filter(e => !match(e))); setDeclared({}) }}
         onClose={() => setShowSettings(false)}
       />
       {tabBar()}

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
-import { flush } from '../entrySync'
+import { flush, dropPending, isProgressKey } from '../entrySync'
 import ReminderSettings from './ReminderSettings'
 import AccountPrivacy from './AccountPrivacy'
 import ScriptureCredits from './ScriptureCredits'
@@ -8,11 +8,17 @@ import Reviews from './Reviews'
 
 const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
 
-export default function Settings({ profile, userId, weapons, entries, lightMode, onToggleLightMode, onClose }) {
+export default function Settings({ profile, userId, weapons, entries, lightMode, onToggleLightMode, onClose, onReset }) {
   const [copiedReferral, setCopiedReferral] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [exporting, setExporting] = useState(false)
   const [showReviews, setShowReviews] = useState(false)
+  // Reset Progress: clears declarations, memorized verses, Daily Drill days and Under Attack history.
+  // The journal and tool entries stay unless the person ticks the box to delete them too.
+  const [resetOpen, setResetOpen] = useState(false)
+  const [resetJournal, setResetJournal] = useState(false)
+  const [resetting, setResetting] = useState(false)
+  const [resetMsg, setResetMsg] = useState('')
 
   const C = lightMode ? {
     bg: '#F2EDE3', bgCard: 'rgba(0,0,0,0.04)', border: 'rgba(0,0,0,0.08)',
@@ -44,6 +50,30 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
         setTimeout(() => setCopiedReferral(false), 2500)
       } catch {}
     }
+  }
+
+  const handleReset = async () => {
+    if (!userId || resetting) return
+    setResetting(true); setResetMsg('')
+    const all = resetJournal
+    const match = (e) => all || isProgressKey(e.field_key)
+    try {
+      await flush() // anything still waiting is sent first, so it can't come back after the reset
+      dropPending(match)
+      const { data, error } = await supabase.from('aa_weapon_entries').select('id, field_key').eq('user_id', userId)
+      if (error) throw error
+      const ids = (data || []).filter(match).map((e) => e.id)
+      for (let i = 0; i < ids.length; i += 100) {
+        const { error: delError } = await supabase.from('aa_weapon_entries').delete().eq('user_id', userId).in('id', ids.slice(i, i + 100))
+        if (delError) throw delError
+      }
+      onReset?.(match)
+      setResetOpen(false); setResetJournal(false)
+      setResetMsg(all ? 'Your progress and journal were reset.' : 'Your progress was reset. Your journal is still here.')
+    } catch (err) {
+      console.warn('reset:', err?.message)
+      setResetMsg("Couldn't reset. Check your connection and try again.")
+    } finally { setResetting(false) }
   }
 
   const handleExport = async () => {
@@ -390,6 +420,41 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
             }}>
               🖨️ Print as PDF
             </button>
+
+            {/* Reset Progress */}
+            <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 16, paddingTop: 16 }}>
+              <p style={{ fontSize: 16, color: C.text, lineHeight: 1.7, marginBottom: 12 }}>
+                Start the arsenal over: clears deployed declarations, memorized verses, your Daily Drill streak and Under Attack history. Your journal stays.
+              </p>
+              {!resetOpen ? (
+                <button onClick={() => { setResetOpen(true); setResetMsg('') }} style={{
+                  width: '100%', padding: '13px', borderRadius: 12, cursor: 'pointer',
+                  background: C.redF, border: `1px solid ${C.redB}`, color: C.red,
+                  fontSize: 13, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.08em',
+                }}>↺ Reset Progress</button>
+              ) : (
+                <div role="group" aria-label="Confirm reset" style={{ background: C.redF, border: `1px solid ${C.redB}`, borderRadius: 12, padding: 14 }}>
+                  <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 16, color: C.text, lineHeight: 1.5, marginBottom: 10, cursor: 'pointer' }}>
+                    <input type="checkbox" checked={resetJournal} onChange={(e) => setResetJournal(e.target.checked)} style={{ width: 20, height: 20, marginTop: 2, accentColor: C.red, flexShrink: 0 }} />
+                    Also delete my journal and tool entries
+                  </label>
+                  <p style={{ fontSize: 15, color: C.red, lineHeight: 1.5, margin: '0 0 12px' }}>
+                    This can't be undone.{resetJournal ? ' Export your journal first if you want a copy.' : ''}
+                  </p>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button onClick={() => { setResetOpen(false); setResetJournal(false) }} disabled={resetting} style={{
+                      flex: 1, padding: '12px', borderRadius: 10, cursor: 'pointer', background: C.bgCard, border: `1px solid ${C.border}`,
+                      color: C.muted, fontSize: 13, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.06em',
+                    }}>Cancel</button>
+                    <button onClick={handleReset} disabled={resetting} style={{
+                      flex: 1, padding: '12px', borderRadius: 10, cursor: resetting ? 'default' : 'pointer', background: C.red, border: `1px solid ${C.red}`,
+                      color: lightMode ? '#F2EDE3' : '#070E17', fontSize: 13, fontWeight: 600, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.06em',
+                    }}>{resetting ? 'Resetting…' : resetJournal ? 'Reset Everything' : 'Reset Progress'}</button>
+                  </div>
+                </div>
+              )}
+              {resetMsg && <p role="status" style={{ fontSize: 15, color: C.text, marginTop: 10, textAlign: 'center', fontStyle: 'italic' }}>{resetMsg}</p>}
+            </div>
           </div>
 
         </div>

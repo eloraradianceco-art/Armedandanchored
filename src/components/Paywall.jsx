@@ -8,19 +8,22 @@ import { BRAND } from '../entryBrand.js'
 import { isNative, NATIVE_PURCHASES, storeLifetime, storeBuy, storeRestore } from '../native'
 
 const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
+// Anchored Library ($79): Year 1 + Year 2 + Armed & Anchored in one purchase. Checkout returns to
+// eloraradiance.com/library-welcome, which opens each app with the checkout id. Web only: never in the App Store app.
+const LIBRARY_LINK = 'https://buy.stripe.com/28EfZg0IYalM6yzeIb57W0b'
 
 // Signed-in buyers carry their account to Stripe so the purchase unlocks it directly.
-function buyLink(session) {
-  if (!session?.user) return STRIPE_LINK
+function buyLink(session, link = STRIPE_LINK) {
+  if (!session?.user) return link
   const q = new URLSearchParams({ client_reference_id: session.user.id })
   if (session.user.email) q.set('prefilled_email', session.user.email)
-  return STRIPE_LINK + '?' + q.toString()
+  return link + '?' + q.toString()
 }
 
 export default function Paywall({ onShowSignIn, session, pending, onCheckAgain, onSignOut, onStorePurchase }) {
   if (isNative && NATIVE_PURCHASES) return <StorePaywall session={session} onShowSignIn={onShowSignIn} onSignOut={onSignOut} onStorePurchase={onStorePurchase} />
   return (
-    <Welcome brand={BRAND} session={session} buyHref={buyLink(session)}
+    <Welcome brand={BRAND} session={session} buyHref={buyLink(session)} bundleHref={isNative ? undefined : buyLink(session, LIBRARY_LINK)}
       purchasable={!isNative} unavailableNote="Lifetime access will be available to purchase right here in the app soon."
       onSignIn={onShowSignIn} onSignOut={onSignOut} onCheckAgain={session && !isNative ? onCheckAgain : undefined}
       notice={pending && session ? 'Just paid? It can take a minute to show up. Tap Check Again.' : null} />

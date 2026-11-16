@@ -35,6 +35,15 @@ export function startSync(userId) {
 export const pendingEntries = () => Object.values(entries)
 export const pendingProfile = () => ({ ...profile })
 
+// Progress (cleared by Settings → Reset Progress); everything else (journal, tool_data) is the person's writing.
+export const isProgressKey = (k) => k === 'declared' || k === 'battles' || /^(mem|drill|tr)_/.test(k || '')
+// Forget queued changes that match (used by Reset Progress so a queued change can't bring deleted progress back)
+export function dropPending(match) {
+  if (!uid) return
+  for (const [k, r] of Object.entries(entries)) if (match(r)) delete entries[k]
+  write(ENTRY_KEY(uid), entries)
+}
+
 export function queueEntry(weaponId, fieldKey, value) {
   if (!uid) return
   entries[`${weaponId}__${fieldKey}`] = { user_id: uid, weapon_id: weaponId, field_key: fieldKey, field_value: value, updated_at: new Date().toISOString() }

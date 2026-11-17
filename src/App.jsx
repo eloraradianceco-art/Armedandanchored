@@ -255,7 +255,7 @@ function LoadingScreen({ message }) {
   return (
     <div style={{ minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',
       background:'#070E17',flexDirection:'column',gap:16 }}>
-      <div style={{fontSize:32}}>⚔️</div>
+      <img src="/icon-192.png" alt="" width="72" height="72" style={{width:72,height:72,borderRadius:16,boxShadow:'0 6px 22px rgba(0,0,0,0.45)'}}/>
       <div style={{fontSize:13,color:'#3A4D5C',fontFamily:"'Cinzel',Georgia,serif",letterSpacing:'0.12em'}}>
         {message || 'ARMED & ANCHORED'}
       </div>

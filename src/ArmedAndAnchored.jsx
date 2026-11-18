@@ -724,7 +724,16 @@ function paintChrome(color) {
   } catch { /* no DOM */ }
 }
 
-export default function ArmedAndAnchored({ session, profile }) {
+// Free accounts get one whole weapon (every tab, the Daily Drill and Under Attack run on it).
+// The rest of the arsenal opens the unlock page.
+export const FREE_WEAPON_ID = 2 // The Full Armor of God
+
+export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
+  const unlocked = !!profile?.paid || !renderUnlock
+  const isOpen = (id) => unlocked || id === FREE_WEAPON_ID
+  const AVAILABLE = unlocked ? WEAPONS : WEAPONS.filter(w => w.id === FREE_WEAPON_ID)
+  const [showUnlock, setShowUnlock] = useState(false)
+  useEffect(() => { if (unlocked) setShowUnlock(false) }, [unlocked])
   // The intro (Onboarding) is shown by App.jsx before this screen loads.
   const [lightMode, setLightMode] = useState(() => {
     try { return localStorage.getItem('aa_lightmode') === 'true' } catch { return false }
@@ -776,7 +785,11 @@ export default function ArmedAndAnchored({ session, profile }) {
     green: "#7C9284",
   }
 
-  const [selected, setSelected] = useState(null)
+  const [selected, setSelectedRaw] = useState(null)
+  const setSelected = (id) => {
+    if (id != null && !isOpen(id)) { setShowUnlock(true); return }
+    setSelectedRaw(id)
+  }
   const [tab, setTab] = useState("scripture")
   const today = useToday()   // rolls over at midnight so the verse of the day changes while the app is open
   const [declared, setDeclared] = useState({})
@@ -1044,6 +1057,9 @@ export default function ArmedAndAnchored({ session, profile }) {
     document.head.appendChild(s)
   }
 
+  // Unlock page (free accounts tapping a locked weapon)
+  if (showUnlock && !unlocked) return renderUnlock(() => setShowUnlock(false))
+
   // Dashboard overlay
   if (showDashboard) return (
     <>
@@ -1220,12 +1236,12 @@ export default function ArmedAndAnchored({ session, profile }) {
       </div>
 
       <div style={{maxWidth:1100,margin:"0 auto",padding:`18px 16px calc(32px + ${BELOW_BAR})`}}>
-        <Drill weapons={WEAPONS} entries={entries} getFor={getFor} setFor={setFor} onDeclare={markDeclared}
+        <Drill weapons={AVAILABLE} entries={entries} getFor={getFor} setFor={setFor} onDeclare={markDeclared}
           onOpenWeapon={id=>{setSelected(id);setTab('scripture');window.scrollTo(0,0)}} lightMode={lightMode}/>
 
         {/* Verse of the day: one quiet line */}
         {(() => {
-          const daily = verseOfDay(WEAPONS, today)
+          const daily = verseOfDay(AVAILABLE, today)
           return (
             <button onClick={()=>{setSelected(daily.weapon.id);setTab("scripture");window.scrollTo(0,0);}}
               style={{display:"block",width:"100%",textAlign:"left",fontFamily:"'EB Garamond',Georgia,serif",background:"transparent",border:"none",borderTop:`1px solid ${C.border}`,borderBottom:`1px solid ${C.border}`,padding:"14px 2px",margin:"18px 0 0",cursor:"pointer"}}>
@@ -1234,6 +1250,14 @@ export default function ArmedAndAnchored({ session, profile }) {
             </button>
           )
         })()}
+
+        {!unlocked && (
+          <button onClick={()=>setShowUnlock(true)}
+            style={{display:"block",width:"100%",textAlign:"left",fontFamily:"'EB Garamond',Georgia,serif",cursor:"pointer",margin:"18px 0 0",padding:"14px 16px",borderRadius:12,background:"linear-gradient(145deg,rgba(176,138,78,0.14),rgba(176,138,78,0.04))",border:`1px solid ${C.goldB||"rgba(176,138,78,0.35)"}`}}>
+            <span style={{display:"block",fontSize:11,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:4}}>Your free weapon</span>
+            <span style={{display:"block",fontSize:17,color:C.cream,lineHeight:1.5}}>🛡️ The Full Armor of God is yours, every section of it. <span style={{color:C.gold,textDecoration:"underline"}}>Unlock all {WEAPONS.length} weapons</span></span>
+          </button>
+        )}
 
         {/* Arsenal */}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",margin:"24px 2px 10px"}}>
@@ -1244,15 +1268,16 @@ export default function ArmedAndAnchored({ session, profile }) {
           {WEAPONS.map(w => {
             const done = declared[w.id];
             const saved = isSaved(w.id);
+            const locked = !isOpen(w.id);
             return (
               <div key={w.id} style={{position:"relative"}}>
-                <button onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}}
-                  style={{width:"100%",height:"100%",minHeight:96,display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,padding:"12px 12px 11px",cursor:"pointer",textAlign:"left",
+                <button onClick={()=>{setSelected(w.id);setTab("scripture");window.scrollTo(0,0);}} aria-label={locked?w.title+" (locked)":undefined}
+                  style={{opacity:locked?0.62:1,width:"100%",height:"100%",minHeight:96,display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,padding:"12px 12px 11px",cursor:"pointer",textAlign:"left",
                     background:done?"linear-gradient(145deg,rgba(158,40,40,0.13),rgba(158,40,40,0.04))":C.bgCard,
                     border:`1px solid ${done?"rgba(158,40,40,0.32)":C.border}`,borderRadius:12}}>
                   <span style={{fontSize:21,lineHeight:1}}>{w.icon}</span>
                   <span style={{fontSize:13.5,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",fontWeight:600,lineHeight:1.3,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden",paddingRight:14}}>{w.title}</span>
-                  <span style={{marginTop:"auto",fontSize:11,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",color:done?C.redL:acc(w)}}>{done?"\u2726 Deployed":w.tag}</span>
+                  <span style={{marginTop:"auto",fontSize:11,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",color:locked?C.muted:done?C.redL:acc(w)}}>{locked?"\uD83D\uDD12 Locked":done?"\u2726 Deployed":!unlocked?"\u2726 Free":w.tag}</span>
                 </button>
                 <button onClick={(e)=>{e.stopPropagation();toggleSave(w.id);}} aria-label={saved?"Remove from saved":"Save weapon"}
                   style={{position:"absolute",right:4,top:4,background:"transparent",border:"none",color:saved?C.gold:C.dim,cursor:"pointer",fontSize:16,lineHeight:1,touchAction:"manipulation",padding:8}}>{saved?"\u2605":"\u2606"}</button>

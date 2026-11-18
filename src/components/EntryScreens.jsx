@@ -72,12 +72,17 @@ function Note({ c, tone = 'ok', children }) {
 // purchasable=false (App Store app before in-app purchase): no buy button, unavailableNote instead.
 export function Welcome({
   brand: b, session, buyHref, bundleHref, onPrimary, onSignIn, onSignOut, purchasable = true, unavailableNote,
-  onCheckAgain, checking = false, checkMessage, notice, footer,
+  onCheckAgain, checking = false, checkMessage, notice, footer, onBack, backLabel = 'Back', onTryFree, freeCta, freeFine,
 }) {
   const c = b.colors
   const signedIn = !!session
   return (
     <Page b={b}>
+      {onBack && (
+        <div style={{ textAlign: 'left', marginBottom: 14 }}>
+          <button type="button" onClick={onBack} style={{ ...linkBtn(c.link), fontSize: 15, textDecoration: 'none', padding: '6px 0' }}>← {backLabel}</button>
+        </div>
+      )}
       <Mark b={b} size={64} />
       <Eyebrow b={b} />
       <Title b={b} size={30} />
@@ -116,6 +121,13 @@ export function Welcome({
           {!signedIn && <button type="button" onClick={onSignIn} style={primaryBtn(c)}>Sign In</button>}
           {unavailableNote && <p style={{ fontSize: 14, color: c.muted, lineHeight: 1.6, margin: '12px 0 0' }}>{unavailableNote}</p>}
         </>
+      )}
+
+      {!signedIn && onTryFree && (
+        <div style={{ marginTop: 16 }}>
+          <button type="button" onClick={onTryFree} style={{ ...primaryBtn(c), background: 'transparent', border: `1px solid ${c.cardBorder}`, color: c.accent, fontSize: 14, padding: '13px 20px' }}>{freeCta || 'Start Free'}</button>
+          {freeFine && <p style={{ fontSize: 13, color: c.muted, lineHeight: 1.6, margin: '10px 0 0' }}>{freeFine}</p>}
+        </div>
       )}
 
       {signedIn && onCheckAgain && (

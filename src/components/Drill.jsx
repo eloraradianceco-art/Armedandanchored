@@ -256,7 +256,8 @@ export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare
   const closeRef = useRef(null);
   const today = useToday();
   const theme = "dr-root " + (lightMode ? "dr-light" : "dr-dark");
-  const byId = id => weapons.find(w => w.id === id);
+  // Free accounts carry one weapon: anything that points at another weapon falls back to it.
+  const byId = id => weapons.find(w => w.id === id) || weapons[0];
 
   /* ---- records on weapon 0 ---- */
   const drillDays = useMemo(() => {

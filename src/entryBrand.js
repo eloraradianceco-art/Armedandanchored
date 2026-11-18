@@ -17,7 +17,9 @@ export const BRAND = {
   ],
   cta: '⚔️ Get Lifetime Access',
   fine: 'One-time $39 · Instant access · All 26 weapons, yours forever',
-  signInPrompt: 'Already have access?',
+  freeCta: '🛡️ Start Free: The Armor of God',
+  freeFine: 'Free account, no card. One complete weapon with the Daily Drill and Under Attack.',
+  signInPrompt: 'Already have an account?',
   signinSubtitle: 'Welcome back, warrior',
   colors: {
     bg: '#070E17',

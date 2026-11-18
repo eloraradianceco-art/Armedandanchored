@@ -42,7 +42,7 @@ function AppInner() {
   const [onboarded, setOnboarded] = useState(() => {
     try { return !!localStorage.getItem('aa_onboarded') } catch { return false }
   })
-  const [showSignIn, setShowSignIn] = useState(false)
+  const [showSignIn, setShowSignIn] = useState(false) // false | 'signin' | 'signup' (free start)
   const [showPasswordReset, setShowPasswordReset] = useState(false)
   const [newPassword, setNewPassword] = useState('')
   const [resetLoading, setResetLoading] = useState(false)
@@ -223,20 +223,25 @@ function AppInner() {
 
   // Not logged in
   if (!session) {
-    if (showSignIn) return <Auth onComplete={handleAuthComplete} onBack={() => setShowSignIn(false)}/>
-    return <Paywall onShowSignIn={() => setShowSignIn(true)}/>
+    if (showSignIn) return <Auth key={showSignIn} initialMode={showSignIn === 'signup' ? 'signup' : 'signin'} freeStart={showSignIn === 'signup'}
+      onComplete={handleAuthComplete} onBack={() => setShowSignIn(false)}/>
+    return <Paywall onShowSignIn={() => setShowSignIn('signin')} onTryFree={() => setShowSignIn('signup')}/>
   }
 
-  // Logged in but not unlocked yet
-  if (!profile?.paid) {
-    if (pendingPurchase && verifyTries < MAX_TRIES) return <LoadingScreen message="Confirming your purchase..."/>
-    return <Paywall
+  // Just paid and still confirming
+  if (!profile?.paid && pendingPurchase && verifyTries < MAX_TRIES) return <LoadingScreen message="Confirming your purchase..."/>
+
+  // Signed in without a purchase: the app opens with one free weapon (The Full Armor of God).
+  // A locked weapon opens this unlock page; "Back" returns to the free weapon.
+  const renderUnlock = profile?.paid ? null : (close) => (
+    <Paywall
       session={session}
       pending={pendingPurchase}
       onCheckAgain={() => { setVerifyTries(0); loadProfile() }}
       onSignOut={() => supabase.auth.signOut()}
+      onBack={close}
     />
-  }
+  )
 
   // Onboarding
   if (showOnboarding || !onboarded) {
@@ -244,7 +249,7 @@ function AppInner() {
   }
 
   // All good — render app
-  return <ArmedAndAnchored session={session} profile={profile}/>
+  return <ArmedAndAnchored session={session} profile={profile} renderUnlock={renderUnlock}/>
 }
 
 export default function App() {

@@ -1,4 +1,5 @@
 // Armed & Anchored's welcome page (signed out) and unlock page (signed in, not purchased yet).
+// Free accounts get The Full Armor of God; this page is what a locked weapon opens.
 // Layout: components/EntryScreens.jsx, shared with the other Elora Radiance apps.
 import { Welcome } from './EntryScreens.jsx'
 import { BRAND } from '../entryBrand.js'
@@ -16,10 +17,11 @@ function buyLink(session, link = STRIPE_LINK) {
   return link + '?' + q.toString()
 }
 
-export default function Paywall({ onShowSignIn, session, pending, onCheckAgain, onSignOut }) {
+export default function Paywall({ onShowSignIn, onTryFree, onBack, session, pending, onCheckAgain, onSignOut }) {
   return (
     <Welcome brand={BRAND} session={session} buyHref={buyLink(session)} bundleHref={buyLink(session, LIBRARY_LINK)}
       onSignIn={onShowSignIn} onSignOut={onSignOut} onCheckAgain={session ? onCheckAgain : undefined}
+      onTryFree={onTryFree} freeCta={BRAND.freeCta} freeFine={BRAND.freeFine} onBack={onBack} backLabel="Back to your free weapon"
       notice={pending && session ? 'Just paid? It can take a minute to show up. Tap Check Again.' : null} />
   )
 }

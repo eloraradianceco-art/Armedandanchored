@@ -277,7 +277,7 @@ export default function App() {
 
 function LoadingScreen({ message }) {
   return (
-    <div style={{minHeight:"100vh",background:'#070E17',display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",textAlign:"center"}}>
+    <div style={{position:"fixed",inset:0,zIndex:50,background:'#070E17',display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",textAlign:"center"}}>
       <img src="/icon-192.png" alt="" width="72" height="72" style={{width:72,height:72,borderRadius:16,boxShadow:"0 6px 22px rgba(0,0,0,0.45)",objectFit:"cover",display:"block",marginBottom:18}}/>
       <div style={{fontFamily:"Cinzel,Georgia,serif",color:'#C9A85C',fontSize:12,fontWeight:700,letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:8}}>Armed &amp; Anchored</div>
       <div style={{color:'rgba(255,255,255,0.64)',fontSize:14}}>{message || 'Loading your arsenal…'}</div>

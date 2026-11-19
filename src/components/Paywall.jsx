@@ -66,8 +66,11 @@ function StorePaywall({ session, onShowSignIn, onSignOut, onStorePurchase, onTry
   }
   const brand = {
     ...BRAND,
-    cta: busy === 'buy' ? 'Opening the App Store…' : `⚔️ Get Lifetime Access${product?.price ? ' · ' + product.price : ''}`,
-    fine: 'One-time purchase · Instant access · All 26 weapons, yours forever',
+    cta: busy === 'buy' ? 'Opening the App Store…' : '⚔️ Get Lifetime Access',
+    // Apple's own price for this person's country; nothing is shown until the App Store answers.
+    price: product?.price ? `${product.price} once` : '',
+    priceNote: 'One-time purchase. No subscription. Yours for good.',
+    fine: '',
   }
   const link = { background: 'none', border: 'none', padding: 0, color: c.link, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline' }
   const footer = uid ? (

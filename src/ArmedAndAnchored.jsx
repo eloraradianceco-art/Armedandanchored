@@ -804,6 +804,7 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
   const [saving, setSaving] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [showDashboard, setShowDashboard] = useState(false)
+  const [showArsenal, setShowArsenal] = useState(false) // the 26 weapons on their own page; home is "Today"
   const [showSearch, setShowSearch] = useState(false)
   const [savedWeapons, setSavedWeapons] = useState(() => {
     try { return JSON.parse(localStorage.getItem('aa_saved') || '[]') } catch { return [] }
@@ -1007,14 +1008,17 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
   const isSaved = (weaponId) => savedWeapons.includes(weaponId)
 
   // ── Bottom tab bar ─────────────────────────────────────────────
-  // Arsenal, Search, Saved, Progress and Settings sit at the bottom where a thumb reaches them
-  // (they were a row of small links under the header). Same pattern as The Living Planner. 2026-11-13
-  const activeTab = showSettings ? 'settings' : showDashboard ? 'progress' : showSaved ? 'saved' : showSearch ? 'search' : 'arsenal'
+  // Today, Arsenal, Saved, Progress and Settings sit at the bottom where a thumb reaches them. 2026-11-13
+  // Since 2026-11-18 home is "Today" (drill, Under Attack, verse, arsenal progress) and the 26 weapons
+  // have their own page; Search is a button at the top of the Arsenal page.
+  const onArsenal = showArsenal || !!selected
+  const activeTab = showSettings ? 'settings' : showDashboard ? 'progress' : showSaved ? 'saved' : onArsenal ? 'arsenal' : 'today'
+  const openSearch = () => { setSearchQuery(''); setSearchResults([]); setShowSearch(true) }
   const goTab = (id) => {
-    if (id === activeTab && id === 'arsenal' && !selected) { window.scrollTo({ top: 0, behavior: 'smooth' }); return }
+    if (id === activeTab && (id === 'today' || id === 'arsenal') && !selected && !showSearch) { window.scrollTo({ top: 0, behavior: 'smooth' }); return }
     setShowSearch(false); setShowSaved(false); setShowDashboard(false); setShowSettings(false)
-    if (id === 'arsenal') { setSelected(null); window.scrollTo(0, 0) }
-    else if (id === 'search') { setSearchQuery(''); setSearchResults([]); setShowSearch(true) }
+    if (id === 'today') { setSelected(null); setShowArsenal(false); window.scrollTo(0, 0) }
+    else if (id === 'arsenal') { setSelected(null); setShowArsenal(true); window.scrollTo(0, 0) }
     else if (id === 'saved') setShowSaved(true)
     else if (id === 'progress') setShowDashboard(true)
     else if (id === 'settings') setShowSettings(true)
@@ -1028,7 +1032,7 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
       paddingBottom:'env(safe-area-inset-bottom, 0px)',
     }}>
       <div style={{display:'flex',maxWidth:560,margin:'0 auto'}}>
-        {[['arsenal','\u2694\uFE0F','Arsenal'],['search','\uD83D\uDD0D','Search'],['saved','\u2B50','Saved'],['progress','\uD83D\uDCCA','Progress'],['settings','\u2699\uFE0F','Settings']].map(([id,icon,label])=>{
+        {[['today','\uD83C\uDFE0','Today'],['arsenal','\u2694\uFE0F','Arsenal'],['saved','\u2B50','Saved'],['progress','\uD83D\uDCCA','Progress'],['settings','\u2699\uFE0F','Settings']].map(([id,icon,label])=>{
           const on = activeTab === id
           return (
             <button key={id} onClick={()=>goTab(id)} aria-current={on?'page':undefined}
@@ -1231,6 +1235,7 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
       </div>
 
       <div style={{maxWidth:1100,margin:"0 auto",padding:`18px 16px calc(32px + ${BELOW_BAR})`}}>
+        {!showArsenal ? (<>
         <Drill weapons={AVAILABLE} entries={entries} getFor={getFor} setFor={setFor} onDeclare={markDeclared}
           onOpenWeapon={id=>{setSelected(id);setTab('scripture');window.scrollTo(0,0)}} lightMode={lightMode}/>
 
@@ -1246,6 +1251,27 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
           )
         })()}
 
+        {/* Arsenal progress: opens the 26 weapons on their own page */}
+        <button onClick={()=>goTab('arsenal')} aria-label="Open your arsenal"
+          style={{display:"block",width:"100%",textAlign:"left",fontFamily:"'EB Garamond',Georgia,serif",cursor:"pointer",margin:"18px 0 0",padding:"16px",borderRadius:16,background:C.bgCard,border:`1px solid ${C.border}`}}>
+          <span style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
+            <span>
+              <span style={{display:"block",fontSize:11,color:C.gold,letterSpacing:"0.16em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif",marginBottom:4}}>Your arsenal</span>
+              <span style={{display:"block",fontSize:21,color:C.cream,lineHeight:1.25}}>{completedCount} of {WEAPONS.length} deployed</span>
+            </span>
+            <span aria-hidden="true" style={{fontSize:28,color:C.gold,lineHeight:1}}>{"\u203A"}</span>
+          </span>
+          <span aria-hidden="true" style={{display:"block",height:6,borderRadius:99,background:lightMode?"rgba(0,0,0,0.08)":"rgba(255,255,255,0.08)",margin:"12px 0 8px",overflow:"hidden"}}>
+            <span style={{display:"block",height:"100%",width:`${Math.round(completedCount/WEAPONS.length*100)}%`,background:C.gold,borderRadius:99}}/>
+          </span>
+          <span style={{display:"block",fontSize:16,color:C.muted}}>{unlocked ? `Open all ${WEAPONS.length} weapons` : `The Full Armor of God is free. See all ${WEAPONS.length} weapons`}</span>
+        </button>
+        </>) : (<>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12,margin:"0 2px 4px"}}>
+          <h1 style={{fontSize:22,fontWeight:600,color:C.cream,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.04em",margin:0}}>The Arsenal</h1>
+          <button onClick={openSearch} aria-label="Search the weapons"
+            style={{display:"inline-flex",alignItems:"center",gap:6,minHeight:44,padding:"8px 14px",borderRadius:999,background:"transparent",border:`1px solid ${C.border}`,color:C.muted,cursor:"pointer",fontSize:12,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>{"\uD83D\uDD0D"} Search</button>
+        </div>
         {!unlocked && (
           <button onClick={()=>setShowUnlock(true)}
             style={{display:"block",width:"100%",textAlign:"left",fontFamily:"'EB Garamond',Georgia,serif",cursor:"pointer",margin:"18px 0 0",padding:"14px 16px",borderRadius:12,background:"linear-gradient(145deg,rgba(176,138,78,0.14),rgba(176,138,78,0.04))",border:`1px solid ${C.goldB||"rgba(176,138,78,0.35)"}`}}>
@@ -1255,7 +1281,7 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
         )}
 
         {/* Arsenal */}
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",margin:"24px 2px 10px"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",margin:"16px 2px 10px"}}>
           <span style={{fontSize:11,color:C.muted,letterSpacing:"0.18em",textTransform:"uppercase",fontFamily:"'Cinzel',Georgia,serif"}}>Your arsenal</span>
           <span style={{fontSize:16,color:C.muted}}>{completedCount} of {WEAPONS.length} deployed</span>
         </div>
@@ -1280,6 +1306,7 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
             );
           })}
         </div>
+        </>)}
       </div>
     {showSearch && <SearchModal/>}
     {showSaved && <SavedModal/>}

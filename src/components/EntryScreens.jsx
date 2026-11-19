@@ -86,6 +86,35 @@ export function Welcome({
       <Mark b={b} size={64} />
       <Eyebrow b={b} />
       <Title b={b} size={30} />
+      {b.groups ? (
+        <>
+          {/* Purchase layout (2026-11-18): what you get in three short groups, then the price and one button. */}
+          <div style={{ fontSize: 12, color: c.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: DISPLAY, margin: '8px 0 14px' }}>
+            {b.tagline}
+          </div>
+          <p style={{ fontSize: 20, color: c.title, lineHeight: 1.4, margin: '0 0 18px' }}>{(signedIn && b.unlockHeadline) || b.headline}</p>
+          {b.groups.map((g) => (
+            <div key={g.title} style={{ background: c.card, border: `1px solid ${c.cardBorder}`, borderRadius: 16, padding: '14px 18px 8px', marginBottom: 10, textAlign: 'left', boxShadow: c.cardShadow || 'none' }}>
+              <div style={{ fontSize: 11, color: c.accent, fontFamily: DISPLAY, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 8 }}>{g.title}</div>
+              <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                {g.items.map((t) => (
+                  <li key={t} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 8 }}>
+                    <span aria-hidden="true" style={{ flexShrink: 0, width: 20, height: 20, borderRadius: '50%', background: c.accent, color: c.bg, fontSize: 12, fontWeight: 700, display: 'grid', placeItems: 'center', marginTop: 2, fontFamily: 'system-ui, sans-serif' }}>✓</span>
+                    <span style={{ fontSize: 16.5, color: c.text, lineHeight: 1.45 }}>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          {purchasable && b.price && (
+            <div style={{ margin: '16px 0 14px' }}>
+              <div style={{ fontSize: 24, color: c.title, fontWeight: 600, lineHeight: 1.2 }}>{b.price}</div>
+              {b.priceNote && <div style={{ fontSize: 15, color: c.muted, marginTop: 2 }}>{b.priceNote}</div>}
+            </div>
+          )}
+        </>
+      ) : (
+        <>
       <div style={{ fontSize: 12, color: c.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: DISPLAY, margin: '8px 0 28px' }}>
         {b.tagline}
       </div>
@@ -102,13 +131,15 @@ export function Welcome({
           ))}
         </ul>
       </div>
+        </>
+      )}
 
       {purchasable ? (
         <>
           {buyHref
             ? <a href={buyHref} style={primaryBtn(c)}>{b.cta}</a>
             : <button type="button" onClick={onPrimary} style={primaryBtn(c)}>{b.cta}</button>}
-          <p style={{ fontSize: 14, color: c.muted, lineHeight: 1.6, margin: '12px 0 0' }}>{b.fine}</p>
+          {b.fine && <p style={{ fontSize: 14, color: c.muted, lineHeight: 1.6, margin: '12px 0 0' }}>{b.fine}</p>}
           {bundleHref && (
             <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${c.divider}` }}>
               <a href={bundleHref} style={{ ...primaryBtn(c), background: 'transparent', border: `1px solid ${c.cardBorder}`, color: c.accent, fontSize: 14, padding: '13px 20px' }}>Get All 3 Apps · $79</a>

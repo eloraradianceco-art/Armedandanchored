@@ -1469,7 +1469,6 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
                         <button onClick={()=>toggleSave(`${weapon.id}_s${i}`)} style={{background:isSaved(`${weapon.id}_s${i}`)?"rgba(176,138,78,0.2)":"transparent",border:`1px solid ${isSaved(`${weapon.id}_s${i}`)?"rgba(176,138,78,0.4)":C.border}`,color:isSaved(`${weapon.id}_s${i}`)?C.gold:C.muted,padding:"2px 10px",borderRadius:12,cursor:"pointer",fontSize:16}}>
                           {isSaved(`${weapon.id}_s${i}`)?"★":"☆"}
                         </button>
-                        <button onClick={()=>setShareCard({weapon,type:"scripture"})} style={{background:"transparent",border:`1px solid ${C.border}`,color:C.muted,padding:"2px 8px",borderRadius:12,cursor:"pointer",fontSize:14}}>&#8599;</button>
                       </div>
                     </div>
                   </div>

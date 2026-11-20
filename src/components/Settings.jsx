@@ -8,6 +8,24 @@ import Reviews from './Reviews'
 
 const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
 
+// A row that opens on tap: emoji, title, one line of detail. Defined outside Settings so a row stays open when the
+// page re-renders (a component defined inside would be rebuilt each time and snap shut).
+function FoldRow({ C, id, emoji, title, sub, first = false, children }) {
+  return (
+    <details id={id} className="aa-fold" style={{ borderTop: first ? 'none' : `1px solid ${C.border}` }}>
+      <summary style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', cursor: 'pointer', listStyle: 'none', touchAction: 'manipulation' }}>
+        <span aria-hidden="true" style={{ fontSize: 20, width: 28, textAlign: 'center', flexShrink: 0 }}>{emoji}</span>
+        <span style={{ flex: 1, minWidth: 0 }}>
+          <span style={{ display: 'block', fontSize: 14, color: C.cream, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.04em' }}>{title}</span>
+          {sub && <span style={{ display: 'block', fontSize: 15, color: C.muted, fontStyle: 'italic', marginTop: 1 }}>{sub}</span>}
+        </span>
+        <span aria-hidden="true" className="aa-fold-caret" style={{ color: C.muted, fontSize: 13, flexShrink: 0 }}>▾</span>
+      </summary>
+      <div style={{ padding: '2px 14px 16px' }}>{children}</div>
+    </details>
+  )
+}
+
 export default function Settings({ profile, userId, weapons, entries, lightMode, onToggleLightMode, onClose, onReset }) {
   const [copiedReferral, setCopiedReferral] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
@@ -211,6 +229,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
       fontFamily: "'EB Garamond',Georgia,serif",
       overflowY: 'auto', animation: 'fadeIn 0.25s ease',
     }}>
+      <style>{`.aa-fold > summary::-webkit-details-marker{display:none}.aa-fold-caret{display:inline-block;transition:transform .2s}.aa-fold[open] > summary .aa-fold-caret{transform:rotate(180deg)}`}</style>
       {showReviews && <Reviews app="aa" appName="Armed & Anchored" eyebrow="Armed & Anchored" userEmail={profile?.email} C={C} lightMode={lightMode} onClose={() => setShowReviews(false)} />}
       <div style={{ maxWidth: 560, margin: '0 auto', padding: '0 0 calc(100px + env(safe-area-inset-bottom, 0px))' /* clears the bottom tab bar */ }}>
 
@@ -231,11 +250,44 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
 
         <div style={{ padding: '8px 20px' }}>
 
-          {/* Progress */}
-          <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase',
-              fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Progress</div>
+
+          {/* Settings 2026-11-19: your account and the light/dark switch stay open; everything else is a row that opens on tap */}
+          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '0 16px', marginTop: 18 }}>
+            <Row icon="✉️" label={profile?.email || 'Your account'}>
+              <span style={{ fontSize: 15, color: C.muted }}>Lifetime Access ✦</span>
+            </Row>
+            <Row icon={lightMode ? '🌙' : '☀️'} label={lightMode ? 'Dark Mode' : 'Light Mode'} border={false}>
+              {/* Toggle switch */}
+              <div
+                onClick={onToggleLightMode}
+                style={{
+                  width: 48, height: 28, borderRadius: 14, cursor: 'pointer',
+                  background: lightMode ? C.redL : C.bgCard,
+                  border: `1px solid ${lightMode ? C.redB : C.border}`,
+                  position: 'relative', transition: 'all 0.25s',
+                }}
+              >
+                <div style={{
+                  position: 'absolute', top: 3, left: lightMode ? 22 : 3,
+                  width: 20, height: 20, borderRadius: '50%',
+                  background: lightMode ? '#fff' : C.muted,
+                  transition: 'left 0.25s', boxShadow: '0 1px 4px rgba(0,0,0,0.3)',
+                }} />
+              </div>
+            </Row>
           </div>
+
+          <div style={{ border: `1px solid ${C.border}`, borderRadius: 14, overflow: 'hidden', marginTop: 14, background: C.bgCard }}>
+            <FoldRow C={C} id="set-reminders" emoji="🔔" title="Reminders" sub="A daily nudge to train" first>
+              <div style={{ marginTop: -22 }}>
+          <ReminderSettings supabase={supabase} app="aa" theme={{
+            text: C.text, muted: C.muted, accent: lightMode ? C.red : C.redL, accentF: C.redF, accentB: C.redB,
+            card: C.bgCard, border: C.border, dark: !lightMode,
+          }} />
+              </div>
+            </FoldRow>
+            <FoldRow C={C} id="set-progress" emoji="📊" title="Progress" sub={`${(weapons||[]).filter(w=>w.deployed).length} of ${weapons?.length || 26} weapons deployed`}>
+          {/* Progress */}
           <div style={{ background: C.redF, border: `1px solid ${C.redB}`, borderRadius: 14, overflow: 'hidden' }}>
             {[
               ['⚔️', (weapons||[]).filter(w=>w.deployed).length, 'Weapons Deployed', weapons?.length||23],
@@ -258,145 +310,9 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
               </div>
             ))}
           </div>
-
-          <ReminderSettings supabase={supabase} app="aa" theme={{
-            text: C.text, muted: C.muted, accent: lightMode ? C.red : C.redL, accentF: C.redF, accentB: C.redB,
-            card: C.bgCard, border: C.border, dark: !lightMode,
-          }} />
-
-      {/* Account */}
-          <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Account</div>
-          </div>
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '0 16px' }}>
-            <Row icon="✉️" label={profile?.email || 'Your account'}>
-              <span style={{ fontSize: 15, color: C.muted }}>Lifetime Access ✦</span>
-            </Row>
-            <Row icon="⭐" label="Ratings & Reviews">
-              <button onClick={() => setShowReviews(true)} style={{ background: C.goldF, border: `1px solid ${C.goldB}`, color: C.gold, padding: '6px 16px', borderRadius: 10, fontSize: 12, fontFamily: "'Cinzel',Georgia,serif", cursor: 'pointer', letterSpacing: '0.06em' }}>Open</button>
-            </Row>
-            <Row icon="🛟" label="Email Support">
-              <a href="mailto:support@eloraradiance.com" style={{ background: C.goldF, border: `1px solid ${C.goldB}`, color: C.gold, padding: '6px 16px', borderRadius: 10, fontSize: 12, fontFamily: "'Cinzel',Georgia,serif", textDecoration: 'none', display: 'inline-block', letterSpacing: '0.06em' }}>Contact</a>
-            </Row>
-            <Row icon="🚪" label="Sign Out" border={false}>
-              <button onClick={handleSignOut} disabled={signingOut} style={{
-                background: C.redF, border: `1px solid ${C.redB}`,
-                color: C.redL, padding: '6px 16px', borderRadius: 10,
-                cursor: 'pointer', fontSize: 12,
-                fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.07em',
-              }}>
-                {signingOut ? 'Signing out...' : 'Sign Out'}
-              </button>
-            </Row>
-          </div>
-
-          <AccountPrivacy supabase={supabase} theme={{
-            text: C.text, muted: C.muted, card: C.bgCard, border: C.border,
-            danger: lightMode ? C.red : C.redL, dangerF: C.redF, dangerB: C.redB, dark: !lightMode,
-          }} />
-
-          <ScriptureCredits notices={['ESV', 'NIV', 'NKJV', 'KJV']} theme={{ text: C.text, muted: C.muted, card: C.bgCard, border: C.border }} />
-
-          {/* Appearance */}
-          <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Appearance</div>
-          </div>
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '0 16px' }}>
-            <Row icon={lightMode ? '🌙' : '☀️'} label={lightMode ? 'Dark Mode' : 'Light Mode'} border={false}>
-              {/* Toggle switch */}
-              <div
-                onClick={onToggleLightMode}
-                style={{
-                  width: 48, height: 28, borderRadius: 14, cursor: 'pointer',
-                  background: lightMode ? C.redL : C.bgCard,
-                  border: `1px solid ${lightMode ? C.redB : C.border}`,
-                  position: 'relative', transition: 'all 0.25s',
-                }}
-              >
-                <div style={{
-                  position: 'absolute', top: 3, left: lightMode ? 22 : 3,
-                  width: 20, height: 20, borderRadius: '50%',
-                  background: lightMode ? '#fff' : C.muted,
-                  transition: 'left 0.25s', boxShadow: '0 1px 4px rgba(0,0,0,0.3)',
-                }} />
-              </div>
-            </Row>
-          </div>
-
-          {/* Share & Referral */}
-          <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Share & Referral</div>
-          </div>
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '16px' }}>
-            <p style={{ fontSize: 16, color: C.text, lineHeight: 1.75, marginBottom: 14 }}>
-              Know a warrior who needs this? Share Armed & Anchored with someone in your life. Every soldier needs to be equipped.
-            </p>
-            <div style={{ background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.03)', border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px', marginBottom: 12, fontSize: 16, color: C.muted, fontStyle: 'italic', lineHeight: 1.7 }}>
-              "{referralText.split('\n')[0]}"
-            </div>
-            <button onClick={handleCopyReferral} style={{
-              width: '100%',
-              background: copiedReferral ? 'rgba(124,146,132,0.15)' : `linear-gradient(135deg,${C.redF},rgba(255,255,255,0.02))`,
-              border: `1px solid ${copiedReferral ? 'rgba(124,146,132,0.4)' : C.redB}`,
-              color: copiedReferral ? '#7C9284' : C.redL,
-              padding: '13px', borderRadius: 12, cursor: 'pointer',
-              fontSize: 13, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.08em',
-              transition: 'all .25s',
-            }}>
-              {copiedReferral ? '✓ Copied — Send It to Someone' : '🔗 Share Armed & Anchored'}
-            </button>
-          </div>
-
-          {/* More from Elora Radiance */}
-          <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>More from Elora Radiance Co.</div>
-          </div>
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '12px 16px', marginBottom: 0 }}>
-            <p style={{ fontSize: 16, color: C.muted, fontStyle: 'italic', lineHeight: 1.7, marginBottom: 14 }}>
-              The rest of the Elora Radiance ecosystem — Scripture-based tools for the whole Christian life.
-            </p>
-            {[
-              { label: 'Anchored Steps · Year 1', desc: '52 weeks of faith in action', url: 'https://steps.eloraradiance.com/', icon: '⚓' },
-              { label: 'Anchored Steps · Year 2', desc: '52 weeks of deeper study', url: 'https://steps2.eloraradiance.com/', icon: '⚓' },
-              { label: 'The Red Letters', desc: 'The words of Jesus by theme — free', url: 'https://redletters.eloraradiance.com/', icon: '✦' },
-              { label: 'Anchored Verse', desc: 'Scripture for every emotion — free', url: 'https://verse.eloraradiance.com/', icon: '📖' },
-              { label: 'The Living Planner', desc: 'Faith-centered life planner', url: 'https://planner.eloraradiance.com/', icon: '📓' },
-            ].map(app => (
-              <a key={app.url} href={app.url} target="_blank" rel="noopener noreferrer" style={{
-                display: 'flex', alignItems: 'center', gap: 14,
-                padding: '13px 14px', borderRadius: 12, marginBottom: 8,
-                background: C.goldF, border: `1px solid ${C.goldB}`,
-                textDecoration: 'none', transition: 'all .2s',
-              }}>
-                <span style={{ fontSize: 22, flexShrink: 0 }}>{app.icon}</span>
-                <span style={{ flex: 1 }}>
-                  <span style={{ display: 'block', fontSize: 13, color: C.cream, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.05em', marginBottom: 2 }}>{app.label}</span>
-                  <span style={{ display: 'block', fontSize: 15, color: C.muted, fontStyle: 'italic' }}>{app.desc}</span>
-                </span>
-                <span style={{ fontSize: 16, color: C.gold }}>↗</span>
-              </a>
-            ))}
-          </div>
-
-          {/* About */}
-          <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>About</div>
-          </div>
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '0 16px' }}>
-            <Row icon="⚔️" label="Armed & Anchored">
-              <span style={{ fontSize: 14, color: C.dim }}>v1.0</span>
-            </Row>
-            <a href="https://eloraradiance.com" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-            <Row icon="🌿" label="Elora Radiance Co." border={false}>
-              <span style={{ fontSize: 14, color: C.gold }}>eloraradiance.com &rarr;</span>
-            </Row>
-            </a>
-          </div>
-
+            </FoldRow>
+            <FoldRow C={C} id="set-data" emoji="📥" title="Your Data" sub="Export your journal or start over">
           {/* Export Journal */}
-          <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 11, color: C.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: "'Cinzel',Georgia,serif", marginBottom: 4 }}>Your Data</div>
-          </div>
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '16px' }}>
             <p style={{ fontSize: 16, color: C.text, lineHeight: 1.7, marginBottom: 14 }}>
               Download all your journal entries, declarations, tool logs, and memorized verses as a text file.
@@ -455,6 +371,106 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
               )}
               {resetMsg && <p role="status" style={{ fontSize: 15, color: C.text, marginTop: 10, textAlign: 'center', fontStyle: 'italic' }}>{resetMsg}</p>}
             </div>
+          </div>
+            </FoldRow>
+            <FoldRow C={C} id="set-share" emoji="🔗" title="Share" sub="Send the app to someone who needs it">
+          {/* Share & Referral */}
+          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '16px' }}>
+            <p style={{ fontSize: 16, color: C.text, lineHeight: 1.75, marginBottom: 14 }}>
+              Know a warrior who needs this? Share Armed & Anchored with someone in your life. Every soldier needs to be equipped.
+            </p>
+            <div style={{ background: lightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.03)', border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px', marginBottom: 12, fontSize: 16, color: C.muted, fontStyle: 'italic', lineHeight: 1.7 }}>
+              "{referralText.split('\n')[0]}"
+            </div>
+            <button onClick={handleCopyReferral} style={{
+              width: '100%',
+              background: copiedReferral ? 'rgba(124,146,132,0.15)' : `linear-gradient(135deg,${C.redF},rgba(255,255,255,0.02))`,
+              border: `1px solid ${copiedReferral ? 'rgba(124,146,132,0.4)' : C.redB}`,
+              color: copiedReferral ? '#7C9284' : C.redL,
+              padding: '13px', borderRadius: 12, cursor: 'pointer',
+              fontSize: 13, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.08em',
+              transition: 'all .25s',
+            }}>
+              {copiedReferral ? '✓ Copied — Send It to Someone' : '🔗 Share Armed & Anchored'}
+            </button>
+          </div>
+            </FoldRow>
+            <FoldRow C={C} id="set-support" emoji="🛟" title="Reviews & Support" sub="Leave a review or email us">
+              <div style={{ padding: '0 4px' }}>
+            <Row icon="✉️" label={profile?.email || 'Your account'}>
+              <span style={{ fontSize: 15, color: C.muted }}>Lifetime Access ✦</span>
+            </Row>
+            <Row icon="✉️" label={profile?.email || 'Your account'}>
+              <span style={{ fontSize: 15, color: C.muted }}>Lifetime Access ✦</span>
+            </Row>
+              </div>
+            </FoldRow>
+            <FoldRow C={C} id="set-privacy" emoji="🔒" title="Privacy & Account" sub="Policies and deleting your account">
+              <div style={{ marginTop: -22 }}>
+          <AccountPrivacy supabase={supabase} theme={{
+            text: C.text, muted: C.muted, card: C.bgCard, border: C.border,
+            danger: lightMode ? C.red : C.redL, dangerF: C.redF, dangerB: C.redB, dark: !lightMode,
+          }} />
+              </div>
+            </FoldRow>
+            <FoldRow C={C} id="set-more" emoji="🌿" title="More from Elora Radiance Co." sub="The other apps in the family">
+          {/* More from Elora Radiance */}
+          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '12px 16px', marginBottom: 0 }}>
+            <p style={{ fontSize: 16, color: C.muted, fontStyle: 'italic', lineHeight: 1.7, marginBottom: 14 }}>
+              The rest of the Elora Radiance ecosystem — Scripture-based tools for the whole Christian life.
+            </p>
+            {[
+              { label: 'Anchored Steps · Year 1', desc: '52 weeks of faith in action', url: 'https://steps.eloraradiance.com/', icon: '⚓' },
+              { label: 'Anchored Steps · Year 2', desc: '52 weeks of deeper study', url: 'https://steps2.eloraradiance.com/', icon: '⚓' },
+              { label: 'The Red Letters', desc: 'The words of Jesus by theme — free', url: 'https://redletters.eloraradiance.com/', icon: '✦' },
+              { label: 'Anchored Verse', desc: 'Scripture for every emotion — free', url: 'https://verse.eloraradiance.com/', icon: '📖' },
+              { label: 'The Living Planner', desc: 'Faith-centered life planner', url: 'https://planner.eloraradiance.com/', icon: '📓' },
+            ].map(app => (
+              <a key={app.url} href={app.url} target="_blank" rel="noopener noreferrer" style={{
+                display: 'flex', alignItems: 'center', gap: 14,
+                padding: '13px 14px', borderRadius: 12, marginBottom: 8,
+                background: C.goldF, border: `1px solid ${C.goldB}`,
+                textDecoration: 'none', transition: 'all .2s',
+              }}>
+                <span style={{ fontSize: 22, flexShrink: 0 }}>{app.icon}</span>
+                <span style={{ flex: 1 }}>
+                  <span style={{ display: 'block', fontSize: 13, color: C.cream, fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.05em', marginBottom: 2 }}>{app.label}</span>
+                  <span style={{ display: 'block', fontSize: 15, color: C.muted, fontStyle: 'italic' }}>{app.desc}</span>
+                </span>
+                <span style={{ fontSize: 16, color: C.gold }}>↗</span>
+              </a>
+            ))}
+          </div>
+            </FoldRow>
+            <FoldRow C={C} id="set-credits" emoji="📖" title="Scripture Credits" sub="Translations used in this app">
+              <div style={{ marginTop: -22 }}>
+          <ScriptureCredits notices={['ESV', 'NIV', 'NKJV', 'KJV']} theme={{ text: C.text, muted: C.muted, card: C.bgCard, border: C.border }} />
+              </div>
+            </FoldRow>
+            <FoldRow C={C} id="set-about" emoji="⚔️" title="About" sub="Armed & Anchored v1.0">
+          {/* About */}
+          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: 14, padding: '0 16px' }}>
+            <Row icon="⚔️" label="Armed & Anchored">
+              <span style={{ fontSize: 14, color: C.dim }}>v1.0</span>
+            </Row>
+            <a href="https://eloraradiance.com" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+            <Row icon="🌿" label="Elora Radiance Co." border={false}>
+              <span style={{ fontSize: 14, color: C.gold }}>eloraradiance.com &rarr;</span>
+            </Row>
+            </a>
+          </div>
+            </FoldRow>
+          </div>
+
+          <div style={{ marginTop: 18, display: 'flex', justifyContent: 'center' }}>
+              <button onClick={handleSignOut} disabled={signingOut} style={{
+                background: C.redF, border: `1px solid ${C.redB}`,
+                color: C.redL, padding: '6px 16px', borderRadius: 10,
+                cursor: 'pointer', fontSize: 12,
+                fontFamily: "'Cinzel',Georgia,serif", letterSpacing: '0.07em',
+              }}>
+                {signingOut ? 'Signing out...' : 'Sign Out'}
+              </button>
           </div>
 
         </div>

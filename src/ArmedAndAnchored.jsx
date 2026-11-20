@@ -1383,7 +1383,6 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
             {declared[weapon.id] && <span style={{fontSize:11,color:C.redL,fontFamily:"'Cinzel',Georgia,serif",letterSpacing:"0.06em"}}>✦ Deployed</span>}
-            <button onClick={()=>setShareCard({weapon,type:tab==="teaching"?"teaching":tab==="tactics"?"tactics":tab==="declare"?"declaration":"scripture"})} style={{background:"rgba(176,138,78,0.1)",border:"1px solid rgba(176,138,78,0.28)",color:"#B08A4E",borderRadius:8,padding:"5px 9px",cursor:"pointer",fontSize:15}}>↗</button>
             
           </div>
         </div>
@@ -1410,14 +1409,15 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
             </div>
           )
         })()}
-        {/* Weapon jump dropdown */}
+        {/* Weapon jump list: all weapons fit without scrolling on a phone (2026-11-19); it only scrolls on a very short screen */}
         {showWeaponJump && (
           <div onClick={()=>setShowWeaponJump(false)} style={{position:"fixed",inset:0,zIndex:800}} >
-            <div onClick={e=>e.stopPropagation()} style={{position:"fixed",top:"calc(140px + var(--safe-top, env(safe-area-inset-top, 0px)))",left:10,right:10,background:C.bg,border:`1px solid ${C.border}`,borderRadius:16,padding:14,maxHeight:280,overflowY:"auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,zIndex:900,boxShadow:"0 8px 32px rgba(0,0,0,0.7)"}}>
+            <div onClick={e=>e.stopPropagation()} style={{position:"fixed",top:"calc(140px + var(--safe-top, env(safe-area-inset-top, 0px)))",left:10,right:10,background:C.bg,border:`1px solid ${C.border}`,borderRadius:16,padding:10,maxHeight:"calc(100dvh - 140px - var(--safe-top, env(safe-area-inset-top, 0px)) - 72px - env(safe-area-inset-bottom, 0px))",overflowY:"auto",overflowX:"hidden",display:"grid",gridTemplateColumns:"repeat(4,minmax(0,1fr))",gap:4,zIndex:900,boxShadow:"0 8px 32px rgba(0,0,0,0.7)"}}>
               {WEAPONS.map(w=>(
-                <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");setShowWeaponJump(false);window.scrollTo(0,0);}} style={{background:w.id===selected?C.redF:"transparent",border:`1px solid ${w.id===selected?C.redB:C.border}`,color:w.id===selected?C.redL:C.muted,borderRadius:10,padding:"10px 4px",cursor:"pointer",fontSize:11,fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",lineHeight:1.3,touchAction:"manipulation"}}>
-                  <div style={{fontSize:20,marginBottom:3}}>{w.icon}</div>
-                  <div style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",padding:"0 2px"}}>{w.title.split(" ").slice(0,2).join(" ")}</div>
+                <button key={w.id} onClick={()=>{setSelected(w.id);setTab("scripture");setShowWeaponJump(false);window.scrollTo(0,0);}} style={{background:w.id===selected?C.redF:"transparent",border:`1px solid ${w.id===selected?C.redB:C.border}`,color:w.id===selected?C.redL:C.muted,borderRadius:10,padding:"5px 3px",minWidth:0,cursor:"pointer",fontSize:10,fontFamily:"'Cinzel',Georgia,serif",textAlign:"center",lineHeight:1.2,touchAction:"manipulation"}}>
+                  <div style={{fontSize:17,marginBottom:1}}>{w.icon}</div>
+                  {/* Up to two lines of the weapon's name (without a leading "The"), so no two tiles read the same */}
+                  <div style={{overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",minHeight:"2.4em",padding:"0 1px"}}>{w.title.replace(/^The /,"")}</div>
                 </button>
               ))}
             </div>

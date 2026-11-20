@@ -72,7 +72,7 @@ const splitTactic = t => {
 const lines = t => (String(t || "").match(/[^.!?]+[.!?]+["'”’)]*/g) || [String(t || "")]).map(s => s.trim()).filter(Boolean);
 
 // Read-aloud lives in speech.js (iPhone Silent switch, Safari's dropped reads, long passages).
-const speakText = (text, onError) => readAloud(text, { rate: 0.92, onError });
+const speakText = (text, onError, onEnd) => readAloud(text, { rate: 0.92, onError, onEnd });
 const hush = stopSpeaking;
 // Older iPhones (no audio-session control) still mute read-aloud with the Silent switch: say so once.
 function silentTip() {
@@ -113,7 +113,7 @@ const verseCard = (w, i, kicker) => ({
     <p className="dr-kicker">{kicker}</p>
     <blockquote className="dr-verse">{w.scriptures[i].text}</blockquote>
     <p className="dr-ref">{w.scriptures[i].ref}</p>
-    <button className="dr-chip" onClick={() => c.speak(w.scriptures[i].text)}><Speaker />Listen</button>
+    <button className={"dr-chip" + (c.listening ? " is-on" : "")} aria-pressed={!!c.listening} onClick={() => c.speak(w.scriptures[i].text)}><Speaker />{c.listening ? "Stop" : "Listen"}</button>
   </>),
 });
 
@@ -252,6 +252,7 @@ export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare
   const [u, setU] = useState({});
   const [done, setDone] = useState(null);         // { flow, weaponId, attackId }
   const [toast, setToast] = useState("");
+  const [listening, setListening] = useState(false); // Listen is reading: the chip says Stop
   const ovRef = useRef(null);
   const closeRef = useRef(null);
   const today = useToday();
@@ -296,8 +297,12 @@ export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare
       const stamp = new Date().toLocaleDateString(undefined, { month: "short", day: "numeric" });
       setFor(id, "journal", (prev ? prev.trim() + "\n\n" : "") + "Battle plan, " + stamp + ": " + text);
     },
+    listening,
+    // Listen reads the passage; while it reads the chip says Stop, and a tap stops it.
     speak: t => {
-      if (!speakText(t, () => setToast("Couldn’t play the audio. Check that your volume is up, then tap Listen again."))) setToast("Listening isn’t supported in this browser.");
+      if (listening) { hush(); setListening(false); return; }
+      setListening(true);
+      if (!speakText(t, () => { setListening(false); setToast("Couldn’t play the audio. Check that your volume is up, then tap Listen again."); }, () => setListening(false))) { setListening(false); setToast("Listening isn’t supported in this browser."); }
       else { const tip = silentTip(); if (tip) setToast(tip); }
     },
   });

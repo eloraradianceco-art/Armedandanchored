@@ -70,7 +70,7 @@ export function syncStatusBar(lightMode) {
 // App Store Connect: non-consumable product aa_lifetime_access (aa_lifetime was used up by a product created under the wrong app). RevenueCat: entitlement "lifetime", current offering with
 // a Lifetime package. The purchase is tied to the signed-in account (RevenueCat app user id = account id), and the
 // shared database is updated by the store-sync function. Setup steps: claude/in-app-purchases.md in the project.
-export const REVENUECAT_IOS_KEY = '' || import.meta.env.VITE_REVENUECAT_IOS_KEY || ''  // key goes in the first quotes
+export const REVENUECAT_IOS_KEY = import.meta.env.VITE_REVENUECAT_IOS_KEY ?? 'appl_nWGmdPGhsBjYhJjdSesrbtwzNuU'  // public key (safe to ship); a test build can override it
 export const NATIVE_PURCHASES = isNative && Capacitor.getPlatform() === 'ios' && /^appl_/.test(REVENUECAT_IOS_KEY)
 export const LIFETIME_ENTITLEMENT = 'lifetime'
 let storeReady = null

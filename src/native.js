@@ -67,7 +67,7 @@ export function syncStatusBar(lightMode) {
 // ── Apple in-app purchase (RevenueCat), decided 2026-11-15 ───────────────
 // Turns on by itself once REVENUECAT_IOS_KEY holds the app's public RevenueCat key (starts with "appl_"; it is
 // meant to ship inside the app). Until then the App Store app shows "sign in" with no buy button, as before.
-// App Store Connect: non-consumable product aa_lifetime. RevenueCat: entitlement "lifetime", current offering with
+// App Store Connect: non-consumable product aa_lifetime_access (aa_lifetime was used up by a product created under the wrong app). RevenueCat: entitlement "lifetime", current offering with
 // a Lifetime package. The purchase is tied to the signed-in account (RevenueCat app user id = account id), and the
 // shared database is updated by the store-sync function. Setup steps: claude/in-app-purchases.md in the project.
 export const REVENUECAT_IOS_KEY = '' || import.meta.env.VITE_REVENUECAT_IOS_KEY || ''  // key goes in the first quotes

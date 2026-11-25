@@ -4,7 +4,7 @@
 import { Welcome } from './EntryScreens.jsx'
 import { BRAND } from '../entryBrand.js'
 
-const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
+const STRIPE_LINK = 'https://buy.stripe.com/aFa6oGajy3Xo2ijfMf57W0f'   // lifetime, $39.99 (since 2026-11-25)
 // Anchored Library ($79): Year 1 + Year 2 + Armed & Anchored in one purchase. Checkout returns to
 // eloraradiance.com/library-welcome, which opens each app with the checkout id. Web only.
 const LIBRARY_LINK = 'https://buy.stripe.com/28EfZg0IYalM6yzeIb57W0b'

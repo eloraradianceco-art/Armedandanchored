@@ -16,7 +16,7 @@ export const BRAND = {
     { title: 'Stand', items: ['Under Attack: the right weapon in a minute', 'Enemy tactics, so you see it coming', 'Declarations and prayers to speak'] },
     { title: 'Go deeper', items: ['Greek and Hebrew word studies with audio', 'A private battle journal on every device', 'Share cards for every weapon'] },
   ],
-  price: '$39 once',
+  price: '$39.99 once',
   priceNote: 'No subscription. Yours for good.',
   cta: '⚔️ Get Lifetime Access',
   fine: '',

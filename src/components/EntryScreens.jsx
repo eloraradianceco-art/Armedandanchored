@@ -177,7 +177,7 @@ export function Welcome({
           {bundleHref && (
             <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${c.divider}` }}>
               <a href={bundleHref} style={{ ...primaryBtn(c), background: 'transparent', border: `1px solid ${c.cardBorder}`, color: c.accent, fontSize: 14, padding: '13px 20px' }}>Get All 3 Apps · $79</a>
-              <p style={{ fontSize: 13, color: c.muted, lineHeight: 1.6, margin: '10px 0 0' }}>The Anchored Library: Year 1, Year 2 and Armed &amp; Anchored on one account, lifetime access. Save $38.</p>
+              <p style={{ fontSize: 13, color: c.muted, lineHeight: 1.6, margin: '10px 0 0' }}>The Anchored Library: Year 1, Year 2 and Armed &amp; Anchored on one account, lifetime access. Save over $40.</p>
             </div>
           )}
         </>

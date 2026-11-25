@@ -6,7 +6,7 @@ import AccountPrivacy from './AccountPrivacy'
 import ScriptureCredits from './ScriptureCredits'
 import Reviews from './Reviews'
 
-const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
+const STRIPE_LINK = 'https://buy.stripe.com/aFa6oGajy3Xo2ijfMf57W0f'
 
 // A row that opens on tap: emoji, title, one line of detail. Defined outside Settings so a row stays open when the
 // page re-renders (a component defined inside would be rebuilt each time and snap shut).

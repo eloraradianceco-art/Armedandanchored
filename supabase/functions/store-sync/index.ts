@@ -1,5 +1,6 @@
 // Shared database (Year 1, Year 2, Armed & Anchored, Red Letters) — Apple in-app purchases through RevenueCat.
-// Deployed to the shared Supabase project as `store-sync`. Armed & Anchored is the first app using it.
+// Deployed to the shared Supabase project as `store-sync`. Used by Armed & Anchored (app=aa) and the Anchored Steps
+// phone app (app=as: Year 1 and Year 2 in one App Store app, one RevenueCat app, two entitlements).
 //
 // Two callers, one rule: never trust what the caller says; re-read the buyer's state from RevenueCat and save it.
 //   • RevenueCat webhook: POST …/store-sync?app=aa with { event: { app_user_id, original_app_user_id, aliases,
@@ -11,8 +12,11 @@
 // Until it exists the function answers 503 and changes nothing.
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4'
 
-const APPS: Record<string, { entitlement: string }> = {
-  aa: { entitlement: 'lifetime' }, // Armed & Anchored: one-time lifetime unlock
+// One RevenueCat app per key. Each entitlement in it unlocks one product in this database (`app` is the value stored in
+// app_store_entitlements.app and purchases.app).
+const APPS: Record<string, { entitlement: string; app: string }[]> = {
+  aa: [{ entitlement: 'lifetime', app: 'aa' }],                                   // Armed & Anchored: one-time lifetime unlock
+  as: [{ entitlement: 'year1', app: 'as1' }, { entitlement: 'year2', app: 'as2' }], // Anchored Steps: each year, or both in one purchase
 }
 const sb = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } })
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -49,19 +53,23 @@ async function syncUser(app: string, userId: string, apiKey: string) {
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
   })
   if (!res.ok) throw new Error(`RevenueCat ${res.status}`)
-  const state = entitlementState((await res.json()).subscriber || {}, APPS[app].entitlement)
-  const { data: existing } = await sb.from('app_store_entitlements').select('active').eq('user_id', userId).eq('app', app).maybeSingle()
-  // Someone who never bought in the app gets no row and nothing changes
-  if (!state.product_id && !existing) return { userId, active: false }
-  const { error } = await sb.from('app_store_entitlements').upsert({ user_id: userId, app, ...state, checked_at: new Date().toISOString() }, { onConflict: 'user_id,app' })
-  if (error) throw error
-  if (app === 'aa') {
-    const { error: e2 } = await sb.rpc('aa_apply_store_entitlement', {
-      p_user: userId, p_active: state.active, p_was_active: !!existing?.active, p_tx: state.transaction_id, p_sandbox: state.is_sandbox,
-    })
+  const subscriber = (await res.json()).subscriber || {}
+  const apps: Record<string, boolean> = {}
+  for (const row of APPS[app]) {
+    const state = entitlementState(subscriber, row.entitlement)
+    const { data: existing } = await sb.from('app_store_entitlements').select('active').eq('user_id', userId).eq('app', row.app).maybeSingle()
+    // Someone who never bought this in the app gets no row and nothing changes
+    if (!state.product_id && !existing) { apps[row.app] = false; continue }
+    const { error } = await sb.from('app_store_entitlements').upsert({ user_id: userId, app: row.app, ...state, checked_at: new Date().toISOString() }, { onConflict: 'user_id,app' })
+    if (error) throw error
+    const args = { p_user: userId, p_active: state.active, p_was_active: !!existing?.active, p_tx: state.transaction_id, p_sandbox: state.is_sandbox }
+    const { error: e2 } = row.app === 'aa'
+      ? await sb.rpc('aa_apply_store_entitlement', args)
+      : await sb.rpc('as_apply_store_entitlement', { ...args, p_app: row.app })
     if (e2) throw e2
+    apps[row.app] = state.active
   }
-  return { userId, active: state.active }
+  return { userId, active: Object.values(apps).some(Boolean), apps }
 }
 
 Deno.serve(async (req) => {

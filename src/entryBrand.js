@@ -20,8 +20,9 @@ export const BRAND = {
   priceNote: 'No subscription. Yours for good.',
   cta: '⚔️ Get Lifetime Access',
   fine: '',
-  // Giving line on the purchase page (components/EntryScreens.jsx, GivingLine). The running total comes from eloraradiance.com/giving.json.
-  giving: "10% of this app's net sales each month is given to Children's Cup.",
+  // Giving line on the purchase page (EntryScreens.jsx, GivingLine). This is the plain sentence; the running total, and
+  // whether the main recipient is named, come from eloraradiance.com/giving.json.
+  giving: '10% of net sales is given to ministry.',
   freeCta: '🛡️ Start Free: The Armor of God',
   freeFine: 'Free account, no card. One complete weapon with the Daily Drill and Under Attack.',
   signInPrompt: 'Already have an account?',

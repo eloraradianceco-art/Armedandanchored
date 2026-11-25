@@ -7,7 +7,7 @@ import ScriptureCredits from './ScriptureCredits'
 import Reviews from './Reviews'
 import { isNative, nativeShareText, nativeShareFile } from '../native'
 
-const STRIPE_LINK = 'https://buy.stripe.com/cNi9AS3Va8dEbSTarV57W0a'
+const STRIPE_LINK = 'https://buy.stripe.com/aFa6oGajy3Xo2ijfMf57W0f'
 // Inside the phone app, point people to the website instead of a checkout page.
 const REFERRAL_LINK = isNative ? 'https://eloraradiance.com' : STRIPE_LINK
 

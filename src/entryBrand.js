@@ -5,8 +5,8 @@ export const BRAND = {
   icon: '/icon.png',
   tagline: 'Spiritual Warfare Training Journal',
   verse: {
-    text: 'Put on the whole armor of God, that you may be able to stand against the schemes of the devil.',
-    ref: 'Ephesians 6:11 · ESV',
+    text: 'Put on the full armor of God, so that you can make your stand against the devil’s schemes.',
+    ref: 'Ephesians 6:11 · BSB',
   },
   // Purchase page: three short groups, the price, one button (components/EntryScreens.jsx, Welcome).
   headline: 'Your personal war room, built on Scripture.',

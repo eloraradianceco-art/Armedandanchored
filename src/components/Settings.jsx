@@ -459,7 +459,7 @@ export default function Settings({ profile, userId, weapons, entries, lightMode,
             </FoldRow>
             <FoldRow C={C} id="set-credits" emoji="📖" title="Scripture Credits" sub="Translations used in this app">
               <div style={{ marginTop: -22 }}>
-          <ScriptureCredits notices={['ESV', 'NIV', 'NKJV', 'KJV']} theme={{ text: C.text, muted: C.muted, card: C.bgCard, border: C.border }} />
+          <ScriptureCredits notices={['BSB', 'KJV']} theme={{ text: C.text, muted: C.muted, card: C.bgCard, border: C.border }} />
               </div>
             </FoldRow>
             <FoldRow C={C} id="set-about" emoji="⚔️" title="About" sub="Armed & Anchored v1.0">

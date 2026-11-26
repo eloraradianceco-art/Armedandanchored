@@ -9,9 +9,9 @@ import { BRAND } from '../entryBrand.js'
 import { isNative, NATIVE_PURCHASES, storeLifetime, storeBuy, storeRestore } from '../native'
 
 const STRIPE_LINK = 'https://buy.stripe.com/aFa6oGajy3Xo2ijfMf57W0f'   // lifetime, $39.99 (since 2026-11-25)
-// Anchored Library ($79): Year 1 + Year 2 + Armed & Anchored in one purchase. Checkout returns to
+// Anchored Library ($79.99): Year 1 + Year 2 + Armed & Anchored in one purchase. Checkout returns to
 // eloraradiance.com/library-welcome, which opens each app with the checkout id. Web only: never in the App Store app.
-const LIBRARY_LINK = 'https://buy.stripe.com/28EfZg0IYalM6yzeIb57W0b'
+const LIBRARY_LINK = 'https://buy.stripe.com/6oUbJ0dvKbpQbSTeIb57W0h'
 
 // Signed-in buyers carry their account to Stripe so the purchase unlocks it directly.
 function buyLink(session, link = STRIPE_LINK) {

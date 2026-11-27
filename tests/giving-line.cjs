@@ -26,7 +26,7 @@ async function open(browser, giving) {
   await page.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.fulfill({ body: '' }))
   await page.route('https://eloraradiance.com/giving.json', (r) => giving === 'down' ? r.abort() : r.fulfill({ json: giving, headers: { 'access-control-allow-origin': '*' } }))
   await page.goto(`http://localhost:${PORT}/`); await page.evaluate(() => localStorage.clear())
-  await page.goto(`http://localhost:${PORT}/`); await page.waitForTimeout(1300)
+  await page.goto(`http://localhost:${PORT}/`); await page.waitForTimeout(900); await page.locator('[data-see-prices]').click(); await page.waitForTimeout(700)   // the giving line is on the prices page
   const t = await page.locator('body').innerText()
   const wide = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
   return { page, errs, t, wide }

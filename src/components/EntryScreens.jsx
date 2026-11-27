@@ -1,6 +1,6 @@
 // EntryScreens.jsx — the same file in Anchored Steps Year 1, Year 2, Armed & Anchored and The Red Letters.
 // One front door for every Elora Radiance app, each in its own colors and words (the app's BRAND):
-//   <Welcome>       signed out: brand, key verse, what's inside, one main button, "Sign in"
+//   <Welcome>       signed out: brand, what's inside, the free start, "Get Lifetime Access" (opens the prices page), "Sign in"
 //                   signed in without access: the same page with "I've Paid · Check Again" and Sign out
 //   <AuthCard>      sign in / create account / reset password (the app keeps its own sign-in logic)
 //   <HomeScreenTip> "Add to your Home Screen" after a new account
@@ -108,6 +108,72 @@ export function Welcome({
 }) {
   const c = b.colors
   const signedIn = !!session
+  // 2026-11-27: the front page stays short (what you get, the free start, one button) and the prices sit on their own
+  // page behind "Get Lifetime Access". Someone already signed in came here to buy, so they start there.
+  const [step, setStep] = useState(signedIn ? 'offers' : 'home')
+  const go = (to) => { setStep(to); try { window.scrollTo(0, 0) } catch (e) { /* not in a browser */ } }
+  const outline = { ...primaryBtn(c), background: 'transparent', border: `1px solid ${c.cardBorder}`, color: c.accent, fontSize: 14, padding: '13px 20px' }
+  const sub = { fontSize: 13, color: c.muted, lineHeight: 1.6, margin: '10px 0 0' }
+  const freeStart = !signedIn && onTryFree
+  const tail = (
+    <>
+      {signedIn && onCheckAgain && (
+        <button type="button" onClick={onCheckAgain} disabled={checking} style={{ ...outline, marginTop: 12, cursor: checking ? 'default' : 'pointer' }}>{checking ? 'Checking…' : "I've Paid · Check Again"}</button>
+      )}
+      {(notice || checkMessage) && <div style={{ marginTop: 14 }}>{notice && <Note c={c}>{notice}</Note>}{checkMessage && <Note c={c}>{checkMessage}</Note>}</div>}
+      {footer}
+
+      <div style={{ marginTop: 22, fontSize: 14, color: c.muted, lineHeight: 1.6 }}>
+        {signedIn ? (
+          <>
+            Signed in as <span style={{ color: c.text }}>{session.user?.email}</span>{onSignOut && <> · <button type="button" onClick={onSignOut} style={linkBtn(c.link)}>Sign out</button></>}
+            {purchasable && <div style={{ fontSize: 13, marginTop: 4 }}>Paid with a different email? Sign out and sign in with that one.</div>}
+          </>
+        ) : (purchasable || b.free) && onSignIn && (
+          <>{b.signInPrompt || 'Already have access?'} <button type="button" onClick={onSignIn} style={linkBtn(c.link)}>Sign in</button></>
+        )}
+      </div>
+    </>
+  )
+
+  // ── The prices: one page, at most three paid choices ──
+  if (purchasable && step === 'offers') {
+    const back = signedIn ? onBack : () => go('home')
+    const choice = { background: c.card, border: `1px solid ${c.cardBorder}`, borderRadius: 16, padding: '18px 18px 16px', marginBottom: 14, boxShadow: c.cardShadow || 'none' }
+    const name = { fontSize: 12, color: c.accent, fontFamily: DISPLAY, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 6 }
+    const about = { fontSize: 15, color: c.text, lineHeight: 1.55, margin: '0 0 14px' }
+    const priceLine = [b.price, b.priceNote].filter(Boolean).join(' · ') || b.fine
+    return (
+      <Page b={b} top>
+        <div data-offers>
+          {back && <div style={{ textAlign: 'left', marginBottom: 14 }}><button type="button" onClick={back} style={{ ...linkBtn(c.link), fontSize: 15, textDecoration: 'none', padding: '6px 0' }}>← {signedIn ? backLabel : 'Back'}</button></div>}
+          <Mark b={b} size={52} />
+          <Eyebrow b={b} />
+          <Title b={b} size={24} />
+          <div style={{ fontSize: 12, color: c.muted, letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: DISPLAY, margin: '8px 0 22px' }}>Choose Your Access</div>
+
+          <div style={choice}>
+            <div style={name}>{b.offerName || b.name}</div>
+            {priceLine && <p style={about}>{priceLine}</p>}
+            {buyHref
+              ? <a href={buyHref} style={primaryBtn(c)}>{b.cta}</a>
+              : <button type="button" onClick={onPrimary} style={primaryBtn(c)}>{b.cta}</button>}
+          </div>
+          {bundleHref && (
+            <div style={choice}>
+              <div style={name}>The Anchored Library</div>
+              <p style={about}>Year 1, Year 2 and Armed &amp; Anchored on one account, lifetime access. Save $39.98.</p>
+              <a href={bundleHref} style={outline}>Get All 3 Apps · $79.99</a>
+            </div>
+          )}
+
+          {b.giving && <GivingLine b={b} />}
+          {tail}
+        </div>
+      </Page>
+    )
+  }
+
   return (
     <Page b={b}>
       {onBack && (
@@ -138,12 +204,7 @@ export function Welcome({
               </ul>
             </div>
           ))}
-          {purchasable && b.price && (
-            <div style={{ margin: '16px 0 14px' }}>
-              <div style={{ fontSize: 24, color: c.title, fontWeight: 600, lineHeight: 1.2 }}>{b.price}</div>
-              {b.priceNote && <div style={{ fontSize: 15, color: c.muted, marginTop: 2 }}>{b.priceNote}</div>}
-            </div>
-          )}
+          <div style={{ height: 12 }} />
         </>
       ) : (
         <>
@@ -166,54 +227,25 @@ export function Welcome({
         </>
       )}
 
-      {b.giving && <GivingLine b={b} />}
-
+      {freeStart && (
+        <div style={{ marginBottom: 14 }}>
+          <button type="button" onClick={onTryFree} style={{ ...primaryBtn(c), cursor: 'pointer' }}>{freeCta || 'Start Free'}</button>
+          {freeFine && <p style={{ ...sub, marginBottom: 0 }}>{freeFine}</p>}
+        </div>
+      )}
       {purchasable ? (
         <>
-          {buyHref
-            ? <a href={buyHref} style={primaryBtn(c)}>{b.cta}</a>
-            : <button type="button" onClick={onPrimary} style={primaryBtn(c)}>{b.cta}</button>}
-          {b.fine && <p style={{ fontSize: 14, color: c.muted, lineHeight: 1.6, margin: '12px 0 0' }}>{b.fine}</p>}
-          {bundleHref && (
-            <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${c.divider}` }}>
-              <a href={bundleHref} style={{ ...primaryBtn(c), background: 'transparent', border: `1px solid ${c.cardBorder}`, color: c.accent, fontSize: 14, padding: '13px 20px' }}>Get All 3 Apps · $79.99</a>
-              <p style={{ fontSize: 13, color: c.muted, lineHeight: 1.6, margin: '10px 0 0' }}>The Anchored Library: Year 1, Year 2 and Armed &amp; Anchored on one account, lifetime access. Save $39.98.</p>
-            </div>
-          )}
+          <button type="button" data-see-prices onClick={() => go('offers')} style={freeStart ? { ...outline, cursor: 'pointer' } : { ...primaryBtn(c), cursor: 'pointer' }}>{b.cta}</button>
+          {b.from && <p style={sub}>{b.from}</p>}
         </>
       ) : (
         <>
-          {!signedIn && <button type="button" onClick={onSignIn} style={primaryBtn(c)}>Sign In</button>}
+          {!signedIn && <button type="button" onClick={onSignIn} style={freeStart ? { ...outline, cursor: 'pointer' } : primaryBtn(c)}>Sign In</button>}
           {unavailableNote && <p style={{ fontSize: 14, color: c.muted, lineHeight: 1.6, margin: '12px 0 0' }}>{unavailableNote}</p>}
         </>
       )}
 
-      {!signedIn && onTryFree && (
-        <div style={{ marginTop: 16 }}>
-          <button type="button" onClick={onTryFree} style={{ ...primaryBtn(c), background: 'transparent', border: `1px solid ${c.cardBorder}`, color: c.accent, fontSize: 14, padding: '13px 20px' }}>{freeCta || 'Start Free'}</button>
-          {freeFine && <p style={{ fontSize: 13, color: c.muted, lineHeight: 1.6, margin: '10px 0 0' }}>{freeFine}</p>}
-        </div>
-      )}
-
-      {signedIn && onCheckAgain && (
-        <button type="button" onClick={onCheckAgain} disabled={checking} style={{
-          ...primaryBtn(c), marginTop: 12, background: 'transparent', border: `1px solid ${c.cardBorder}`,
-          color: c.accent, fontSize: 14, padding: '13px 20px', cursor: checking ? 'default' : 'pointer',
-        }}>{checking ? 'Checking…' : "I've Paid · Check Again"}</button>
-      )}
-      {(notice || checkMessage) && <div style={{ marginTop: 14 }}>{notice && <Note c={c}>{notice}</Note>}{checkMessage && <Note c={c}>{checkMessage}</Note>}</div>}
-      {footer}
-
-      <div style={{ marginTop: 22, fontSize: 14, color: c.muted, lineHeight: 1.6 }}>
-        {signedIn ? (
-          <>
-            Signed in as <span style={{ color: c.text }}>{session.user?.email}</span>{onSignOut && <> · <button type="button" onClick={onSignOut} style={linkBtn(c.link)}>Sign out</button></>}
-            {purchasable && <div style={{ fontSize: 13, marginTop: 4 }}>Paid with a different email? Sign out and sign in with that one.</div>}
-          </>
-        ) : (purchasable || b.free) && onSignIn && (
-          <>{b.signInPrompt || 'Already have access?'} <button type="button" onClick={onSignIn} style={linkBtn(c.link)}>Sign in</button></>
-        )}
-      </div>
+      {tail}
     </Page>
   )
 }

@@ -70,6 +70,7 @@ function StorePaywall({ session, onShowSignIn, onSignOut, onStorePurchase, onTry
     // Apple's own price for this person's country; nothing is shown until the App Store answers.
     price: product?.price ? `${product.price} once` : '',
     priceNote: 'One-time purchase. No subscription. Yours for good.',
+    from: '',
     fine: '',
   }
   const link = { background: 'none', border: 'none', padding: 0, color: c.link, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline' }

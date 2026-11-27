@@ -3,7 +3,7 @@ import { supabase } from '../supabaseClient'
 import { AuthCard } from './EntryScreens.jsx'
 import { BRAND } from '../entryBrand.js'
 
-export default function Auth({ isNewUser = false, freeStart = false, onComplete, onBack, initialMode }) {
+export default function Auth({ isNewUser = false, freeStart = false, buyStart = false, onComplete, onBack, initialMode }) {
   const [mode, setMode] = useState(initialMode || (isNewUser ? 'signup' : 'signin'))
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -68,6 +68,7 @@ export default function Auth({ isNewUser = false, freeStart = false, onComplete,
 
   const message = confirmSent ? `Confirmation link sent to ${email}. Open it, then come back and sign in.`
     : isNewUser && mode !== 'forgot' ? 'Payment received. Create your account (or sign in) with the email you paid with to open Armed & Anchored.'
+    : buyStart && mode !== 'forgot' ? 'Create your account (or sign in) first. Lifetime access is saved to it, so it opens on every device.'
     : freeStart && mode === 'signup' ? 'Create a free account to open The Full Armor of God. Your journal and progress are saved to it.' : null
   return (
     <AuthCard brand={BRAND} mode={mode} onMode={(m) => { setMode(m); setError(null); setConfirmSent(false); setResetSent(false) }}

@@ -21,8 +21,8 @@ function buyLink(session, link = STRIPE_LINK) {
   return link + '?' + q.toString()
 }
 
-export default function Paywall({ onShowSignIn, onTryFree, onBack, session, pending, onCheckAgain, onSignOut, onStorePurchase }) {
-  if (isNative && NATIVE_PURCHASES) return <StorePaywall session={session} onShowSignIn={onShowSignIn} onSignOut={onSignOut} onStorePurchase={onStorePurchase} onTryFree={onTryFree} onBack={onBack} />
+export default function Paywall({ onShowSignIn, onTryFree, onGetAccess, onBack, session, pending, onCheckAgain, onSignOut, onStorePurchase }) {
+  if (isNative && NATIVE_PURCHASES) return <StorePaywall session={session} onShowSignIn={onShowSignIn} onSignOut={onSignOut} onStorePurchase={onStorePurchase} onTryFree={onTryFree} onGetAccess={onGetAccess} onBack={onBack} />
   return (
     <Welcome brand={BRAND} session={session} buyHref={buyLink(session)} bundleHref={isNative ? undefined : buyLink(session, LIBRARY_LINK)}
       purchasable={!isNative} unavailableNote="Lifetime access will be available to purchase right here in the app soon."
@@ -34,7 +34,7 @@ export default function Paywall({ onShowSignIn, onTryFree, onBack, session, pend
 
 // App Store: the lifetime unlock is bought with Apple and tied to the signed-in account, so it also opens on the
 // website and every device. Apple requires a Restore Purchases button.
-function StorePaywall({ session, onShowSignIn, onSignOut, onStorePurchase, onTryFree, onBack }) {
+function StorePaywall({ session, onShowSignIn, onSignOut, onStorePurchase, onTryFree, onGetAccess, onBack }) {
   const c = BRAND.colors
   const uid = session?.user?.id
   const [product, setProduct] = useState(undefined) // undefined = loading, null = store unavailable
@@ -87,7 +87,8 @@ function StorePaywall({ session, onShowSignIn, onSignOut, onStorePurchase, onTry
   ) : null
   return (
     <Welcome brand={brand} session={session} purchasable={!!uid} onPrimary={buy}
-      unavailableNote={uid ? null : 'Start free with The Full Armor of God, or sign in. Lifetime access is saved to your account, so it opens on every device.'}
+      unavailableNote={uid || onGetAccess ? null : 'Start free with The Full Armor of God, or sign in. Lifetime access is saved to your account, so it opens on every device.'}
+      onGetAccess={uid ? undefined : onGetAccess} accessNote="One-time purchase · No subscription"
       onSignIn={onShowSignIn} onSignOut={onSignOut} notice={msg || null} footer={footer}
       onTryFree={onTryFree} freeCta={BRAND.freeCta} freeFine={BRAND.freeFine} onBack={onBack} backLabel="Back to your free weapon" />
   )

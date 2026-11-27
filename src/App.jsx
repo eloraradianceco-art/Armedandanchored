@@ -43,7 +43,8 @@ function AppInner() {
   const [onboarded, setOnboarded] = useState(() => {
     try { return !!localStorage.getItem('aa_onboarded') } catch { return false }
   })
-  const [showSignIn, setShowSignIn] = useState(false) // false | 'signin' | 'signup' (free start)
+  const [showSignIn, setShowSignIn] = useState(false) // false | 'signin' | 'signup' (free start) | 'buy' (account first, then the prices)
+  const [wantUnlock, setWantUnlock] = useState(false)   // came in through Get Lifetime Access: open the prices page after sign-in
   const [showPasswordReset, setShowPasswordReset] = useState(false)
   const [newPassword, setNewPassword] = useState('')
   const [resetLoading, setResetLoading] = useState(false)
@@ -246,9 +247,10 @@ function AppInner() {
 
   // Not logged in
   if (!session) {
-    if (showSignIn) return <Auth key={showSignIn} initialMode={showSignIn === 'signup' ? 'signup' : 'signin'} freeStart={showSignIn === 'signup'}
+    if (showSignIn) return <Auth key={showSignIn} initialMode={showSignIn === 'signin' ? 'signin' : 'signup'} freeStart={showSignIn === 'signup'} buyStart={showSignIn === 'buy'}
       onComplete={handleAuthComplete} onBack={() => setShowSignIn(false)}/>
-    return <Paywall onShowSignIn={() => setShowSignIn('signin')} onTryFree={() => setShowSignIn('signup')}/>
+    return <Paywall onShowSignIn={() => { setWantUnlock(false); setShowSignIn('signin') }} onTryFree={() => { setWantUnlock(false); setShowSignIn('signup') }}
+      onGetAccess={() => { setWantUnlock(true); setShowSignIn('buy') }}/>
   }
 
   // Just paid and still confirming
@@ -266,6 +268,9 @@ function AppInner() {
       onBack={close}
     />
   )
+
+  // Signed out, they tapped Get Lifetime Access: the prices page comes first, the app (and its intro) after.
+  if (wantUnlock && renderUnlock) return renderUnlock(() => setWantUnlock(false))
 
   // Onboarding
   if (showOnboarding || !onboarded) {

@@ -104,7 +104,7 @@ function Note({ c, tone = 'ok', children }) {
 // purchasable=false (App Store app before in-app purchase): no buy button, unavailableNote instead.
 export function Welcome({
   brand: b, session, buyHref, bundleHref, onPrimary, onSignIn, onSignOut, purchasable = true, unavailableNote,
-  onCheckAgain, checking = false, checkMessage, notice, footer, onBack, backLabel = 'Back', onTryFree, freeCta, freeFine,
+  onCheckAgain, checking = false, checkMessage, notice, footer, onBack, backLabel = 'Back', onTryFree, freeCta, freeFine, onGetAccess, accessNote,
 }) {
   const c = b.colors
   const signedIn = !!session
@@ -129,7 +129,7 @@ export function Welcome({
             Signed in as <span style={{ color: c.text }}>{session.user?.email}</span>{onSignOut && <> · <button type="button" onClick={onSignOut} style={linkBtn(c.link)}>Sign out</button></>}
             {purchasable && <div style={{ fontSize: 13, marginTop: 4 }}>Paid with a different email? Sign out and sign in with that one.</div>}
           </>
-        ) : (purchasable || b.free) && onSignIn && (
+        ) : (purchasable || b.free || onGetAccess) && onSignIn && (
           <>{b.signInPrompt || 'Already have access?'} <button type="button" onClick={onSignIn} style={linkBtn(c.link)}>Sign in</button></>
         )}
       </div>
@@ -240,7 +240,10 @@ export function Welcome({
         </>
       ) : (
         <>
-          {!signedIn && <button type="button" onClick={onSignIn} style={freeStart ? { ...outline, cursor: 'pointer' } : primaryBtn(c)}>Sign In</button>}
+          {/* App Store app, signed out: the same two buttons as the website. A purchase is saved to an account, so
+              Get Lifetime Access asks for the account first and then opens the prices page. */}
+          {!signedIn && onGetAccess && <><button type="button" data-get-access onClick={onGetAccess} style={freeStart ? { ...outline, cursor: 'pointer' } : { ...primaryBtn(c), cursor: 'pointer' }}>{b.cta}</button>{accessNote && <p style={sub}>{accessNote}</p>}</>}
+          {!signedIn && !onGetAccess && <button type="button" onClick={onSignIn} style={freeStart ? { ...outline, cursor: 'pointer' } : primaryBtn(c)}>Sign In</button>}
           {unavailableNote && <p style={{ fontSize: 14, color: c.muted, lineHeight: 1.6, margin: '12px 0 0' }}>{unavailableNote}</p>}
         </>
       )}

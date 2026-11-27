@@ -19,6 +19,9 @@ export const BRAND = {
   price: '$39.99 once',
   priceNote: 'No subscription. Yours for good.',
   cta: '⚔️ Get Lifetime Access',
+  // Front page, under "Get Lifetime Access" (which opens the prices page). Website only: the App Store app shows Apple's price.
+  from: 'One-time purchase from $39.99 · No subscription',
+  offerName: 'Armed & Anchored',
   fine: '',
   // Giving line on the purchase page (EntryScreens.jsx, GivingLine). This is the plain sentence; the running total, and
   // whether the main recipient is named, come from eloraradiance.com/giving.json.

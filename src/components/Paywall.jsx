@@ -69,7 +69,7 @@ function StorePaywall({ session, onShowSignIn, onSignOut, onStorePurchase, onTry
     cta: busy === 'buy' ? 'Opening the App Store…' : '⚔️ Get Lifetime Access',
     // Apple's own price for this person's country; nothing is shown until the App Store answers.
     price: product?.price ? `${product.price} once` : '',
-    priceNote: 'One-time purchase. No subscription. Yours for good.',
+    priceNote: 'No subscription. Yours for good.',
     from: '',
     fine: '',
   }

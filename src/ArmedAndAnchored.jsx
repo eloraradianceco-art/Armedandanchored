@@ -5,7 +5,7 @@ import { speak as readAloud } from './speech.js'
 import ShareCard from './components/ShareCard'
 import Dashboard from './components/Dashboard'
 import Settings from './components/Settings'
-import WeaponTool from './components/WeaponTool'
+import WeaponTool, { TOOL_NAMES } from './components/WeaponTool'
 import { isNative, WEB_ORIGIN, nativeShareText, syncStatusBar } from './native'
 import Drill, { useToday, verseOfDay } from './components/Drill'
 
@@ -1239,10 +1239,14 @@ export default function ArmedAndAnchored({ session, profile, renderUnlock }) {
         </div>
       </div>
 
-      <div style={{maxWidth:1100,margin:"0 auto",padding:`18px 16px calc(32px + ${BELOW_BAR})`}}>
+      {/* Today sits in the middle of a tall screen (iPad) instead of hugging the top; on a phone the content is
+          taller than the screen, so nothing changes there (2026-11-27). */}
+      <div style={{maxWidth:1100,margin:"0 auto",padding:`18px 16px calc(32px + ${BELOW_BAR})`,boxSizing:"border-box",...(!showArsenal?{minHeight:"calc(100dvh - 64px)",display:"flex",flexDirection:"column",justifyContent:"center"}:{})}}>
         {!showArsenal ? (<>
         <Drill weapons={AVAILABLE} entries={entries} getFor={getFor} setFor={setFor} onDeclare={markDeclared}
-          onOpenWeapon={id=>{setSelected(id);setTab('scripture');window.scrollTo(0,0)}} lightMode={lightMode}/>
+          onOpenWeapon={id=>{setSelected(id);setTab('scripture');window.scrollTo(0,0)}} lightMode={lightMode}
+          toolName={id=>TOOL_NAMES[id]}
+          renderTool={w=><WeaponTool weapon={w} get={k=>getFor(w.id,k)} set={(k,v)=>setFor(w.id,k,v)} C={C}/>}/>
 
         {/* Verse of the day: one quiet line */}
         {(() => {

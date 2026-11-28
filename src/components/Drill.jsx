@@ -4,9 +4,10 @@ import { speak as readAloud, stopSpeaking, silentSwitchMayMute } from "../speech
 
 /* ─────────────────────────────────────────────────────────────
    ARMED & ANCHORED — DAILY DRILL + UNDER ATTACK
-   Daily Drill: one weapon a day in seven short cards (scripture,
+   Daily Drill: one weapon a day in eight short cards (scripture,
    the enemy's tactics, the teaching, memorize, declare, pray,
-   battle plan). Under Attack: pick what you're facing and get the
+   battle plan, and the weapon's own tool to finish: added 2026-11-27).
+   The verse read first is the same one memorized (the weapon's shortest). Under Attack: pick what you're facing and get the
    right weapon in about a minute.
    Saves into the existing aa_weapon_entries keys for each weapon:
      declared · mem_<scripture index> · journal (battle plan appended)
@@ -130,14 +131,14 @@ const declareCard = (w, cta) => ({
   onLeave: c => { if (c.u.said) c.declare(w.id); },
 });
 
-/* ---------- Daily Drill: seven cards on one weapon ---------- */
-function buildDrill(w) {
+/* ---------- Daily Drill: eight cards on one weapon ---------- */
+function buildDrill(w, tool) {
   const mi = shortestIdx(w);
   const chunks = chunkVerse(w.scriptures[mi].text);
   const teach = paras(w.teaching);
   const prayer = lines(w.prayer);
   return [
-    verseCard(w, 0, "Today’s weapon: " + w.title),
+    verseCard(w, mi, "Today’s weapon: " + w.title),
     { top: true,
       render: c => {
         const seen = c.u.seen || [];
@@ -200,7 +201,7 @@ function buildDrill(w) {
         <div className="dr-pray">{prayer.slice(0, c.u.line + 1).map((l, i) => <p key={i} className={i < c.u.line ? "is-past" : ""}>{l}</p>)}</div>
       </>) },
     { top: true,
-      cta: "Deploy it",
+      cta: tool ? "Continue" : "Deploy it",
       skip: true,
       ready: c => !!String(c.u.plan || "").trim(),
       render: c => (<>
@@ -212,6 +213,15 @@ function buildDrill(w) {
         <p className="dr-hint dr-after">Saved to this weapon{"’"}s journal.</p>
       </>),
       onLeave: c => { if (String(c.u.plan || "").trim()) c.appendJournal(w.id, c.u.plan.trim()); } },
+    // The weapon's own tool closes the drill: the same tool, and the same saved entries, as the weapon's Tool tab.
+    ...(tool ? [{ top: true,
+      cta: "Deploy it",
+      render: () => (<>
+        <p className="dr-kicker">Put it to work</p>
+        <h2 className="dr-q">{tool.name ? "Your tool: " + tool.name : "Your tool for this weapon"}</h2>
+        <p className="dr-hint">Use it now, or come back to it any time on this weapon{"’"}s Tool tab. What you enter is saved.</p>
+        <div className="dr-tool">{tool.node}</div>
+      </>) }] : []),
   ];
 }
 
@@ -247,7 +257,7 @@ function buildSos(w) {
 /* ─────────────────────────────────────────────────────────────
    COMPONENT: the home panel plus the full-screen sessions
    ───────────────────────────────────────────────────────────── */
-export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare, onOpenWeapon, lightMode = false }) {
+export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare, onOpenWeapon, lightMode = false, renderTool, toolName }) {
   const [session, setSession] = useState(null);   // { flow: 'drill'|'sos'|'pick'|'attack', weaponId, attackId, card }
   const [u, setU] = useState({});
   const [done, setDone] = useState(null);         // { flow, weaponId, attackId }
@@ -284,7 +294,8 @@ export default function Drill({ weapons, entries = [], getFor, setFor, onDeclare
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(""), 2600); return () => clearTimeout(t); }, [toast]);
 
   /* ---- session control ---- */
-  const cardsFor = s => (s.flow === "drill" ? buildDrill(byId(s.weaponId)) : buildSos(byId(s.weaponId)));
+  const toolFor = w => (renderTool ? { name: toolName ? toolName(w.id) : "", node: renderTool(w) } : null);
+  const cardsFor = s => (s.flow === "drill" ? buildDrill(byId(s.weaponId), toolFor(byId(s.weaponId))) : buildSos(byId(s.weaponId)));
   const cards = session && (session.flow === "drill" || session.flow === "sos") ? cardsFor(session) : null;
   const card = cards ? cards[session.card] : null;
 
@@ -562,6 +573,7 @@ const CSS = `
 .dr-tac{border-left:3px solid var(--redL);padding:2px 0 2px 14px;margin-bottom:16px;font-size:19px;line-height:1.45;color:var(--body)}
 .dr-tac b{color:var(--ink);font-weight:600}
 .dr-chal{border-left:3px solid var(--gold);padding:2px 0 2px 16px;margin-bottom:22px;font-size:20px;line-height:1.5;color:var(--ink)}
+.dr-tool{width:100%;text-align:left;margin-top:18px}
 .dr-textarea{width:100%;background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:14px;font-family:inherit;font-size:18px;line-height:1.5;color:var(--ink);resize:vertical;min-height:110px;display:block}
 .dr-textarea:focus{outline:none;border-color:var(--gold)}
 .dr-built{min-height:120px;font-size:24px;line-height:1.45;font-style:italic;color:var(--ink);margin-bottom:6px!important}
